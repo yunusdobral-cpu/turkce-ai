@@ -9,6 +9,7 @@ async function renderAdmin(container) {
   const tabs = [
     { id: 'home', label: 'Anasayfa' },
     { id: 'characters', label: 'Ogretmenler' },
+    { id: 'users', label: 'Uyeler' },
     { id: 'vocab', label: 'Kelime' },
     { id: 'quiz', label: 'Sinav' }
   ];
@@ -24,6 +25,7 @@ async function renderAdmin(container) {
   const renderers = {
     home: renderAdminHome,
     characters: renderAdminCharacters,
+    users: renderAdminUsers,
     vocab: renderAdminVocab,
     quiz: renderAdminQuiz
   };
@@ -280,6 +282,58 @@ async function deleteCharacter(id, name) {
     await loadAdminList();
   } catch (err) {
     showToast('Silme islemi basarisiz', 'error');
+  }
+}
+
+// ===================== USERS TAB =====================
+
+async function renderAdminUsers() {
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="admin-header">
+      <h1>Kayitli Uyeler</h1>
+    </div>
+    <div id="adminUsersList">
+      <div class="empty-state"><p>Yukleniyor...</p></div>
+    </div>
+  `;
+
+  try {
+    const users = await API.getUsers();
+    const list = document.getElementById('adminUsersList');
+
+    if (!users || users.length === 0) {
+      list.innerHTML = `<div class="empty-state"><p>Henuz kayitli uye yok</p></div>`;
+      return;
+    }
+
+    list.innerHTML = `
+      <div class="admin-users-count">${users.length} kayitli uye</div>
+      <table class="admin-users-table">
+        <thead>
+          <tr>
+            <th>Isim</th>
+            <th>Email</th>
+            <th>Durum</th>
+            <th>Kayit Tarihi</th>
+            <th>Son Giris</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${users.map(u => `
+            <tr>
+              <td><strong>${u.displayName}</strong></td>
+              <td>${u.email}</td>
+              <td>${u.verified ? '<span class="badge badge-success">Dogrulanmis</span>' : '<span class="badge badge-warning">Beklemede</span>'}</td>
+              <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString('tr-TR') : '-'}</td>
+              <td>${u.lastSignIn ? new Date(u.lastSignIn).toLocaleDateString('tr-TR') : '-'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  } catch (err) {
+    document.getElementById('adminUsersList').innerHTML = `<div class="empty-state"><p>Uye listesi yuklenemedi</p></div>`;
   }
 }
 

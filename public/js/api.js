@@ -200,6 +200,13 @@ const API = {
     return res.json();
   },
 
+  async getUsers() {
+    const res = await fetch('/api/auth/users', {
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }
+    });
+    return res.json();
+  },
+
   async getMe(token) {
     const res = await fetch('/api/auth/me', {
       headers: { 'Authorization': `Bearer ${token}` }

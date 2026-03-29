@@ -1,6 +1,7 @@
 const express = require('express');
 const { supabaseAdmin } = require('../lib/supabase');
 const userAuth = require('../middleware/userAuth');
+const adminAuth = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -131,6 +132,28 @@ router.get('/me', userAuth, async (req, res) => {
     displayName,
     verified: !!req.user.email_confirmed_at
   });
+});
+
+// GET /api/auth/users (admin)
+router.get('/users', adminAuth, async (req, res) => {
+  try {
+    const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
+    if (error) throw error;
+
+    const userList = users.map(u => ({
+      id: u.id,
+      email: u.email,
+      displayName: u.user_metadata?.displayName || 'User',
+      verified: !!u.email_confirmed_at,
+      createdAt: u.created_at,
+      lastSignIn: u.last_sign_in_at
+    }));
+
+    res.json(userList);
+  } catch (err) {
+    console.error('List users error:', err);
+    res.status(500).json({ error: 'Sunucu hatası' });
+  }
 });
 
 module.exports = router;
