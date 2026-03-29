@@ -8,58 +8,42 @@ const router = express.Router();
 // Get all categories with thread/post counts
 router.get('/categories', async (req, res) => {
   try {
-    const { data: categories, error } = await supabaseAdmin
-      .from('forum_categories')
-      .select('*')
-      .order('order');
+    const [catRes, threadRes, postRes] = await Promise.all([
+      supabaseAdmin.from('forum_categories').select('*').order('order'),
+      supabaseAdmin.from('forum_threads').select('id, category_id, title, updated_at'),
+      supabaseAdmin.from('forum_posts').select('thread_id')
+    ]);
 
-    if (error) throw error;
+    if (catRes.error) throw catRes.error;
 
-    const result = [];
-    for (const cat of categories) {
-      const { count: threadCount } = await supabaseAdmin
-        .from('forum_threads')
-        .select('*', { count: 'exact', head: true })
-        .eq('category_id', cat.id);
+    const categories = catRes.data || [];
+    const threads = threadRes.data || [];
+    const posts = postRes.data || [];
 
-      const { data: threads } = await supabaseAdmin
-        .from('forum_threads')
-        .select('id')
-        .eq('category_id', cat.id);
+    // Build post count per thread
+    const postCountByThread = {};
+    for (const p of posts) {
+      postCountByThread[p.thread_id] = (postCountByThread[p.thread_id] || 0) + 1;
+    }
 
-      const threadIds = (threads || []).map(t => t.id);
-      let postCount = 0;
-      if (threadIds.length > 0) {
-        const { count } = await supabaseAdmin
-          .from('forum_posts')
-          .select('*', { count: 'exact', head: true })
-          .in('thread_id', threadIds);
-        postCount = count || 0;
-      }
+    const result = categories.map(cat => {
+      const catThreads = threads.filter(t => t.category_id === cat.id);
+      const postCount = catThreads.reduce((sum, t) => sum + (postCountByThread[t.id] || 0), 0);
+      const sorted = catThreads.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+      const last = sorted[0];
 
-      const { data: lastThreadArr } = await supabaseAdmin
-        .from('forum_threads')
-        .select('id, title, updated_at')
-        .eq('category_id', cat.id)
-        .order('updated_at', { ascending: false })
-        .limit(1);
-
-      const lastThread = lastThreadArr && lastThreadArr[0]
-        ? { id: lastThreadArr[0].id, title: lastThreadArr[0].title, updatedAt: lastThreadArr[0].updated_at }
-        : null;
-
-      result.push({
+      return {
         id: cat.id,
         name: cat.name,
         description: cat.description,
         icon: cat.icon,
         order: cat.order,
         createdAt: cat.created_at,
-        threadCount: threadCount || 0,
+        threadCount: catThreads.length,
         postCount,
-        lastThread
-      });
-    }
+        lastThread: last ? { id: last.id, title: last.title, updatedAt: last.updated_at } : null
+      };
+    });
 
     res.json(result);
   } catch (err) {
@@ -136,45 +120,39 @@ router.delete('/categories/:id', adminAuth, async (req, res) => {
 // Get threads in a category
 router.get('/categories/:catId/threads', async (req, res) => {
   try {
-    const { data: threads, error } = await supabaseAdmin
-      .from('forum_threads')
-      .select('*')
-      .eq('category_id', req.params.catId)
-      .order('pinned', { ascending: false })
-      .order('updated_at', { ascending: false });
+    const [threadRes, postRes] = await Promise.all([
+      supabaseAdmin.from('forum_threads').select('*').eq('category_id', req.params.catId).order('pinned', { ascending: false }).order('updated_at', { ascending: false }),
+      supabaseAdmin.from('forum_posts').select('thread_id, author_name, created_at').order('created_at', { ascending: false })
+    ]);
 
-    if (error) throw error;
+    if (threadRes.error) throw threadRes.error;
 
-    const result = [];
-    for (const t of (threads || [])) {
-      const { count: postCount } = await supabaseAdmin
-        .from('forum_posts')
-        .select('*', { count: 'exact', head: true })
-        .eq('thread_id', t.id);
+    const threads = threadRes.data || [];
+    const posts = postRes.data || [];
 
-      const { data: lastPostArr } = await supabaseAdmin
-        .from('forum_posts')
-        .select('author_name, created_at')
-        .eq('thread_id', t.id)
-        .order('created_at', { ascending: false })
-        .limit(1);
-
-      const lastPost = lastPostArr && lastPostArr[0]
-        ? { author: lastPostArr[0].author_name, createdAt: lastPostArr[0].created_at }
-        : null;
-
-      result.push({
-        id: t.id,
-        categoryId: t.category_id,
-        author: t.author_name,
-        title: t.title,
-        pinned: t.pinned,
-        createdAt: t.created_at,
-        updatedAt: t.updated_at,
-        postCount: postCount || 0,
-        lastPost
-      });
+    // Build post count and last post per thread
+    const threadIds = new Set(threads.map(t => t.id));
+    const postCountByThread = {};
+    const lastPostByThread = {};
+    for (const p of posts) {
+      if (!threadIds.has(p.thread_id)) continue;
+      postCountByThread[p.thread_id] = (postCountByThread[p.thread_id] || 0) + 1;
+      if (!lastPostByThread[p.thread_id]) {
+        lastPostByThread[p.thread_id] = { author: p.author_name, createdAt: p.created_at };
+      }
     }
+
+    const result = threads.map(t => ({
+      id: t.id,
+      categoryId: t.category_id,
+      author: t.author_name,
+      title: t.title,
+      pinned: t.pinned,
+      createdAt: t.created_at,
+      updatedAt: t.updated_at,
+      postCount: postCountByThread[t.id] || 0,
+      lastPost: lastPostByThread[t.id] || null
+    }));
 
     res.json(result);
   } catch (err) {
@@ -358,11 +336,20 @@ router.delete('/threads/:id', adminAuth, async (req, res) => {
 // Forum stats (admin)
 router.get('/stats', adminAuth, async (req, res) => {
   try {
-    const { count: categoryCount } = await supabaseAdmin.from('forum_categories').select('*', { count: 'exact', head: true });
-    const { count: threadCount } = await supabaseAdmin.from('forum_threads').select('*', { count: 'exact', head: true });
-    const { count: postCount } = await supabaseAdmin.from('forum_posts').select('*', { count: 'exact', head: true });
+    const [catRes, threadRes, postRes] = await Promise.all([
+      supabaseAdmin.from('forum_categories').select('*', { count: 'exact', head: true }),
+      supabaseAdmin.from('forum_threads').select('*', { count: 'exact', head: true }),
+      supabaseAdmin.from('forum_posts').select('author_name')
+    ]);
 
-    res.json({ categoryCount, threadCount, postCount, authorCount: 0 });
+    const uniqueAuthors = new Set((postRes.data || []).map(p => p.author_name));
+
+    res.json({
+      categoryCount: catRes.count || 0,
+      threadCount: threadRes.count || 0,
+      postCount: (postRes.data || []).length,
+      authorCount: uniqueAuthors.size
+    });
   } catch (err) {
     console.error('Stats error:', err);
     res.status(500).json({ error: 'Sunucu hatası' });
