@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const charactersRouter = require('./routes/characters');
 const chatRouter = require('./routes/chat');
+const forumRouter = require('./routes/forum');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +16,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/characters', charactersRouter);
 app.use('/api/chat', chatRouter);
+app.use('/api/forum', forumRouter);
+app.use('/api/auth', authRouter);
 
 // SPA fallback
 app.get('*', (req, res) => {

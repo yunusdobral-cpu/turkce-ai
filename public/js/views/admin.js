@@ -1,30 +1,53 @@
+let adminActiveTab = 'home';
+
 async function renderAdmin(container) {
   if (!sessionStorage.getItem('adminPassword')) {
     showLoginPrompt(container);
     return;
   }
 
+  const tabs = [
+    { id: 'home', label: 'Anasayfa' },
+    { id: 'characters', label: 'Ogretmenler' },
+    { id: 'vocab', label: 'Kelime' },
+    { id: 'quiz', label: 'Sinav' }
+  ];
+
   container.innerHTML = `
-    <div class="admin-header">
-      <h1>Kişilik Yönetimi</h1>
-      <button class="btn btn-primary" onclick="showCharacterForm()">+ Yeni Kişilik</button>
+    <div class="admin-tabs">
+      ${tabs.map(t => `<button class="admin-tab ${adminActiveTab === t.id ? 'active' : ''}" onclick="switchAdminTab('${t.id}')">${t.label}</button>`).join('')}
+      <button class="admin-tab-logout" onclick="adminLogout()">Cikis</button>
     </div>
-    <div class="admin-list" id="adminList">
-      <div class="empty-state"><p>Yükleniyor...</p></div>
-    </div>
+    <div id="adminContent"></div>
   `;
 
-  await loadAdminList();
+  const renderers = {
+    home: renderAdminHome,
+    characters: renderAdminCharacters,
+    vocab: renderAdminVocab,
+    quiz: renderAdminQuiz
+  };
+  (renderers[adminActiveTab] || renderAdminHome)()
+}
+
+function switchAdminTab(tab) {
+  adminActiveTab = tab;
+  renderAdmin(document.getElementById('app'));
+}
+
+function adminLogout() {
+  sessionStorage.removeItem('adminPassword');
+  renderAdmin(document.getElementById('app'));
 }
 
 function showLoginPrompt(container) {
   container.innerHTML = `
     <div style="max-width:400px;margin:3rem auto;text-align:center">
-      <h2 style="margin-bottom:1.5rem">Yönetim Paneli</h2>
+      <h2 style="margin-bottom:1.5rem">Yonetim Paneli</h2>
       <div class="form-group">
-        <input type="password" id="adminPassInput" placeholder="Yönetici şifresi" style="text-align:center">
+        <input type="password" id="adminPassInput" placeholder="Yonetici sifresi" style="text-align:center">
       </div>
-      <button class="btn btn-primary btn-block" onclick="adminLogin()">Giriş Yap</button>
+      <button class="btn btn-primary btn-block" onclick="adminLogin()">Giris Yap</button>
     </div>
   `;
 
@@ -42,12 +65,34 @@ function adminLogin() {
   renderAdmin(document.getElementById('app'));
 }
 
+// ===================== HOME TAB =====================
+
+function renderAdminHome() {
+  renderAdminForum();
+}
+
+// ===================== CHARACTERS TAB =====================
+
+function renderAdminCharacters() {
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="admin-header">
+      <h1>Kisilik Yonetimi</h1>
+      <button class="btn btn-primary" onclick="showCharacterForm()">+ Yeni Kisilik</button>
+    </div>
+    <div class="admin-list" id="adminList">
+      <div class="empty-state"><p>Yukleniyor...</p></div>
+    </div>
+  `;
+  loadAdminList();
+}
+
 async function loadAdminList() {
   const list = document.getElementById('adminList');
   try {
     const characters = await API.getCharacters();
     if (characters.length === 0) {
-      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Henüz kişilik eklenmemiş</p></div>`;
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Henuz kisilik eklenmemis</p></div>`;
       return;
     }
 
@@ -59,23 +104,23 @@ async function loadAdminList() {
           <div class="card-avatar" style="background:linear-gradient(135deg,${c1},${c2});width:42px;height:42px;font-size:1.2rem">${c.avatar ? `<img src="${c.avatar}" alt="">` : initial}</div>
           <div class="admin-item-info">
             <h3>${c.name}</h3>
-            <p>${c.description || 'Açıklama yok'}</p>
+            <p>${c.description || 'Aciklama yok'}</p>
           </div>
           <div class="admin-item-actions">
-            <button class="btn btn-outline btn-sm" onclick="editCharacter('${c.id}')">Düzenle</button>
+            <button class="btn btn-outline btn-sm" onclick="editCharacter('${c.id}')">Duzenle</button>
             <button class="btn btn-danger btn-sm" onclick="deleteCharacter('${c.id}', '${c.name}')">Sil</button>
           </div>
         </div>
       `;
     }).join('');
   } catch (err) {
-    list.innerHTML = `<div class="empty-state"><p>Yüklenemedi. Şifrenizi kontrol edin.</p></div>`;
+    list.innerHTML = `<div class="empty-state"><p>Yuklenemedi. Sifrenizi kontrol edin.</p></div>`;
   }
 }
 
 function showCharacterForm(existing = null) {
   const isEdit = !!existing;
-  const title = isEdit ? 'Kişiliği Düzenle' : 'Yeni Kişilik Ekle';
+  const title = isEdit ? 'Kisiligi Duzenle' : 'Yeni Kisilik Ekle';
 
   const html = `
     <form id="charForm">
@@ -85,32 +130,32 @@ function showCharacterForm(existing = null) {
       </div>
       <div class="form-group">
         <label>Rol / Role</label>
-        <input type="text" name="role" value="${existing?.role || ''}" placeholder="Örn: Dilbilgisi Öğretmeni / Grammar Teacher">
-        <div class="help-text">Öğretmenin uzmanlık alanı (Türkçe / İngilizce)</div>
+        <input type="text" name="role" value="${existing?.role || ''}" placeholder="Orn: Dilbilgisi Ogretmeni / Grammar Teacher">
+        <div class="help-text">Ogretmenin uzmanlik alani (Turkce / Ingilizce)</div>
       </div>
       <div class="form-group">
         <label>Avatar URL</label>
         <input type="text" name="avatar" value="${existing?.avatar || ''}" placeholder="https://...">
-        <div class="help-text">Boş bırakılırsa otomatik avatar oluşturulur</div>
+        <div class="help-text">Bos birakilirsa otomatik avatar olusturulur</div>
       </div>
       <div class="form-group">
-        <label>Açıklama (Türkçe)</label>
+        <label>Aciklama (Turkce)</label>
         <textarea name="description" rows="2">${existing?.description || ''}</textarea>
       </div>
       <div class="form-group">
-        <label>Açıklama (İngilizce)</label>
+        <label>Aciklama (Ingilizce)</label>
         <textarea name="descriptionEn" rows="2">${existing?.descriptionEn || ''}</textarea>
-        <div class="help-text">Ana sayfada öğrencilere gösterilen İngilizce açıklama</div>
+        <div class="help-text">Ana sayfada ogrencilere gosterilen Ingilizce aciklama</div>
       </div>
       <div class="form-group">
-        <label>Karşılama Mesajı</label>
+        <label>Karsilama Mesaji</label>
         <textarea name="greeting" rows="2">${existing?.greeting || ''}</textarea>
-        <div class="help-text">Sohbet başladığında gösterilecek ilk mesaj</div>
+        <div class="help-text">Sohbet basladiginda gosterilecek ilk mesaj</div>
       </div>
       <div class="form-group">
-        <label>Kişilik Özellikleri *</label>
+        <label>Kisilik Ozellikleri *</label>
         <textarea name="personality" rows="3" required>${existing?.personality || ''}</textarea>
-        <div class="help-text">Karakterin nasıl davranacağını açıklayın</div>
+        <div class="help-text">Karakterin nasil davranacagini aciklayin</div>
       </div>
       <div class="form-group">
         <label>Ton</label>
@@ -119,37 +164,37 @@ function showCharacterForm(existing = null) {
           <option value="formal" ${existing?.tone === 'formal' ? 'selected' : ''}>Resmi</option>
           <option value="humorous" ${existing?.tone === 'humorous' ? 'selected' : ''}>Esprili</option>
           <option value="dramatic" ${existing?.tone === 'dramatic' ? 'selected' : ''}>Dramatik</option>
-          <option value="poetic" ${existing?.tone === 'poetic' ? 'selected' : ''}>Şiirsel</option>
+          <option value="poetic" ${existing?.tone === 'poetic' ? 'selected' : ''}>Siirsel</option>
         </select>
       </div>
       <div class="form-group">
-        <label>Sistem İstemi</label>
+        <label>Sistem Istemi</label>
         <textarea name="systemPrompt" rows="4">${existing?.systemPrompt || ''}</textarea>
-        <div class="help-text">AI'ya doğrudan verilecek talimatlar (opsiyonel, gelişmiş)</div>
+        <div class="help-text">AI'ya dogrudan verilecek talimatlar (opsiyonel, gelismis)</div>
       </div>
       <div class="form-group">
         <label>Konular / Topics</label>
         <div id="topicsContainer">
           ${(existing?.topics || []).map((t, i) => `
             <div class="topic-entry" data-index="${i}">
-              <input type="text" placeholder="ID (örn: ekler)" value="${t.id}" class="topic-id">
-              <input type="text" placeholder="Ad (örn: Ekler / Suffixes)" value="${t.name}" class="topic-name-input">
-              <input type="text" placeholder="Icon (örn: 🔗)" value="${t.icon}" class="topic-icon-input" style="width:60px">
-              <input type="text" placeholder="Açıklama (İngilizce)" value="${t.description}" class="topic-desc-input">
-              <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">×</button>
+              <input type="text" placeholder="ID (orn: ekler)" value="${t.id}" class="topic-id">
+              <input type="text" placeholder="Ad (orn: Ekler / Suffixes)" value="${t.name}" class="topic-name-input">
+              <input type="text" placeholder="Icon (orn: 🔗)" value="${t.icon}" class="topic-icon-input" style="width:60px">
+              <input type="text" placeholder="Aciklama (Ingilizce)" value="${t.description}" class="topic-desc-input">
+              <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">x</button>
             </div>
           `).join('')}
         </div>
         <button type="button" class="btn btn-outline btn-sm" onclick="addTopicEntry()" style="margin-top:0.5rem">+ Konu Ekle</button>
-        <div class="help-text">Ana sayfada öğretmenin altında gösterilen konu kartları</div>
+        <div class="help-text">Ana sayfada ogretmenin altinda gosterilen konu kartlari</div>
       </div>
       <div class="form-group">
         <label>Etiketler</label>
         <input type="text" name="tags" value="${(existing?.tags || []).join(', ')}" placeholder="etiket1, etiket2, ...">
       </div>
       <div class="form-actions">
-        <button type="button" class="btn btn-outline" onclick="closeModal()">İptal</button>
-        <button type="submit" class="btn btn-primary">${isEdit ? 'Güncelle' : 'Oluştur'}</button>
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Iptal</button>
+        <button type="submit" class="btn btn-primary">${isEdit ? 'Guncelle' : 'Olustur'}</button>
       </div>
     </form>
   `;
@@ -187,15 +232,15 @@ function showCharacterForm(existing = null) {
     try {
       if (isEdit) {
         await API.updateCharacter(existing.id, data);
-        showToast('Kişilik güncellendi');
+        showToast('Kisilik guncellendi');
       } else {
         await API.createCharacter(data);
-        showToast('Kişilik oluşturuldu');
+        showToast('Kisilik olusturuldu');
       }
       closeModal();
       await loadAdminList();
     } catch (err) {
-      showToast('İşlem başarısız. Şifrenizi kontrol edin.', 'error');
+      showToast('Islem basarisiz. Sifrenizi kontrol edin.', 'error');
     }
   });
 }
@@ -209,7 +254,7 @@ async function editCharacter(id) {
     }
     showCharacterForm(char);
   } catch (err) {
-    showToast('Kişilik yüklenemedi', 'error');
+    showToast('Kisilik yuklenemedi', 'error');
   }
 }
 
@@ -218,22 +263,305 @@ function addTopicEntry() {
   const div = document.createElement('div');
   div.className = 'topic-entry';
   div.innerHTML = `
-    <input type="text" placeholder="ID (örn: ekler)" class="topic-id">
-    <input type="text" placeholder="Ad (örn: Ekler / Suffixes)" class="topic-name-input">
-    <input type="text" placeholder="Icon (örn: 🔗)" class="topic-icon-input" style="width:60px">
-    <input type="text" placeholder="Açıklama (İngilizce)" class="topic-desc-input">
-    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">×</button>
+    <input type="text" placeholder="ID (orn: ekler)" class="topic-id">
+    <input type="text" placeholder="Ad (orn: Ekler / Suffixes)" class="topic-name-input">
+    <input type="text" placeholder="Icon (orn: 🔗)" class="topic-icon-input" style="width:60px">
+    <input type="text" placeholder="Aciklama (Ingilizce)" class="topic-desc-input">
+    <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()">x</button>
   `;
   container.appendChild(div);
 }
 
 async function deleteCharacter(id, name) {
-  if (!confirm(`"${name}" kişiliğini silmek istediğinize emin misiniz?`)) return;
+  if (!confirm(`"${name}" kisiligini silmek istediginize emin misiniz?`)) return;
   try {
     await API.deleteCharacter(id);
-    showToast('Kişilik silindi');
+    showToast('Kisilik silindi');
     await loadAdminList();
   } catch (err) {
-    showToast('Silme işlemi başarısız', 'error');
+    showToast('Silme islemi basarisiz', 'error');
+  }
+}
+
+// ===================== VOCAB TAB =====================
+
+function renderAdminVocab() {
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="admin-placeholder">
+      <div class="admin-placeholder-icon">📖</div>
+      <h2>Kelime Yonetimi</h2>
+      <p>Bu bolum yakin zamanda eklenecek.</p>
+    </div>
+  `;
+}
+
+// ===================== QUIZ TAB =====================
+
+function renderAdminQuiz() {
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="admin-placeholder">
+      <div class="admin-placeholder-icon">📝</div>
+      <h2>Sinav Yonetimi</h2>
+      <p>Bu bolum yakin zamanda eklenecek.</p>
+    </div>
+  `;
+}
+
+// ===================== FORUM TAB =====================
+
+async function renderAdminForum() {
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="admin-forum-stats" id="forumStats">
+      <div class="empty-state"><p>Yukleniyor...</p></div>
+    </div>
+    <div class="admin-forum-section">
+      <div class="admin-header">
+        <h2>Kategori Yonetimi</h2>
+        <button class="btn btn-primary" onclick="showForumCategoryForm()">+ Yeni Kategori</button>
+      </div>
+      <div class="admin-list" id="forumCatList">
+        <div class="empty-state"><p>Yukleniyor...</p></div>
+      </div>
+    </div>
+    <div class="admin-forum-section">
+      <div class="admin-header">
+        <h2>Konu Yonetimi</h2>
+      </div>
+      <div class="admin-list" id="forumThreadList">
+        <div class="empty-state"><p>Yukleniyor...</p></div>
+      </div>
+    </div>
+  `;
+
+  loadForumStats();
+  loadForumCategories();
+  loadForumThreads();
+}
+
+async function loadForumStats() {
+  const el = document.getElementById('forumStats');
+  try {
+    const stats = await API.getForumStats();
+    el.innerHTML = `
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">📁</div>
+        <div class="admin-stat-value">${stats.categoryCount}</div>
+        <div class="admin-stat-label">Kategori</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">💬</div>
+        <div class="admin-stat-value">${stats.threadCount}</div>
+        <div class="admin-stat-label">Konu</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">📝</div>
+        <div class="admin-stat-value">${stats.postCount}</div>
+        <div class="admin-stat-label">Gonderi</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-icon">👥</div>
+        <div class="admin-stat-value">${stats.authorCount}</div>
+        <div class="admin-stat-label">Yazar</div>
+      </div>
+    `;
+  } catch (err) {
+    el.innerHTML = `<div class="empty-state"><p>Istatistikler yuklenemedi</p></div>`;
+  }
+}
+
+async function loadForumCategories() {
+  const list = document.getElementById('forumCatList');
+  try {
+    const cats = await API.getForumCategories();
+    if (cats.length === 0) {
+      list.innerHTML = `<div class="empty-state"><p>Henuz kategori yok</p></div>`;
+      return;
+    }
+    list.innerHTML = cats.map(c => `
+      <div class="admin-item">
+        <div class="admin-forum-icon">${c.icon}</div>
+        <div class="admin-item-info">
+          <h3>${c.name}</h3>
+          <p>${c.description || ''} &mdash; ${c.threadCount || 0} konu, ${c.postCount || 0} gonderi</p>
+        </div>
+        <div class="admin-item-actions">
+          <button class="btn btn-outline btn-sm" onclick="showForumCategoryForm('${c.id}', '${c.name.replace(/'/g, "\\'")}', '${(c.description || '').replace(/'/g, "\\'")}', '${c.icon}')">Duzenle</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteForumCat('${c.id}', '${c.name.replace(/'/g, "\\'")}')">Sil</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    list.innerHTML = `<div class="empty-state"><p>Kategoriler yuklenemedi</p></div>`;
+  }
+}
+
+async function loadForumThreads() {
+  const list = document.getElementById('forumThreadList');
+  try {
+    const cats = await API.getForumCategories();
+    let allThreads = [];
+    for (const cat of cats) {
+      const threads = await API.getForumThreads(cat.id);
+      allThreads.push(...threads.map(t => ({ ...t, categoryName: cat.name })));
+    }
+
+    if (allThreads.length === 0) {
+      list.innerHTML = `<div class="empty-state"><p>Henuz konu yok</p></div>`;
+      return;
+    }
+
+    allThreads.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+    list.innerHTML = allThreads.map(t => `
+      <div class="admin-item">
+        <div class="admin-forum-icon">${t.pinned ? '📌' : '💬'}</div>
+        <div class="admin-item-info">
+          <h3>${t.title}</h3>
+          <p>${t.categoryName} &mdash; ${t.author} &mdash; ${t.postCount || 0} gonderi &mdash; ${new Date(t.updatedAt).toLocaleDateString('tr-TR')}</p>
+        </div>
+        <div class="admin-item-actions">
+          <button class="btn btn-outline btn-sm" onclick="togglePin('${t.id}')" title="${t.pinned ? 'Sabitlemeyi kaldir' : 'Sabitle'}">${t.pinned ? '📌 Kaldir' : '📌 Sabitle'}</button>
+          <button class="btn btn-outline btn-sm" onclick="showThreadPosts('${t.id}', '${t.title.replace(/'/g, "\\'")}')">Gonderiler</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteForumThreadAdmin('${t.id}', '${t.title.replace(/'/g, "\\'")}')">Sil</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    list.innerHTML = `<div class="empty-state"><p>Konular yuklenemedi</p></div>`;
+  }
+}
+
+function showForumCategoryForm(id, name, description, icon) {
+  const isEdit = !!id;
+  const title = isEdit ? 'Kategoriyi Duzenle' : 'Yeni Kategori Ekle';
+
+  const html = `
+    <form id="forumCatForm">
+      <div class="form-group">
+        <label>Kategori Adi *</label>
+        <input type="text" name="name" value="${name || ''}" required>
+      </div>
+      <div class="form-group">
+        <label>Aciklama</label>
+        <input type="text" name="description" value="${description || ''}">
+      </div>
+      <div class="form-group">
+        <label>Ikon</label>
+        <input type="text" name="icon" value="${icon || ''}" placeholder="📁" style="width:80px">
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Iptal</button>
+        <button type="submit" class="btn btn-primary">${isEdit ? 'Guncelle' : 'Olustur'}</button>
+      </div>
+    </form>
+  `;
+
+  openModal(title, html);
+
+  document.getElementById('forumCatForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = {
+      name: form.elements.namedItem('name').value.trim(),
+      description: form.elements.namedItem('description').value.trim(),
+      icon: form.elements.namedItem('icon').value.trim() || '📁'
+    };
+
+    try {
+      if (isEdit) {
+        await API.updateForumCategory(id, data);
+        showToast('Kategori guncellendi');
+      } else {
+        await API.createForumCategory(data);
+        showToast('Kategori olusturuldu');
+      }
+      closeModal();
+      loadForumCategories();
+      loadForumStats();
+    } catch (err) {
+      showToast('Islem basarisiz', 'error');
+    }
+  });
+}
+
+async function deleteForumCat(id, name) {
+  if (!confirm(`"${name}" kategorisini ve tum konularini silmek istediginize emin misiniz?`)) return;
+  try {
+    await API.deleteForumCategory(id);
+    showToast('Kategori silindi');
+    loadForumCategories();
+    loadForumThreads();
+    loadForumStats();
+  } catch (err) {
+    showToast('Silme basarisiz', 'error');
+  }
+}
+
+async function togglePin(threadId) {
+  try {
+    await API.toggleForumPin(threadId);
+    showToast('Sabitleme durumu degistirildi');
+    loadForumThreads();
+  } catch (err) {
+    showToast('Islem basarisiz', 'error');
+  }
+}
+
+async function deleteForumThreadAdmin(id, title) {
+  if (!confirm(`"${title}" konusunu silmek istediginize emin misiniz?`)) return;
+  try {
+    await API.deleteForumThread(id);
+    showToast('Konu silindi');
+    loadForumThreads();
+    loadForumStats();
+  } catch (err) {
+    showToast('Silme basarisiz', 'error');
+  }
+}
+
+async function showThreadPosts(threadId, threadTitle) {
+  try {
+    const data = await API.getForumThread(threadId);
+    if (!data.posts || data.posts.length === 0) {
+      showToast('Bu konuda gonderi yok', 'error');
+      return;
+    }
+
+    const html = `
+      <div class="admin-posts-list">
+        ${data.posts.map(p => `
+          <div class="admin-post-item">
+            <div class="admin-post-info">
+              <strong>${p.author}</strong>
+              <span class="admin-post-date">${new Date(p.createdAt).toLocaleString('tr-TR')}</span>
+              <p class="admin-post-content">${p.content.length > 200 ? p.content.substring(0, 200) + '...' : p.content}</p>
+            </div>
+            <div class="admin-item-actions">
+              <button class="btn btn-danger btn-sm" onclick="deleteForumPostAdmin('${p.id}', '${threadId}', '${threadTitle.replace(/'/g, "\\'")}')">Sil</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+
+    openModal(`Gonderiler: ${threadTitle}`, html);
+  } catch (err) {
+    showToast('Gonderiler yuklenemedi', 'error');
+  }
+}
+
+async function deleteForumPostAdmin(postId, threadId, threadTitle) {
+  if (!confirm('Bu gonderiyi silmek istediginize emin misiniz?')) return;
+  try {
+    await API.deleteForumPost(postId);
+    showToast('Gonderi silindi');
+    closeModal();
+    showThreadPosts(threadId, threadTitle);
+    loadForumStats();
+  } catch (err) {
+    showToast('Silme basarisiz', 'error');
   }
 }

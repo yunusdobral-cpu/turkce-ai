@@ -60,6 +60,153 @@ const API = {
     return res.json();
   },
 
+  // Forum
+  async getForumCategories() {
+    const res = await fetch('/api/forum/categories');
+    return res.json();
+  },
+
+  async createForumCategory(data) {
+    const res = await fetch('/api/forum/categories', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}`
+      },
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  async deleteForumCategory(id) {
+    const res = await fetch(`/api/forum/categories/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }
+    });
+    return res.json();
+  },
+
+  async getForumThreads(catId) {
+    const res = await fetch(`/api/forum/categories/${catId}/threads`);
+    return res.json();
+  },
+
+  async createForumThread(data) {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = localStorage.getItem('turkceai_token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch('/api/forum/threads', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  async getForumThread(id) {
+    const res = await fetch(`/api/forum/threads/${id}`);
+    return res.json();
+  },
+
+  async replyForumThread(threadId, data) {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = localStorage.getItem('turkceai_token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(`/api/forum/threads/${threadId}/posts`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  async deleteForumThread(id) {
+    const res = await fetch(`/api/forum/threads/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }
+    });
+    return res.json();
+  },
+
+  async updateForumCategory(id, data) {
+    const res = await fetch(`/api/forum/categories/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}`
+      },
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  async toggleForumPin(threadId) {
+    const res = await fetch(`/api/forum/threads/${threadId}/pin`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }
+    });
+    return res.json();
+  },
+
+  async deleteForumPost(postId) {
+    const res = await fetch(`/api/forum/posts/${postId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }
+    });
+    return res.json();
+  },
+
+  async getForumStats() {
+    const res = await fetch('/api/forum/stats', {
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }
+    });
+    return res.json();
+  },
+
+  // Auth
+  async register(email, password, displayName) {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, displayName })
+    });
+    return res.json();
+  },
+
+  async verify(email, code) {
+    const res = await fetch('/api/auth/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code })
+    });
+    return res.json();
+  },
+
+  async resendCode(email) {
+    const res = await fetch('/api/auth/resend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    return res.json();
+  },
+
+  async login(email, password) {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    return res.json();
+  },
+
+  async getMe(token) {
+    const res = await fetch('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return res.json();
+  },
+
   sendMessage(sessionId, characterId, message, topicId, onChunk, onDone, onError) {
     fetch('/api/chat', {
       method: 'POST',

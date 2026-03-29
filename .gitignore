@@ -1,3 +1,8 @@
 node_modules/
 .env
 server-error.log
+.claude/
+.playwright-mcp/
+append_c1.js
+append_t0.js
+append_t1.js
