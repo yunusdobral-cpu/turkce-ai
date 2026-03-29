@@ -2,6 +2,8 @@
 function requireAuth(hash) {
   // Anasayfa ve admin hariç tüm sayfalar üyelik gerektirir
   if (hash === '#/' || hash === '' || !hash || hash === '#/admin') return true;
+  // Admin girişi yapılmışsa serbest gezinebilir
+  if (sessionStorage.getItem('adminPassword')) return true;
   if (!Auth.isLoggedIn()) {
     Auth.showLoginModal();
     return false;
