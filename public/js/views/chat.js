@@ -71,18 +71,16 @@ async function renderChat(container, characterId, topicId) {
       }
     });
 
-    // Mobile keyboard: keep input visible
+    // Mobile keyboard: keep input above keyboard
     if (window.visualViewport) {
-      const onResize = () => {
-        const inputArea = document.querySelector('.chat-input-area');
-        if (inputArea) {
-          const offset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
-          inputArea.style.paddingBottom = Math.max(0, offset) + 'px';
-          textarea.scrollIntoView({ block: 'nearest' });
-        }
+      const inputArea = document.querySelector('.chat-input-area');
+      const onViewportChange = () => {
+        if (!inputArea) return;
+        const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+        inputArea.style.bottom = Math.max(0, bottomOffset) + 'px';
       };
-      window.visualViewport.addEventListener('resize', onResize);
-      window.visualViewport.addEventListener('scroll', onResize);
+      window.visualViewport.addEventListener('resize', onViewportChange);
+      window.visualViewport.addEventListener('scroll', onViewportChange);
     }
 
     textarea.focus();
