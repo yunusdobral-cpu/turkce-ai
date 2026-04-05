@@ -172,43 +172,43 @@ function parseTopicIntoSlides(topic, level, meta) {
     label: meta.tr
   });
 
-  // Walk through child nodes and group them into slides
-  let currentSlide = { type: 'content', elements: [] };
+  // Walk through child nodes and split aggressively — each element gets its own slide
+  let currentHeading = '';
   const children = Array.from(temp.children);
 
   for (let i = 0; i < children.length; i++) {
     const el = children[i];
     const tag = el.tagName.toLowerCase();
 
-    // h3 is overall title - skip (we have title card)
     if (tag === 'h3') continue;
 
-    // h4 starts a new slide
     if (tag === 'h4') {
-      if (currentSlide.elements.length > 0) {
-        slides.push(currentSlide);
-      }
-      currentSlide = { type: 'content', elements: [] };
-      currentSlide.heading = el.innerHTML;
+      currentHeading = el.innerHTML;
       continue;
     }
 
-    currentSlide.elements.push(el.outerHTML);
+    // Each table, example, tip, or paragraph group = new slide
+    const isTable = el.classList.contains('grammar-table-wrap') || tag === 'table';
+    const isTip = el.classList.contains('grammar-tip');
+    const isExample = el.classList.contains('grammar-example');
 
-    // If we have a table + tip/example, break
-    const hasTable = currentSlide.elements.some(e => e.includes('<table'));
-    const hasTipOrExample = currentSlide.elements.some(e => e.includes('grammar-tip') || e.includes('grammar-example'));
-    if (hasTable && hasTipOrExample && i < children.length - 1) {
-      const nextTag = children[i + 1]?.tagName?.toLowerCase();
-      if (nextTag !== 'div' || children[i + 1]?.className === 'grammar-table-wrap') {
-        slides.push(currentSlide);
-        currentSlide = { type: 'content', elements: [], heading: currentSlide.heading };
+    if (isTable || isTip || isExample) {
+      slides.push({ type: 'content', heading: currentHeading, elements: [el.outerHTML] });
+    } else {
+      // Group consecutive p tags together (max 3)
+      const group = [el.outerHTML];
+      while (i + 1 < children.length) {
+        const next = children[i + 1];
+        const nextTag = next.tagName.toLowerCase();
+        if (nextTag === 'p' && group.length < 3) {
+          group.push(next.outerHTML);
+          i++;
+        } else {
+          break;
+        }
       }
+      slides.push({ type: 'content', heading: currentHeading, elements: group });
     }
-  }
-
-  if (currentSlide.elements.length > 0) {
-    slides.push(currentSlide);
   }
 
   return slides;
@@ -253,21 +253,30 @@ function showCardCarousel(slides, mode, topicTitle, level, meta) {
   const renderZone = overlay.querySelector('.ig-card-render-zone');
   const counter = overlay.querySelector('.ig-card-counter');
 
+  // Level-specific gradient backgrounds
+  const levelGradients = {
+    A1: { bg: 'linear-gradient(135deg, #065f46 0%, #059669 50%, #34d399 100%)', accent: '#6ee7b7' },
+    A2: { bg: 'linear-gradient(135deg, #3f6212 0%, #65a30d 50%, #a3e635 100%)', accent: '#d9f99d' },
+    B1: { bg: 'linear-gradient(135deg, #92400e 0%, #d97706 50%, #fbbf24 100%)', accent: '#fde68a' },
+    B2: { bg: 'linear-gradient(135deg, #9a3412 0%, #ea580c 50%, #fb923c 100%)', accent: '#fed7aa' },
+    C1: { bg: 'linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #f87171 100%)', accent: '#fecaca' },
+    C2: { bg: 'linear-gradient(135deg, #581c87 0%, #7c3aed 50%, #a78bfa 100%)', accent: '#ddd6fe' }
+  };
+
   function renderSlide(idx) {
     currentIndex = idx;
     counter.textContent = `${idx + 1} / ${slides.length}`;
     const slide = slides[idx];
     const levelColor = meta.color;
-    const gradientBg = isStory
-      ? `linear-gradient(180deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)`
-      : `linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)`;
+    const grad = levelGradients[level] || levelGradients.A1;
+    const gradientBg = grad.bg;
 
     const cardClass = isStory ? 'ig-card' : 'ig-card ig-card-post';
     if (slide.type === 'title') {
       renderZone.innerHTML = `
         <div class="${cardClass}" style="width:${cardW}px;height:${cardH}px;background:${gradientBg};">
           <div class="ig-card-header">
-            <div class="ig-card-badge" style="background:${levelColor}">${slide.level}</div>
+            <div class="ig-card-badge" style="background:rgba(255,255,255,0.25);backdrop-filter:blur(8px)">${slide.level}</div>
             <div class="ig-card-level-text">${slide.label}</div>
           </div>
           <div class="ig-card-title-area ${isStory ? 'ig-story' : 'ig-post'}">
@@ -275,7 +284,7 @@ function showCardCarousel(slides, mode, topicTitle, level, meta) {
             <h2 class="ig-card-title">${slide.title}</h2>
             <p class="ig-card-desc">${slide.desc}</p>
           </div>
-          <div class="ig-card-swipe">${slides.length > 1 ? (isStory ? '&uarr; Yukari kaydir' : '&larr; Kaydirarak devam et') : ''}</div>
+          <div class="ig-card-swipe">${slides.length > 1 ? (isStory ? '&#8593; Yukari kaydir' : '&#8592; Kaydirarak devam et &bull; ${slides.length} sayfa') : ''}</div>
           <div class="ig-card-watermark">
             <div class="ig-card-wm-name">${GRAMMAR_BRAND_NAME}</div>
             <div class="ig-card-wm-handle">${GRAMMAR_BRAND_HANDLE}</div>
@@ -286,7 +295,7 @@ function showCardCarousel(slides, mode, topicTitle, level, meta) {
       renderZone.innerHTML = `
         <div class="${cardClass}" style="width:${cardW}px;height:${cardH}px;background:${gradientBg};">
           <div class="ig-card-header">
-            <div class="ig-card-badge" style="background:${levelColor}">${level}</div>
+            <div class="ig-card-badge" style="background:rgba(255,255,255,0.25)">${level}</div>
             <div class="ig-card-header-title">${topicTitle}</div>
             <div class="ig-card-page-num">${idx + 1}/${slides.length}</div>
           </div>
