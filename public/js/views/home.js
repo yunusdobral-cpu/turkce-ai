@@ -85,6 +85,10 @@ function initCorrection() {
   const btn = document.getElementById('correctionCheck');
   if (!btn) return;
   const doCheck = async () => {
+    if (!Auth.isLoggedIn() && !sessionStorage.getItem('adminPassword')) {
+      Auth.showLoginModal();
+      return;
+    }
     const text = document.getElementById('correctionText').value.trim();
     const intended = document.getElementById('correctionIntended').value.trim();
     const resultEl = document.getElementById('correctionResult');
