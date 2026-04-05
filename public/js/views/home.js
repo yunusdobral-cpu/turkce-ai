@@ -210,7 +210,6 @@ async function renderHome(container) {
           <h2>${I18N.bi('Türkçe Düzeltme', 'correction_title')}</h2>
           <p>${I18N.bi('Türkçe yazımınızı kontrol edin, hatalarınızı öğrenin', 'correction_subtitle')}</p>
         </div>
-        ${(Auth.isLoggedIn() || sessionStorage.getItem('adminPassword')) ? `
         <div class="correction-form">
           <div class="correction-field">
             <label>${I18N.bi('Ne yazmak istiyorsunuz?', 'correction_intended')}</label>
@@ -225,15 +224,6 @@ async function renderHome(container) {
           </button>
         </div>
         <div id="correctionResult" class="correction-result" style="display:none"></div>
-        ` : `
-        <div class="correction-auth-prompt">
-          <p>${I18N.bi('Bu özelliği kullanmak için üye olmanız gerekiyor.', 'correction_auth_msg')}</p>
-          <div class="correction-auth-btns">
-            <button class="btn btn-primary" onclick="Auth.showRegisterModal()">${I18N.bi('Kayıt Ol', 'correction_register')}</button>
-            <button class="btn btn-outline" onclick="Auth.showLoginModal()">${I18N.bi('Giriş Yap', 'correction_login')}</button>
-          </div>
-        </div>
-        `}
       </div>
 
       <div class="level-test-section">
