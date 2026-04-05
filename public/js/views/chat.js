@@ -71,6 +71,20 @@ async function renderChat(container, characterId, topicId) {
       }
     });
 
+    // Mobile keyboard: keep input visible
+    if (window.visualViewport) {
+      const onResize = () => {
+        const inputArea = document.querySelector('.chat-input-area');
+        if (inputArea) {
+          const offset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+          inputArea.style.paddingBottom = Math.max(0, offset) + 'px';
+          textarea.scrollIntoView({ block: 'nearest' });
+        }
+      };
+      window.visualViewport.addEventListener('resize', onResize);
+      window.visualViewport.addEventListener('scroll', onResize);
+    }
+
     textarea.focus();
 
   } catch (err) {

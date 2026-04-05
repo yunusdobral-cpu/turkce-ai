@@ -53,7 +53,8 @@ router.post('/new', (req, res) => {
   const sessionId = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   sessions.set(sessionId, {
     characterId,
-    messages: []
+    messages: [],
+    lastActivity: Date.now()
   });
 
   res.json({ sessionId, greeting: character.greeting });
@@ -73,6 +74,7 @@ router.post('/', async (req, res) => {
     sessions.set(sessionId, session);
   }
 
+  session.lastActivity = Date.now();
   session.messages.push({ role: 'user', content: message });
 
   if (session.messages.length > MAX_MESSAGES) {
