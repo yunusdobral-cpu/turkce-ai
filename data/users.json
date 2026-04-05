@@ -1,0 +1,15 @@
+{
+  "users": [
+    {
+      "id": "99facea5-abfe-4ba1-871d-5cf11702e54f",
+      "email": "test@example.com",
+      "passwordHash": "$2b$10$pLeVTpg0GnzZyGrUyzWEeOKNWE1jvdRsGZjelftp5ZQnGnWqpZRf2",
+      "displayName": "Test User",
+      "verified": true,
+      "verificationCode": null,
+      "verificationExpires": null,
+      "createdAt": "2026-03-28T11:46:19.560Z",
+      "lastLoginAt": "2026-03-28T11:46:41.139Z"
+    }
+  ]
+}

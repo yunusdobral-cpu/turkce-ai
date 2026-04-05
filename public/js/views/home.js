@@ -81,6 +81,77 @@ function formatPostContent(text) {
     .replace(/\n/g, '<br>');
 }
 
+function initCorrection() {
+  const btn = document.getElementById('correctionCheck');
+  if (!btn) return;
+  const doCheck = async () => {
+    const text = document.getElementById('correctionText').value.trim();
+    const intended = document.getElementById('correctionIntended').value.trim();
+    const resultEl = document.getElementById('correctionResult');
+    if (!text) {
+      showToast(I18N.bi('Türkçe yazımınızı girin', 'correction_empty'), 'error');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = I18N.bi('Kontrol ediliyor...', 'correction_checking');
+    resultEl.style.display = 'none';
+    try {
+      const lang = (typeof I18N !== 'undefined') ? I18N._lang : 'en';
+      const sourceLang = lang === 'tr' ? 'en' : lang;
+      const result = await API.correctText(text, sourceLang, intended || null);
+      let html = '';
+      if (result.corrected) {
+        html += `<div class="correction-correct-box">
+          <div class="correction-label">${I18N.bi('Doğru Türkçe', 'correction_correct_ver')}</div>
+          <div class="correction-correct-text">${result.corrected}</div>
+        </div>`;
+      }
+      if (result.translation) {
+        html += `<div class="correction-translation">${result.translation}</div>`;
+      }
+      if (result.score !== undefined) {
+        const scoreClass = result.score >= 80 ? 'high' : result.score >= 50 ? 'mid' : 'low';
+        html += `<div class="correction-score ${scoreClass}">
+          <span class="correction-score-num">${result.score}</span>/100
+        </div>`;
+      }
+      if (result.praise) {
+        html += `<div class="correction-praise">${result.praise}</div>`;
+      }
+      if (result.mistakes && result.mistakes.length > 0) {
+        html += `<div class="correction-mistakes">
+          <div class="correction-label">${I18N.bi('Hatalar', 'correction_mistakes')}</div>
+          ${result.mistakes.map(m => `
+            <div class="correction-mistake-item">
+              <div class="correction-mistake-line">
+                <span class="correction-wrong">${m.wrong}</span>
+                <span class="correction-arrow">→</span>
+                <span class="correction-right">${m.correct}</span>
+              </div>
+              <div class="correction-explanation">${m.explanation}</div>
+            </div>
+          `).join('')}
+        </div>`;
+      } else if (result.score === 100) {
+        html += `<div class="correction-perfect">${I18N.bi('Mükemmel! Hiç hata yok!', 'correction_perfect')}</div>`;
+      }
+      resultEl.innerHTML = html;
+      resultEl.style.display = 'block';
+    } catch (err) {
+      showToast(I18N.bi('Düzeltme yapılamadı', 'correction_error'), 'error');
+    }
+    btn.disabled = false;
+    btn.textContent = I18N.bi('Kontrol Et', 'correction_check');
+  };
+  btn.addEventListener('click', doCheck);
+  document.getElementById('correctionText').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doCheck(); }
+  });
+  document.getElementById('correctionIntended').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doCheck(); }
+  });
+}
+
 // ===== CATEGORY LIST (main forum page) =====
 async function renderHome(container) {
   const dailyContent = getDailyContent();
@@ -102,6 +173,15 @@ async function renderHome(container) {
 
   container.innerHTML = `
     <div class="home-page">
+      <div class="mill-home-card" onclick="location.hash='#/millionaire'">
+        <div class="mill-home-icon">💎</div>
+        <div class="mill-home-info">
+          <div class="mill-home-title"><span class="mill-title-race">YARIŞ</span> <span class="mill-title-arrow">→</span> <span class="mill-title-prize">ÜCRETSİZ ÜYELİK KAZAN</span></div>
+          <div class="mill-home-desc">Seviye seç, 15 soruyu geç, skor tablosunda zirveye çık!</div>
+        </div>
+        <div class="mill-home-badge">Oyna →</div>
+      </div>
+
       <div class="gallery-header">
         <h1>TürkçeAI</h1>
         <p class="gallery-subtitle">${I18N.bi('Yapay Zeka ile Türkçe Öğren', 'home_subtitle')}</p>
@@ -119,6 +199,27 @@ async function renderHome(container) {
           <div id="tickerTrack" class="daily-ticker-track">${slidesHtml}</div>
         </div>
         <div class="daily-ticker-dots">${dotsHtml}</div>
+      </div>
+
+      <div class="correction-section">
+        <div class="correction-header">
+          <h2>${I18N.bi('Türkçe Düzeltme', 'correction_title')}</h2>
+          <p>${I18N.bi('Türkçe yazımınızı kontrol edin, hatalarınızı öğrenin', 'correction_subtitle')}</p>
+        </div>
+        <div class="correction-form">
+          <div class="correction-field">
+            <label>${I18N.bi('Ne yazmak istiyorsunuz?', 'correction_intended')}</label>
+            <textarea id="correctionIntended" rows="2" placeholder="${I18N.bi('Yazmak istediğinizi kendi dilinizde yazın...', 'correction_intended_ph')}"></textarea>
+          </div>
+          <div class="correction-field">
+            <label>${I18N.bi('Türkçe yazımınız', 'correction_your_try')}</label>
+            <textarea id="correctionText" rows="2" placeholder="${I18N.bi('Türkçe çevirinizi deneyin...', 'correction_your_try_ph')}"></textarea>
+          </div>
+          <button class="btn btn-primary correction-btn" id="correctionCheck">
+            ${I18N.bi('Kontrol Et', 'correction_check')}
+          </button>
+        </div>
+        <div id="correctionResult" class="correction-result" style="display:none"></div>
       </div>
 
       <div class="level-test-section">
@@ -178,6 +279,7 @@ async function renderHome(container) {
   `;
 
   initTicker();
+  initCorrection();
   await loadForumCategories();
 }
 

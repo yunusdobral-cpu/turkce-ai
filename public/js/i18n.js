@@ -66,6 +66,16 @@ const I18N = {
     level_advanced_words:{ en: 'Advanced words', es: 'Palabras avanzadas', ar: 'كلمات متقدمة', ru: 'Продвинутые слова', de: 'Fortgeschrittene Wörter', fr: 'Mots avancés' },
     level_coming_soon:  { en: 'Coming soon', es: 'Próximamente', ar: 'قريباً', ru: 'Скоро', de: 'Bald verfügbar', fr: 'Bientôt' },
 
+    // Text Correction
+    correction_title:       { en: 'Text Correction', es: 'Corrección de Texto', ar: 'تصحيح النص', ru: 'Коррекция текста', de: 'Textkorrektur', fr: 'Correction de texte' },
+    correction_intended:    { en: 'What do you want to say?', es: '¿Qué quieres decir?', ar: 'ماذا تريد أن تقول؟', ru: 'Что вы хотите сказать?', de: 'Was möchten Sie sagen?', fr: 'Que voulez-vous dire ?' },
+    correction_your_try:    { en: 'Write your Turkish attempt', es: 'Escribe tu intento en turco', ar: 'اكتب محاولتك بالتركية', ru: 'Напишите свою попытку на турецком', de: 'Schreiben Sie Ihren türkischen Versuch', fr: 'Écrivez votre essai en turc' },
+    correction_check:       { en: 'Check', es: 'Verificar', ar: 'تحقق', ru: 'Проверить', de: 'Prüfen', fr: 'Vérifier' },
+    correction_correct_ver: { en: 'Correct Version', es: 'Versión Correcta', ar: 'النسخة الصحيحة', ru: 'Правильная версия', de: 'Korrekte Version', fr: 'Version correcte' },
+    correction_mistakes:    { en: 'Mistakes', es: 'Errores', ar: 'الأخطاء', ru: 'Ошибки', de: 'Fehler', fr: 'Erreurs' },
+    correction_perfect:     { en: 'Perfect! No mistakes.', es: '¡Perfecto! Sin errores.', ar: 'ممتاز! لا أخطاء.', ru: 'Отлично! Без ошибок.', de: 'Perfekt! Keine Fehler.', fr: 'Parfait ! Aucune erreur.' },
+    correction_checking:    { en: 'Checking...', es: 'Verificando...', ar: 'جاري التحقق...', ru: 'Проверка...', de: 'Wird geprüft...', fr: 'Vérification...' },
+
     // Forum section
     forum_add_cat:  { en: '+ Add Category', es: '+ Añadir categoría', ar: '+ إضافة فئة', ru: '+ Добавить категорию', de: '+ Kategorie hinzufügen', fr: '+ Ajouter une catégorie' },
     forum_topic:    { en: 'Topic', es: 'Tema', ar: 'موضوع', ru: 'Тема', de: 'Thema', fr: 'Sujet' },

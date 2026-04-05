@@ -214,6 +214,16 @@ const API = {
     return res.json();
   },
 
+  async correctText(text, sourceLang, intended) {
+    const res = await fetch('/api/correction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, sourceLang, intended })
+    });
+    if (!res.ok) throw new Error('Correction failed');
+    return res.json();
+  },
+
   sendMessage(sessionId, characterId, message, topicId, onChunk, onDone, onError) {
     fetch('/api/chat', {
       method: 'POST',

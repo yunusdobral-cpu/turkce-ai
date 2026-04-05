@@ -1,0 +1,699 @@
+/* ===== Milyoner Yarışması ===== */
+
+.mill-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Menu */
+.mill-menu-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.mill-logo {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
+  animation: mill-pulse 2s infinite;
+}
+
+@keyframes mill-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.mill-menu-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Yarış → Ücretsiz Üyelik Kazan title styling */
+.mill-title-race {
+  background: linear-gradient(135deg, #1877f2, #0ea5e9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.mill-title-arrow {
+  color: #c9a227;
+  font-size: 1.2em;
+  -webkit-text-fill-color: #c9a227;
+}
+
+.mill-title-prize {
+  background: linear-gradient(135deg, #c9a227, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+}
+
+.mill-home-card .mill-title-race {
+  font-size: 1.1rem;
+}
+
+.mill-home-card .mill-title-arrow {
+  font-size: 1.1rem;
+}
+
+.mill-home-card .mill-title-prize {
+  font-size: 1.1rem;
+}
+
+.mill-menu-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.mill-level-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.mill-level-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mill-level-card:hover {
+  border-color: var(--level-color);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+}
+
+.mill-level-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.mill-level-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.mill-level-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Leaderboard */
+.mill-leaderboard {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+
+.mill-leaderboard h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.mill-board-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.mill-board-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+}
+
+.mill-board-top {
+  background: linear-gradient(135deg, #fefce8, #fef9c3);
+  border: 1px solid #fde047;
+}
+
+.mill-board-rank {
+  font-weight: 700;
+  min-width: 28px;
+  text-align: center;
+}
+
+.mill-board-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.mill-board-level {
+  background: var(--primary);
+  color: white;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.mill-board-prize {
+  font-weight: 700;
+  color: var(--success);
+  min-width: 90px;
+  text-align: right;
+}
+
+.mill-clear-btn {
+  display: block;
+  margin: 1rem auto 0;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.mill-clear-btn:hover {
+  color: var(--danger);
+}
+
+/* Game Layout */
+.mill-game {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.mill-game-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Top Bar */
+.mill-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.mill-level-tag {
+  background: var(--primary);
+  color: white;
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.mill-question-num {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.mill-quit-btn {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mill-quit-btn:hover {
+  box-shadow: 0 2px 8px rgba(220,38,38,0.3);
+}
+
+/* Jokers */
+.mill-jokers {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.mill-joker {
+  flex: 1;
+  padding: 0.6rem;
+  background: linear-gradient(135deg, #1e3a5f, #2563eb);
+  color: white;
+  border: 2px solid #3b82f6;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.mill-joker:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+
+.mill-joker-used {
+  background: var(--border) !important;
+  border-color: var(--border) !important;
+  color: var(--text-light) !important;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Question */
+.mill-question-card {
+  background: linear-gradient(135deg, #1e3a5f, #0f172a);
+  border: 2px solid #c9a227;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.mill-question-text {
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Options */
+.mill-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.mill-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(135deg, #1e293b, #334155);
+  border: 2px solid #475569;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.mill-option:hover:not(:disabled) {
+  border-color: #c9a227;
+  background: linear-gradient(135deg, #1e3a5f, #1e40af);
+}
+
+.mill-option-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.mill-option-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+.mill-option-selected {
+  border-color: #f59e0b !important;
+  background: linear-gradient(135deg, #92400e, #b45309) !important;
+  animation: mill-blink 0.5s ease 3;
+}
+
+@keyframes mill-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.mill-option-correct {
+  border-color: #22c55e !important;
+  background: linear-gradient(135deg, #14532d, #16a34a) !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+.mill-option-wrong {
+  border-color: #ef4444 !important;
+  background: linear-gradient(135deg, #7f1d1d, #dc2626) !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+.mill-option-eliminated {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* Prize Ladder */
+.mill-prize-ladder {
+  width: 200px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.mill-prize-title {
+  color: #c9a227;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #334155;
+}
+
+.mill-prize-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  transition: var(--transition);
+}
+
+.mill-prize-num {
+  width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.mill-prize-amount {
+  font-weight: 600;
+}
+
+.mill-prize-current {
+  background: linear-gradient(135deg, #c9a227, #f59e0b);
+  color: #0f172a !important;
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+.mill-prize-passed {
+  color: #22c55e;
+}
+
+.mill-prize-safe {
+  color: #c9a227;
+  font-weight: 700;
+}
+
+.mill-prize-safe .mill-prize-amount {
+  color: #c9a227;
+}
+
+/* Audience Panel */
+.mill-audience-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mill-audience-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.mill-audience-card {
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  min-width: 300px;
+  text-align: center;
+}
+
+.mill-audience-card h3 {
+  margin-bottom: 1rem;
+}
+
+.mill-audience-bars {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  height: 150px;
+  align-items: flex-end;
+}
+
+.mill-audience-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  width: 50px;
+}
+
+.mill-audience-pct {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.mill-audience-bar-track {
+  width: 36px;
+  height: 100px;
+  background: var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.mill-audience-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, #3b82f6, #1e40af);
+  border-radius: 4px;
+  transition: height 0.5s ease;
+}
+
+.mill-audience-letter {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* Result */
+.mill-result {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.mill-result-emoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.mill-result-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #c9a227, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mill-result-details {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.mill-result-stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.mill-result-stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.mill-result-stat-value {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.mill-result-prize {
+  color: var(--success) !important;
+}
+
+.mill-save-score {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.mill-name-input {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  width: 200px;
+  transition: var(--transition);
+}
+
+.mill-name-input:focus {
+  border-color: var(--primary);
+}
+
+.mill-result-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* Homepage Millionaire Card */
+.mill-home-card {
+  background: linear-gradient(135deg, #0f172a, #1e3a5f);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 2px solid #c9a227;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.mill-home-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(201,162,39,0.2);
+}
+
+.mill-home-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.mill-home-info {
+  flex: 1;
+}
+
+.mill-home-title {
+  color: #c9a227;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.mill-home-desc {
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.mill-home-badge {
+  background: #c9a227;
+  color: #0f172a;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mill-level-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mill-game {
+    flex-direction: column-reverse;
+  }
+
+  .mill-prize-ladder {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+  }
+
+  .mill-prize-title {
+    width: 100%;
+    margin-bottom: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .mill-prize-item {
+    flex: 1;
+    min-width: 80px;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.3rem;
+  }
+
+  .mill-options {
+    grid-template-columns: 1fr;
+  }
+
+  .mill-result-details {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mill-save-score {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .mill-level-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mill-home-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .mill-jokers {
+    flex-direction: column;
+  }
+}

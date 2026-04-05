@@ -1,7 +1,7 @@
 // SPA Router
 function requireAuth(hash) {
   // Anasayfa ve admin hariç tüm sayfalar üyelik gerektirir
-  if (hash === '#/' || hash === '' || !hash || hash === '#/admin') return true;
+  if (hash === '#/' || hash === '' || !hash || hash === '#/admin' || hash === '#/privacy' || hash === '#/terms' || hash === '#/contact') return true;
   // Admin girişi yapılmışsa serbest gezinebilir
   if (sessionStorage.getItem('adminPassword')) return true;
   if (!Auth.isLoggedIn()) {
@@ -42,6 +42,15 @@ function navigateTo(hash) {
     if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'vocab') l.classList.add('active'); });
     renderVocab(app);
+  } else if (hash === '#/privacy') {
+    renderPrivacy(app);
+  } else if (hash === '#/terms') {
+    renderTerms(app);
+  } else if (hash === '#/contact') {
+    renderContact(app);
+  } else if (hash === '#/millionaire') {
+    if (!requireAuth(hash)) return;
+    renderMillionaireMenu(app);
   } else if (hash.startsWith('#/quiz')) {
     if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'quiz') l.classList.add('active'); });

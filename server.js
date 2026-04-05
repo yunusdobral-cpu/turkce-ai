@@ -6,6 +6,7 @@ const charactersRouter = require('./routes/characters');
 const chatRouter = require('./routes/chat');
 const forumRouter = require('./routes/forum');
 const authRouter = require('./routes/auth');
+const correctionRouter = require('./routes/correction');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use('/api/characters', charactersRouter);
 app.use('/api/chat', chatRouter);
 app.use('/api/forum', forumRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/correction', correctionRouter);
 
 // SPA fallback
 app.get('*', (req, res) => {

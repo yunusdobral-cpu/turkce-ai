@@ -1,0 +1,159 @@
+{
+  "categories": [
+    {
+      "id": "genel",
+      "name": "Genel Tartışma",
+      "description": "Türkçe öğrenme ile ilgili her türlü konu",
+      "icon": "💬",
+      "order": 0,
+      "createdAt": "2026-03-14T00:00:00.000Z"
+    },
+    {
+      "id": "dilbilgisi",
+      "name": "Dilbilgisi / Grammar",
+      "description": "Dilbilgisi soruları ve kurallar",
+      "icon": "📐",
+      "order": 1,
+      "createdAt": "2026-03-14T00:00:00.000Z"
+    },
+    {
+      "id": "kelime",
+      "name": "Kelime & Deyimler",
+      "description": "Kelime soruları, deyimler, atasözleri",
+      "icon": "📝",
+      "order": 2,
+      "createdAt": "2026-03-14T00:00:00.000Z"
+    },
+    {
+      "id": "kultur",
+      "name": "Kültür & Yaşam",
+      "description": "Türk kültürü, gelenekler, günlük yaşam",
+      "icon": "🌍",
+      "order": 3,
+      "createdAt": "2026-03-14T00:00:00.000Z"
+    },
+    {
+      "id": "kaynaklar",
+      "name": "Kaynaklar & Öneriler",
+      "description": "Kitap, film, dizi, uygulama önerileri",
+      "icon": "📚",
+      "order": 4,
+      "createdAt": "2026-03-14T00:00:00.000Z"
+    },
+    {
+      "id": "0e3519c6-5fe3-46c0-9dfd-79c0dae5bb77",
+      "name": "Türkçe Pratiği",
+      "description": "Türkçe pratiği yapmak isteyenlerin buluşma noktası",
+      "icon": "📁",
+      "order": 5,
+      "createdAt": "2026-03-16T22:47:08.856Z"
+    }
+  ],
+  "threads": [
+    {
+      "id": "t1",
+      "categoryId": "genel",
+      "author": "Dilara Hoca",
+      "title": "Hoş geldiniz! Forum kuralları / Welcome! Forum rules",
+      "pinned": true,
+      "createdAt": "2026-03-14T10:00:00.000Z",
+      "updatedAt": "2026-03-14T10:00:00.000Z"
+    },
+    {
+      "id": "t2",
+      "categoryId": "dilbilgisi",
+      "author": "Emre Hoca",
+      "title": "-miş ile -di farkı nedir? / What is the difference between -miş and -di?",
+      "pinned": false,
+      "createdAt": "2026-03-15T08:30:00.000Z",
+      "updatedAt": "2026-03-16T14:20:00.000Z"
+    },
+    {
+      "id": "t3",
+      "categoryId": "kelime",
+      "author": "Zeynep Hoca",
+      "title": "Günlük en çok kullanılan 50 fiil / 50 most used daily verbs",
+      "pinned": false,
+      "createdAt": "2026-03-15T11:00:00.000Z",
+      "updatedAt": "2026-03-16T09:45:00.000Z"
+    },
+    {
+      "id": "t4",
+      "categoryId": "kultur",
+      "author": "Ahmet Hoca",
+      "title": "Türk çay kültürü - Neden her yerde çay var? / Turkish tea culture",
+      "pinned": false,
+      "createdAt": "2026-03-16T07:00:00.000Z",
+      "updatedAt": "2026-03-16T18:00:00.000Z"
+    },
+    {
+      "id": "t5",
+      "categoryId": "kaynaklar",
+      "author": "Dilara Hoca",
+      "title": "A1 seviyesi için en iyi Türkçe diziler / Best Turkish series for A1",
+      "pinned": false,
+      "createdAt": "2026-03-16T13:00:00.000Z",
+      "updatedAt": "2026-03-17T08:00:00.000Z"
+    },
+    {
+      "id": "t6",
+      "categoryId": "dilbilgisi",
+      "author": "Öğrenci",
+      "title": "Ünlü uyumu beni çok zorluyor / Vowel harmony is so hard for me",
+      "pinned": false,
+      "createdAt": "2026-03-16T16:00:00.000Z",
+      "updatedAt": "2026-03-17T10:30:00.000Z"
+    }
+  ],
+  "posts": [
+    {
+      "id": "p1",
+      "threadId": "t1",
+      "author": "Dilara Hoca",
+      "content": "Herkese merhaba! Bu forum Türkçe öğrenen herkes için açık bir platformdur.\n\nKurallar:\n1. Saygılı olun\n2. Sorularınızı açık ve net sorun\n3. Hem Türkçe hem İngilizce yazabilirsiniz\n4. Diğer öğrencilere yardım etmekten çekinmeyin\n\nWelcome everyone! This forum is an open platform for everyone learning Turkish.\n\nRules:\n1. Be respectful\n2. Ask clear questions\n3. You can write in both Turkish and English\n4. Don't hesitate to help other students",
+      "createdAt": "2026-03-14T10:00:00.000Z"
+    },
+    {
+      "id": "p2",
+      "threadId": "t2",
+      "author": "Emre Hoca",
+      "content": "Türkçede geçmiş zaman iki şekilde ifade edilir:\n\n**-di geçmiş zaman:** Kendiniz gördüğünüz, yaşadığınız olaylar için.\n→ \"Dün yağmur yağdı.\" (I saw it rain yesterday)\n\n**-miş geçmiş zaman:** Duyduğunuz veya sonradan fark ettiğiniz olaylar için.\n→ \"Dün yağmur yağmış.\" (I heard/realized it rained yesterday)\n\nBu fark Türkçeyi çok özel kılıyor! Sorularınızı bekliyorum.",
+      "createdAt": "2026-03-15T08:30:00.000Z"
+    },
+    {
+      "id": "p3",
+      "threadId": "t2",
+      "author": "Öğrenci",
+      "content": "Çok teşekkürler Emre Hoca! Peki \"Güzel olmuş\" derken hangi anlamda kullanıyoruz?",
+      "createdAt": "2026-03-16T14:20:00.000Z"
+    },
+    {
+      "id": "p4",
+      "threadId": "t3",
+      "author": "Zeynep Hoca",
+      "content": "İşte A1 seviyesi için en temel 10 fiil:\n\n1. **gelmek** - to come\n2. **gitmek** - to go\n3. **yapmak** - to do/make\n4. **yemek** - to eat\n5. **içmek** - to drink\n6. **konuşmak** - to speak\n7. **okumak** - to read\n8. **yazmak** - to write\n9. **sevmek** - to love\n10. **bilmek** - to know\n\nDevamı yarın gelecek!",
+      "createdAt": "2026-03-15T11:00:00.000Z"
+    },
+    {
+      "id": "p5",
+      "threadId": "t4",
+      "author": "Ahmet Hoca",
+      "content": "Türkiye'de çay sadece bir içecek değil, bir yaşam biçimidir!\n\n🫖 Türkiye, dünyada kişi başına en çok çay tüketen ülkedir.\n🫖 Çay, misafirperverliğin simgesidir. Size çay ikram edilirse reddetmek ayıptır!\n🫖 İnce belli bardaklar kullanılır.\n🫖 Çayı demlemek bir sanattır - demlik ve çaydanlık sistemi kullanılır.\n\nTürkiye'ye geldiğinizde her yerde çay göreceksiniz. Ofislerde, bakkalda, berberde... Her yerde!",
+      "createdAt": "2026-03-16T07:00:00.000Z"
+    },
+    {
+      "id": "p6",
+      "threadId": "t6",
+      "author": "Öğrenci",
+      "content": "Ünlü uyumunu bir türlü anlayamıyorum. \"evler\" diyoruz ama \"odalar\" diyoruz. Neden farklı ek geliyor?",
+      "createdAt": "2026-03-16T16:00:00.000Z"
+    },
+    {
+      "id": "p7",
+      "threadId": "t6",
+      "author": "Dilara Hoca",
+      "content": "Çok güzel soru! Bu tam olarak ünlü uyumunun özü:\n\n**Kalın ünlüler:** a, ı, o, u → sonraki ek de kalın olur\n**İnce ünlüler:** e, i, ö, ü → sonraki ek de ince olur\n\n\"oda\" → son ünlü **a** (kalın) → **oda-lar** ✅\n\"ev\" → son ünlü **e** (ince) → **ev-ler** ✅\n\nSon ünlüye bakman yeterli! Practice yapmaya devam et, zamanla otomatik gelecek.",
+      "createdAt": "2026-03-17T10:30:00.000Z"
+    }
+  ]
+}
