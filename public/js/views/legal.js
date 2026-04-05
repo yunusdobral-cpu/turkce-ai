@@ -1,7 +1,7 @@
 // Gizlilik Politikası, Kullanım Şartları, İletişim Sayfaları
 
 function getSiteName() {
-  return 'TurkceAI';
+  return 'Lingual.work';
 }
 
 function getSiteUrl() {
@@ -266,21 +266,21 @@ function renderContact(container) {
             <div class="contact-card-icon">📧</div>
             <h3>E-posta</h3>
             <p>Genel sorular ve destek icin:</p>
-            <a href="mailto:info@turkceai.com" class="contact-link">info@turkceai.com</a>
+            <a href="mailto:info@lingual.work" class="contact-link">info@lingual.work</a>
           </div>
 
           <div class="contact-card">
             <div class="contact-card-icon">🐛</div>
             <h3>Hata Bildirimi</h3>
             <p>Bir hata veya sorun buldunuz mu?</p>
-            <a href="mailto:support@turkceai.com" class="contact-link">support@turkceai.com</a>
+            <a href="mailto:support@lingual.work" class="contact-link">support@lingual.work</a>
           </div>
 
           <div class="contact-card">
             <div class="contact-card-icon">💡</div>
             <h3>Oneri ve Geri Bildirim</h3>
             <p>Fikirlerinizi duymak isteriz!</p>
-            <a href="mailto:feedback@turkceai.com" class="contact-link">feedback@turkceai.com</a>
+            <a href="mailto:feedback@lingual.work" class="contact-link">feedback@lingual.work</a>
           </div>
         </div>
 

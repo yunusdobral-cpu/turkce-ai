@@ -143,8 +143,8 @@ function renderGrammar(container) {
 }
 
 // ========== Instagram Card Generator ==========
-const GRAMMAR_BRAND_NAME = 'TurkceAI';
-const GRAMMAR_BRAND_HANDLE = '@turkceai';
+const GRAMMAR_BRAND_NAME = 'Lingual.work';
+const GRAMMAR_BRAND_HANDLE = '@lingualwork';
 
 function generateGrammarCards(level, topicIndex, mode) {
   const topic = GRAMMAR_LEVELS[level][topicIndex];

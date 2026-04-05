@@ -183,7 +183,7 @@ async function renderHome(container) {
       </div>
 
       <div class="gallery-header">
-        <h1>TürkçeAI</h1>
+        <h1>Lingual.work</h1>
         <p class="gallery-subtitle">${I18N.bi('Yapay Zeka ile Türkçe Öğren', 'home_subtitle')}</p>
       </div>
 
