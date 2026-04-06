@@ -471,41 +471,41 @@
 .ig-card-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 48px 60px 28px;
+  gap: 20px;
+  padding: 52px 64px 32px;
 }
 
 .ig-card-badge {
   display: inline-block;
-  padding: 12px 28px;
-  border-radius: 16px;
-  font-size: 36px;
+  padding: 16px 36px;
+  border-radius: 20px;
+  font-size: 54px;
   font-weight: 900;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  letter-spacing: 2px;
+  text-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  letter-spacing: 3px;
 }
 
 .ig-card-level-text {
-  font-size: 30px;
+  font-size: 45px;
   font-weight: 600;
   color: rgba(255,255,255,0.8);
 }
 
 .ig-card-header-title {
-  font-size: 30px;
+  font-size: 45px;
   font-weight: 700;
   color: rgba(255,255,255,0.95);
   flex: 1;
 }
 
 .ig-card-page-num {
-  font-size: 26px;
+  font-size: 39px;
   color: rgba(255,255,255,0.5);
   font-weight: 700;
   background: rgba(255,255,255,0.15);
-  padding: 6px 16px;
-  border-radius: 20px;
+  padding: 8px 22px;
+  border-radius: 24px;
 }
 
 /* Title card */
@@ -515,44 +515,44 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px;
+  padding: 64px;
   text-align: center;
 }
 
 .ig-card-emoji {
-  font-size: 120px;
-  margin-bottom: 48px;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+  font-size: 180px;
+  margin-bottom: 56px;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
 }
 
-.ig-card-title-area.ig-post .ig-card-emoji { font-size: 80px; margin-bottom: 24px; }
+.ig-card-title-area.ig-post .ig-card-emoji { font-size: 120px; margin-bottom: 32px; }
 
 .ig-card-title {
-  font-size: 68px;
+  font-size: 102px;
   font-weight: 900;
   line-height: 1.15;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
   color: #fff;
-  text-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  text-shadow: 0 4px 16px rgba(0,0,0,0.25);
 }
 
-.ig-card-title-area.ig-post .ig-card-title { font-size: 52px; margin-bottom: 16px; }
+.ig-card-title-area.ig-post .ig-card-title { font-size: 78px; margin-bottom: 20px; }
 
 .ig-card-desc {
-  font-size: 34px;
+  font-size: 51px;
   color: rgba(255,255,255,0.75);
-  line-height: 1.5;
-  max-width: 850px;
+  line-height: 1.45;
+  max-width: 900px;
 }
 
-.ig-card-title-area.ig-post .ig-card-desc { font-size: 26px; }
+.ig-card-title-area.ig-post .ig-card-desc { font-size: 39px; }
 
 .ig-card-swipe {
   text-align: center;
-  padding: 28px;
-  font-size: 22px;
+  padding: 32px;
+  font-size: 33px;
   color: rgba(255,255,255,0.45);
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   font-weight: 600;
 }
@@ -560,90 +560,91 @@
 /* Content card */
 .ig-card-body {
   flex: 1;
-  padding: 28px 60px 20px;
+  padding: 32px 64px 24px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.ig-card-body.ig-post { padding: 20px 48px 12px; }
+.ig-card-body.ig-post { padding: 28px 56px 16px; }
 
 .ig-card.ig-card-post .ig-card-header {
-  padding: 36px 48px 20px;
+  padding: 44px 56px 24px;
 }
 
 .ig-card.ig-card-post .ig-card-watermark {
-  padding: 16px 48px 28px;
+  padding: 20px 56px 32px;
 }
 
 .ig-card.ig-card-post .ig-card-watermark::before {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .ig-card.ig-card-post .ig-card-wm-name {
-  font-size: 24px;
+  font-size: 36px;
 }
 
 .ig-card.ig-card-post .ig-card-wm-handle {
-  font-size: 16px;
+  font-size: 24px;
 }
 
 .ig-card.ig-card-post .ig-card-swipe {
-  padding: 16px;
-  font-size: 18px;
+  padding: 20px;
+  font-size: 27px;
 }
 
 .ig-card-content-heading {
-  font-size: 40px;
+  font-size: 60px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 4px solid rgba(255,255,255,0.25);
+  margin-bottom: 36px;
+  padding-bottom: 20px;
+  border-bottom: 5px solid rgba(255,255,255,0.25);
 }
 
-.ig-card-body.ig-post .ig-card-content-heading { font-size: 32px; margin-bottom: 18px; }
+.ig-card-body.ig-post .ig-card-content-heading { font-size: 48px; margin-bottom: 24px; }
 
 .ig-card-content {
   overflow: hidden;
 }
 
 /* Override grammar styles inside ig-card */
-.ig-card .grammar-table-wrap { width: 100%; overflow-x: hidden; margin: 16px 0; }
+.ig-card .grammar-table-wrap { width: 100%; overflow-x: hidden; margin: 20px 0; }
 
 .ig-card .grammar-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 28px;
-  border-radius: 20px;
+  font-size: 42px;
+  border-radius: 24px;
   overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.2);
+  border: 3px solid rgba(255,255,255,0.2);
 }
 
-.ig-card .ig-post .grammar-table { font-size: 22px; }
+.ig-card .ig-post .grammar-table { font-size: 33px; }
 
 .ig-card .grammar-table th {
   background: rgba(255,255,255,0.2);
   color: #fff;
   font-weight: 800;
-  padding: 20px 28px;
+  padding: 28px 36px;
   text-align: left;
-  font-size: 26px;
+  font-size: 39px;
   white-space: nowrap;
-  border-bottom: 2px solid rgba(255,255,255,0.15);
+  border-bottom: 3px solid rgba(255,255,255,0.15);
 }
 
-.ig-card .ig-post .grammar-table th { padding: 16px 22px; font-size: 20px; }
+.ig-card .ig-post .grammar-table th { padding: 22px 30px; font-size: 30px; }
 
 .ig-card .grammar-table td {
-  padding: 18px 28px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 24px 36px;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.95);
   background: transparent;
+  font-size: 38px;
 }
 
-.ig-card .ig-post .grammar-table td { padding: 14px 22px; }
+.ig-card .ig-post .grammar-table td { padding: 20px 30px; font-size: 30px; }
 
 .ig-card .grammar-table tr:nth-child(even) td { background: rgba(255,255,255,0.06); }
 .ig-card .grammar-table tr:nth-child(odd) td { background: transparent; }
@@ -655,48 +656,48 @@
 
 .ig-card .grammar-example {
   background: rgba(255,255,255,0.12);
-  border-left: 6px solid rgba(255,255,255,0.6);
-  border-radius: 0 16px 16px 0;
-  padding: 28px 32px;
-  margin: 20px 0;
-  font-size: 28px;
-  line-height: 1.8;
+  border-left: 8px solid rgba(255,255,255,0.6);
+  border-radius: 0 20px 20px 0;
+  padding: 36px 44px;
+  margin: 24px 0;
+  font-size: 42px;
+  line-height: 1.75;
   color: rgba(255,255,255,0.95);
   width: 100%;
 }
 
-.ig-card .ig-post .grammar-example { font-size: 22px; padding: 20px 24px; }
+.ig-card .ig-post .grammar-example { font-size: 33px; padding: 28px 32px; }
 
 .ig-card .grammar-example strong { color: #fff; font-weight: 800; }
 
 .ig-card .grammar-tip {
   background: rgba(255,255,255,0.1);
-  border-left: 6px solid rgba(255,255,255,0.5);
-  border-radius: 0 16px 16px 0;
-  padding: 24px 32px;
-  margin: 20px 0;
-  font-size: 26px;
+  border-left: 8px solid rgba(255,255,255,0.5);
+  border-radius: 0 20px 20px 0;
+  padding: 32px 44px;
+  margin: 24px 0;
+  font-size: 39px;
   color: rgba(255,255,255,0.9);
   font-weight: 600;
   width: 100%;
 }
 
-.ig-card .ig-post .grammar-tip { font-size: 20px; padding: 18px 24px; }
+.ig-card .ig-post .grammar-tip { font-size: 30px; padding: 24px 32px; }
 
 .ig-card p {
-  font-size: 30px;
-  line-height: 1.65;
+  font-size: 45px;
+  line-height: 1.6;
   color: rgba(255,255,255,0.85);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-.ig-card .ig-post p { font-size: 24px; }
+.ig-card .ig-post p { font-size: 36px; }
 
 .ig-card strong { color: #fff; font-weight: 800; }
 
 /* ===== Watermark / Branding ===== */
 .ig-card-watermark {
-  padding: 28px 60px 40px;
+  padding: 24px 64px 36px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -708,23 +709,23 @@
 .ig-card-watermark::before {
   content: '';
   display: block;
-  width: 80px;
-  height: 3px;
+  width: 100px;
+  height: 4px;
   background: rgba(255,255,255,0.2);
   border-radius: 2px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .ig-card-wm-name {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 900;
   color: rgba(255,255,255,0.6);
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   text-transform: uppercase;
 }
 
 .ig-card-wm-handle {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
   color: rgba(255,255,255,0.4);
   letter-spacing: 1px;
