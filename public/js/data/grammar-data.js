@@ -439,20 +439,23 @@ const GRAMMAR_LEVELS = {
     ` },
     { title: 'Soru Eki', desc: 'mı / mi / mu / mü ile soru yapma', content: `
       <h3>Soru Eki / Question Particle</h3>
-      <p>Türkçede evet/hayır soruları <strong>mı</strong> eki ile yapılır (ayrı yazılır).</p>
+      <p>Türkçede evet/hayır soruları <strong>mı / mi / mu / mü</strong> eki ile yapılır. Bu ek her zaman <strong>ayrı yazılır</strong>.</p>
+      <div class="grammar-tip">💡 Kural: Kelimenin <strong>son ünlüsüne</strong> bak → ona uygun soru ekini seç.<br>
+      a, ı → <strong>mı</strong> &nbsp;|&nbsp; e, i → <strong>mi</strong> &nbsp;|&nbsp; o, u → <strong>mu</strong> &nbsp;|&nbsp; ö, ü → <strong>mü</strong></div>
       <div class="grammar-table-wrap">
         <table class="grammar-table">
           <tr><th>Son ünlü</th><th>Soru eki</th><th>Örnek</th></tr>
-          <tr><td>a, ı</td><td>mı</td><td>Güzel <strong>mi</strong>? → Hazır <strong>mı</strong>?</td></tr>
-          <tr><td>e, i</td><td>mi</td><td>Geldin <strong>mi</strong>?</td></tr>
-          <tr><td>o, u</td><td>mu</td><td>Yorgun <strong>mu</strong>?</td></tr>
-          <tr><td>ö, ü</td><td>mü</td><td>Güzel <strong>mü</strong>?</td></tr>
+          <tr><td>a, ı</td><td><strong>mı</strong></td><td>Haz<em>ı</em>r <strong>mı</strong>? / Çal<em>ı</em>şkan <strong>mı</strong>?</td></tr>
+          <tr><td>e, i</td><td><strong>mi</strong></td><td>Güz<em>e</em>l <strong>mi</strong>? / Geld<em>i</em>n <strong>mi</strong>?</td></tr>
+          <tr><td>o, u</td><td><strong>mu</strong></td><td>Yorg<em>u</em>n <strong>mu</strong>? / Dokt<em>o</em>r <strong>mu</strong>?</td></tr>
+          <tr><td>ö, ü</td><td><strong>mü</strong></td><td>Üzg<em>ü</em>n <strong>mü</strong>? / T<em>ü</em>rk <strong>mü</strong>?</td></tr>
         </table>
       </div>
       <div class="grammar-example">
-        Türk <strong>müsünüz</strong>? (Are you Turkish?)<br>
-        Kahve ister <strong>misiniz</strong>? (Would you like coffee?)<br>
-        Bu senin <strong>mi</strong>? (Is this yours?)
+        T<em>ü</em>rk <strong>müsünüz</strong>? (Are you Turkish?)<br>
+        Kahve <em>i</em>ster <strong>misiniz</strong>? (Would you like coffee?)<br>
+        Bu sen<em>i</em>n <strong>mi</strong>? (Is this yours?)<br>
+        S<em>ı</em>cak <strong>mı</strong>? (Is it hot?)
       </div>
     ` },
     { title: 'Olmak & Değil', desc: 'İsim cümlelerinde olumlu ve olumsuz', content: `
