@@ -445,10 +445,14 @@ const GRAMMAR_LEVELS = {
       <div class="grammar-table-wrap">
         <table class="grammar-table">
           <tr><th>Son ünlü</th><th>Soru eki</th><th>Örnek</th></tr>
-          <tr><td>a, ı</td><td><strong>mı</strong></td><td>Haz<em>ı</em>r <strong>mı</strong>? / Çal<em>ı</em>şkan <strong>mı</strong>?</td></tr>
-          <tr><td>e, i</td><td><strong>mi</strong></td><td>Güz<em>e</em>l <strong>mi</strong>? / Geld<em>i</em>n <strong>mi</strong>?</td></tr>
-          <tr><td>o, u</td><td><strong>mu</strong></td><td>Yorg<em>u</em>n <strong>mu</strong>? / Dokt<em>o</em>r <strong>mu</strong>?</td></tr>
-          <tr><td>ö, ü</td><td><strong>mü</strong></td><td>Üzg<em>ü</em>n <strong>mü</strong>? / T<em>ü</em>rk <strong>mü</strong>?</td></tr>
+          <tr><td><strong>a</strong></td><td><strong>mı</strong></td><td>S<em>a</em>kin <strong>mı</strong>? (Is he/she calm?)</td></tr>
+          <tr><td><strong>ı</strong></td><td><strong>mı</strong></td><td>Haz<em>ı</em>r <strong>mı</strong>? (Is it ready?)</td></tr>
+          <tr><td><strong>e</strong></td><td><strong>mi</strong></td><td>Güz<em>e</em>l <strong>mi</strong>? (Is it beautiful?)</td></tr>
+          <tr><td><strong>i</strong></td><td><strong>mi</strong></td><td>Geld<em>i</em>n <strong>mi</strong>? (Did you come?)</td></tr>
+          <tr><td><strong>o</strong></td><td><strong>mu</strong></td><td>Dokt<em>o</em>r <strong>mu</strong>? (Is he/she a doctor?)</td></tr>
+          <tr><td><strong>u</strong></td><td><strong>mu</strong></td><td>Yorg<em>u</em>n <strong>mu</strong>? (Is he/she tired?)</td></tr>
+          <tr><td><strong>ö</strong></td><td><strong>mü</strong></td><td>G<em>ö</em>ç <strong>mü</strong>? (Is it migration?)</td></tr>
+          <tr><td><strong>ü</strong></td><td><strong>mü</strong></td><td>Üzg<em>ü</em>n <strong>mü</strong>? (Is he/she sad?)</td></tr>
         </table>
       </div>
       <div class="grammar-example">
