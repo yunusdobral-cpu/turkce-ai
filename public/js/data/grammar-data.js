@@ -445,7 +445,7 @@ const GRAMMAR_LEVELS = {
       <div class="grammar-table-wrap">
         <table class="grammar-table">
           <tr><th>Son ünlü</th><th>Soru eki</th><th>Örnek</th></tr>
-          <tr><td><strong>a</strong></td><td><strong>mı</strong></td><td>S<em>a</em>kin <strong>mı</strong>? (Is he/she calm?)</td></tr>
+          <tr><td><strong>a</strong></td><td><strong>mı</strong></td><td>Kas<em>a</em>p <strong>mı</strong>? (Is he a butcher?)</td></tr>
           <tr><td><strong>ı</strong></td><td><strong>mı</strong></td><td>Haz<em>ı</em>r <strong>mı</strong>? (Is it ready?)</td></tr>
           <tr><td><strong>e</strong></td><td><strong>mi</strong></td><td>Güz<em>e</em>l <strong>mi</strong>? (Is it beautiful?)</td></tr>
           <tr><td><strong>i</strong></td><td><strong>mi</strong></td><td>Geld<em>i</em>n <strong>mi</strong>? (Did you come?)</td></tr>
