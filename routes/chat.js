@@ -14,6 +14,7 @@ const MAX_MESSAGES = 50;
 // ===== Public Chatroom =====
 const chatroomMessages = []; // { id, nickname, text, createdAt }
 const MAX_CHATROOM_MESSAGES = 200;
+const sseClients = new Set();
 
 // Clean up messages older than 24 hours
 setInterval(() => {
@@ -23,12 +24,39 @@ setInterval(() => {
   }
 }, 60 * 1000);
 
-// GET /api/chat/room — get all messages
+// SSE /api/chat/room/stream — real-time message stream
+router.get('/room/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+
+  // Send all existing messages as init
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  const existing = chatroomMessages.filter(m => m.createdAt >= cutoff);
+  res.write(`data: ${JSON.stringify({ type: 'init', messages: existing })}\n\n`);
+
+  sseClients.add(res);
+
+  req.on('close', () => {
+    sseClients.delete(res);
+  });
+});
+
+// GET /api/chat/room — fallback for initial load
 router.get('/room', (req, res) => {
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;
   const messages = chatroomMessages.filter(m => m.createdAt >= cutoff);
   res.json(messages);
 });
+
+function broadcastMessage(msg) {
+  const data = `data: ${JSON.stringify({ type: 'message', message: msg })}\n\n`;
+  for (const client of sseClients) {
+    client.write(data);
+  }
+}
 
 // POST /api/chat/room — send a message
 router.post('/room', (req, res) => {
@@ -48,6 +76,7 @@ router.post('/room', (req, res) => {
     chatroomMessages.shift();
   }
 
+  broadcastMessage(msg);
   res.json(msg);
 });
 

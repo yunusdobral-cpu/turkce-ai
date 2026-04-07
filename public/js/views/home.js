@@ -156,8 +156,8 @@ function initCorrection() {
   });
 }
 
-let chatroomPollInterval = null;
-let lastChatroomMsgId = null;
+let chatroomEventSource = null;
+let chatroomMessagesList = [];
 let pendingChatroomText = null;
 
 function initChatroom() {
@@ -166,11 +166,8 @@ function initChatroom() {
   const sendBtn = document.getElementById('publicChatSendBtn');
   if (!messagesDiv || !textarea || !sendBtn) return;
 
-  // Load messages immediately
-  loadChatroomMessages();
-
-  // Poll every 3 seconds
-  chatroomPollInterval = setInterval(loadChatroomMessages, 3000);
+  // Connect SSE for real-time messages
+  connectChatroomSSE();
 
   // Enter to send
   textarea.addEventListener('keydown', (e) => {
@@ -190,6 +187,33 @@ function initChatroom() {
       if (e.key === 'Enter') { e.preventDefault(); submitWithNick(); }
     });
   }
+}
+
+function connectChatroomSSE() {
+  if (chatroomEventSource) chatroomEventSource.close();
+
+  chatroomEventSource = new EventSource('/api/chat/room/stream');
+
+  chatroomEventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      if (data.type === 'init') {
+        chatroomMessagesList = data.messages;
+        renderChatroomMessages();
+      } else if (data.type === 'message') {
+        chatroomMessagesList.push(data.message);
+        renderChatroomMessages(true);
+      }
+    } catch (e) {}
+  };
+
+  chatroomEventSource.onerror = () => {
+    chatroomEventSource.close();
+    // Reconnect after 3 seconds
+    setTimeout(() => {
+      if (document.getElementById('publicChatMessages')) connectChatroomSSE();
+    }, 3000);
+  };
 }
 
 function handleChatroomSend() {
@@ -234,36 +258,23 @@ function submitWithNick() {
   }
 }
 
-async function loadChatroomMessages() {
+function renderChatroomMessages(scrollToBottom) {
   const messagesDiv = document.getElementById('publicChatMessages');
-  if (!messagesDiv) {
-    clearInterval(chatroomPollInterval);
-    return;
-  }
+  if (!messagesDiv) return;
 
-  try {
-    const res = await fetch('/api/chat/room');
-    const messages = await res.json();
+  const wasAtBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop - messagesDiv.clientHeight < 50;
 
-    // Check if new messages arrived
-    const lastMsg = messages.length > 0 ? messages[messages.length - 1].id : null;
-    if (lastMsg === lastChatroomMsgId) return;
-    lastChatroomMsgId = lastMsg;
+  messagesDiv.innerHTML = chatroomMessagesList.length === 0
+    ? `<div class="chatroom-empty">${I18N.bi('Henüz mesaj yok. İlk mesajı sen yaz!', 'chatroom_empty')}</div>`
+    : chatroomMessagesList.map(m => `
+      <div class="chatroom-msg">
+        <span class="chatroom-nick" style="color:${nickColor(m.nickname)}">${escapeHtmlText(m.nickname)}</span>
+        <span class="chatroom-text">${escapeHtmlText(m.text)}</span>
+        <span class="chatroom-time">${chatroomTimeAgo(m.createdAt)}</span>
+      </div>
+    `).join('');
 
-    const wasAtBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop - messagesDiv.clientHeight < 50;
-
-    messagesDiv.innerHTML = messages.length === 0
-      ? `<div class="chatroom-empty">${I18N.bi('Henüz mesaj yok. İlk mesajı sen yaz!', 'chatroom_empty')}</div>`
-      : messages.map(m => `
-        <div class="chatroom-msg">
-          <span class="chatroom-nick" style="color:${nickColor(m.nickname)}">${escapeHtmlText(m.nickname)}</span>
-          <span class="chatroom-text">${escapeHtmlText(m.text)}</span>
-          <span class="chatroom-time">${chatroomTimeAgo(m.createdAt)}</span>
-        </div>
-      `).join('');
-
-    if (wasAtBottom) messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  } catch (e) {}
+  if (scrollToBottom || wasAtBottom) messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 async function sendChatroomMessage(nickname, text) {
@@ -273,9 +284,7 @@ async function sendChatroomMessage(nickname, text) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nickname, text })
     });
-    await loadChatroomMessages();
-    const messagesDiv = document.getElementById('publicChatMessages');
-    if (messagesDiv) messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    // No need to manually load — SSE broadcast will deliver the message
   } catch (e) {
     showToast(I18N.bi('Mesaj gönderilemedi', 'chatroom_send_error'), 'error');
   }
