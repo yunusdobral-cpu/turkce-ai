@@ -158,33 +158,80 @@ function initCorrection() {
 
 let chatroomPollInterval = null;
 let lastChatroomMsgId = null;
+let pendingChatroomText = null;
 
 function initChatroom() {
   const messagesDiv = document.getElementById('publicChatMessages');
   const textarea = document.getElementById('publicChatInput');
   const sendBtn = document.getElementById('publicChatSendBtn');
-  const nickInput = document.getElementById('publicChatNick');
   if (!messagesDiv || !textarea || !sendBtn) return;
 
-  // Restore saved nickname
-  const savedNick = localStorage.getItem('chatroom_nick');
-  if (savedNick && nickInput) nickInput.value = savedNick;
-
-  // Load messages
+  // Load messages immediately
   loadChatroomMessages();
 
-  // Poll every 5 seconds
-  chatroomPollInterval = setInterval(loadChatroomMessages, 5000);
+  // Poll every 3 seconds
+  chatroomPollInterval = setInterval(loadChatroomMessages, 3000);
 
   // Enter to send
   textarea.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendChatroomMessage();
+      handleChatroomSend();
     }
   });
+  sendBtn.addEventListener('click', handleChatroomSend);
 
-  sendBtn.addEventListener('click', sendChatroomMessage);
+  // Nick bar submit
+  const nickBtn = document.getElementById('publicChatNickBtn');
+  const nickInput = document.getElementById('publicChatNick');
+  if (nickBtn) nickBtn.addEventListener('click', submitWithNick);
+  if (nickInput) {
+    nickInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); submitWithNick(); }
+    });
+  }
+}
+
+function handleChatroomSend() {
+  const textarea = document.getElementById('publicChatInput');
+  const text = textarea.value.trim();
+  if (!text) return;
+
+  const savedNick = localStorage.getItem('chatroom_nick');
+  if (savedNick) {
+    // Nick already saved, send directly
+    sendChatroomMessage(savedNick, text);
+    textarea.value = '';
+  } else {
+    // Show nick bar, hide message input
+    pendingChatroomText = text;
+    document.getElementById('publicChatInputArea').style.display = 'none';
+    const nickBar = document.getElementById('chatroomNickBar');
+    nickBar.style.display = 'flex';
+    document.getElementById('publicChatNick').focus();
+  }
+}
+
+function submitWithNick() {
+  const nickInput = document.getElementById('publicChatNick');
+  const nick = nickInput.value.trim();
+  if (!nick) {
+    nickInput.style.borderColor = 'var(--danger)';
+    setTimeout(() => nickInput.style.borderColor = '', 2000);
+    return;
+  }
+
+  localStorage.setItem('chatroom_nick', nick);
+
+  // Hide nick bar, show message input
+  document.getElementById('chatroomNickBar').style.display = 'none';
+  document.getElementById('publicChatInputArea').style.display = 'flex';
+
+  if (pendingChatroomText) {
+    sendChatroomMessage(nick, pendingChatroomText);
+    document.getElementById('publicChatInput').value = '';
+    pendingChatroomText = null;
+  }
 }
 
 async function loadChatroomMessages() {
@@ -219,23 +266,7 @@ async function loadChatroomMessages() {
   } catch (e) {}
 }
 
-async function sendChatroomMessage() {
-  const textarea = document.getElementById('publicChatInput');
-  const nickInput = document.getElementById('publicChatNick');
-  const text = textarea.value.trim();
-  const nickname = nickInput ? nickInput.value.trim() : '';
-
-  if (!nickname) {
-    nickInput.focus();
-    nickInput.style.borderColor = 'var(--danger)';
-    setTimeout(() => nickInput.style.borderColor = '', 2000);
-    return;
-  }
-  if (!text) return;
-
-  localStorage.setItem('chatroom_nick', nickname);
-  textarea.value = '';
-
+async function sendChatroomMessage(nickname, text) {
   try {
     await fetch('/api/chat/room', {
       method: 'POST',
@@ -323,16 +354,19 @@ async function renderHome(container) {
       <div class="public-chat-section">
         <div class="public-chat-header">
           <h2>${I18N.bi('Sohbet Odası', 'chatroom_title')}</h2>
-          <p>${I18N.bi('Herkes katılabilir! Bir nick seç ve sohbete başla.', 'chatroom_subtitle')}</p>
+          <p>${I18N.bi('Mesajını yaz ve sohbete başla!', 'chatroom_subtitle')}</p>
         </div>
         <div class="public-chat-box">
           <div class="public-chat-messages" id="publicChatMessages">
             <div class="chatroom-empty">${I18N.bi('Mesajlar yükleniyor...', 'chatroom_loading')}</div>
           </div>
-          <div class="public-chat-input-area">
-            <input type="text" id="publicChatNick" class="chatroom-nick-input" placeholder="${I18N.bi('Nick', 'chatroom_nick_ph')}" maxlength="20">
+          <div class="public-chat-input-area" id="publicChatInputArea">
             <textarea id="publicChatInput" placeholder="${I18N.bi('Mesajınızı yazın...', 'chatroom_placeholder')}" rows="1"></textarea>
             <button class="send-btn" id="publicChatSendBtn">${I18N.bi('Gönder', 'chatroom_send')}</button>
+          </div>
+          <div class="chatroom-nick-bar" id="chatroomNickBar" style="display:none">
+            <input type="text" id="publicChatNick" class="chatroom-nick-input" placeholder="${I18N.bi('Nickini yaz...', 'chatroom_nick_ph')}" maxlength="20">
+            <button class="send-btn" id="publicChatNickBtn">${I18N.bi('Gönder', 'chatroom_send')}</button>
           </div>
         </div>
       </div>
