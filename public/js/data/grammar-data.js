@@ -546,7 +546,7 @@ const GRAMMAR_LEVELS = {
       <div class="grammar-table-wrap">
         <table class="grammar-table">
           <tr><th>Saat</th><th>Türkçe</th><th>English</th></tr>
-          <tr><td>2:30</td><td><strong>İkiyi buçuk geçiyor.</strong></td><td>It's half past two.</td></tr>
+          <tr><td>2:30</td><td><strong>İki buçuk.</strong></td><td>It's half past two.</td></tr>
           <tr><td>4:15</td><td><strong>Dördü çeyrek geçiyor.</strong></td><td>It's quarter past four.</td></tr>
           <tr><td>6:45</td><td><strong>Yediye çeyrek var.</strong></td><td>It's quarter to seven.</td></tr>
           <tr><td>9:10</td><td><strong>Dokuzu on geçiyor.</strong></td><td>It's ten past nine.</td></tr>
