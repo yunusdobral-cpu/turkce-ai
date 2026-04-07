@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const OpenAI = require('openai');
-const { supabaseAdmin } = require('../lib/supabase');
 
 const router = express.Router();
 const DATA_FILE = path.join(__dirname, '..', 'data', 'characters.json');
@@ -12,43 +11,45 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const sessions = new Map();
 const MAX_MESSAGES = 50;
 
-// IP-based rate limiting for non-authenticated users
-const ipMessageCounts = new Map(); // ip -> { count, resetAt }
-const GUEST_MESSAGE_LIMIT = 10;
+// ===== Public Chatroom =====
+const chatroomMessages = []; // { id, nickname, text, createdAt }
+const MAX_CHATROOM_MESSAGES = 200;
 
-function getClientIp(req) {
-  return req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
-}
-
-function checkGuestLimit(ip) {
-  const now = Date.now();
-  const record = ipMessageCounts.get(ip);
-
-  if (!record || now > record.resetAt) {
-    // New day — reset
-    const tomorrow = new Date();
-    tomorrow.setHours(24, 0, 0, 0);
-    ipMessageCounts.set(ip, { count: 1, resetAt: tomorrow.getTime() });
-    return true;
-  }
-
-  if (record.count >= GUEST_MESSAGE_LIMIT) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
-
-// Clean up old IP records daily
+// Clean up messages older than 24 hours
 setInterval(() => {
-  const now = Date.now();
-  for (const [ip, record] of ipMessageCounts) {
-    if (now > record.resetAt) {
-      ipMessageCounts.delete(ip);
-    }
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  while (chatroomMessages.length > 0 && chatroomMessages[0].createdAt < cutoff) {
+    chatroomMessages.shift();
   }
-}, 60 * 60 * 1000);
+}, 60 * 1000);
+
+// GET /api/chat/room — get all messages
+router.get('/room', (req, res) => {
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  const messages = chatroomMessages.filter(m => m.createdAt >= cutoff);
+  res.json(messages);
+});
+
+// POST /api/chat/room — send a message
+router.post('/room', (req, res) => {
+  const { nickname, text } = req.body;
+  if (!nickname || !nickname.trim()) return res.status(400).json({ error: 'Nickname gerekli' });
+  if (!text || !text.trim()) return res.status(400).json({ error: 'Mesaj gerekli' });
+
+  const msg = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    nickname: nickname.trim().substring(0, 20),
+    text: text.trim().substring(0, 500),
+    createdAt: Date.now()
+  };
+
+  chatroomMessages.push(msg);
+  if (chatroomMessages.length > MAX_CHATROOM_MESSAGES) {
+    chatroomMessages.shift();
+  }
+
+  res.json(msg);
+});
 
 const toneDirectives = {
   formal: 'Use a polite, structured teaching style.',
@@ -68,22 +69,6 @@ function buildSystemPrompt(character, topicId) {
   const topicContext = topic
     ? `\n\nSEÇİLEN KONU / SELECTED TOPIC: "${topic.name}"\nKonu açıklaması: ${topic.description}\nBu konuya odaklan. İlgili örnekler, alıştırmalar ve açıklamalar ver.`
     : '\n\nSerbest sohbet modu. Öğrencinin istediği konuda yardımcı ol.';
-
-  // Public chat room: Turkish only
-  if (topicId === 'public-chat') {
-    return `${character.systemPrompt}
-
-Ton: ${toneDirectives[character.tone] || toneDirectives.formal}
-
-Serbest sohbet modu. Öğrencinin istediği konuda yardımcı ol.
-
-GENEL KURALLAR:
-- HER ZAMAN SADECE TÜRKÇE YAZ. Kesinlikle İngilizce kullanma.
-- Öğrenciyi motive et ve cesaretlendir.
-- Öğrencinin seviyesini anlamaya çalış ve ona göre ayarla.
-- Yanıtlarını kısa ve doğal tut (1-3 paragraf), çok uzun yanıtlar verme.
-- Zor kelimelerin yanına parantez içinde basit Türkçe açıklama ekle.`;
-  }
 
   return `${character.systemPrompt}
 
@@ -118,29 +103,6 @@ router.post('/new', (req, res) => {
 // Send message (streaming)
 router.post('/', async (req, res) => {
   const { sessionId, characterId, message, topicId } = req.body;
-
-  // Check if user is authenticated
-  let isAuthenticated = false;
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    try {
-      const token = authHeader.slice(7);
-      const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-      if (user && !error) isAuthenticated = true;
-    } catch (e) {}
-  }
-
-  // Rate limit for guests
-  if (!isAuthenticated) {
-    const ip = getClientIp(req);
-    if (!checkGuestLimit(ip)) {
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.write(`data: ${JSON.stringify({ type: 'error', content: 'RATE_LIMIT' })}\n\n`);
-      res.end();
-      return;
-    }
-  }
 
   const characters = readCharacters();
   const character = characters.find(c => c.id === characterId);

@@ -156,119 +156,119 @@ function initCorrection() {
   });
 }
 
-let publicChatSessionId = null;
-let publicChatStreaming = false;
+let chatroomPollInterval = null;
+let lastChatroomMsgId = null;
 
-function initPublicChat() {
+function initChatroom() {
+  const messagesDiv = document.getElementById('publicChatMessages');
   const textarea = document.getElementById('publicChatInput');
   const sendBtn = document.getElementById('publicChatSendBtn');
-  if (!textarea || !sendBtn) return;
+  const nickInput = document.getElementById('publicChatNick');
+  if (!messagesDiv || !textarea || !sendBtn) return;
 
-  // Create session
-  API.newChatSession('dilara-hoca').then(session => {
-    publicChatSessionId = session.sessionId;
-  }).catch(() => {});
+  // Restore saved nickname
+  const savedNick = localStorage.getItem('chatroom_nick');
+  if (savedNick && nickInput) nickInput.value = savedNick;
 
-  // Auto-resize
-  textarea.addEventListener('input', () => {
-    textarea.style.height = 'auto';
-    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-  });
+  // Load messages
+  loadChatroomMessages();
+
+  // Poll every 5 seconds
+  chatroomPollInterval = setInterval(loadChatroomMessages, 5000);
 
   // Enter to send
   textarea.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendPublicChatMessage();
+      sendChatroomMessage();
     }
   });
 
-  sendBtn.addEventListener('click', sendPublicChatMessage);
+  sendBtn.addEventListener('click', sendChatroomMessage);
 }
 
-async function sendPublicChatMessage() {
-  if (publicChatStreaming) return;
-
-  const textarea = document.getElementById('publicChatInput');
+async function loadChatroomMessages() {
   const messagesDiv = document.getElementById('publicChatMessages');
-  const sendBtn = document.getElementById('publicChatSendBtn');
-  const message = textarea.value.trim();
-  if (!message) return;
-
-  // Add user message
-  messagesDiv.appendChild(createMessageElement('user', message));
-  textarea.value = '';
-  textarea.style.height = 'auto';
-
-  // Add bot streaming message
-  const botMsg = createStreamingMessage('Dilara Hoca');
-  messagesDiv.appendChild(botMsg);
-  const bubble = botMsg.querySelector('.message-bubble');
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-  publicChatStreaming = true;
-  sendBtn.disabled = true;
-  sendBtn.textContent = I18N.bi('Yazıyor...', 'chatroom_typing');
-
-  let fullText = '';
-
-  // If no session yet, create one
-  if (!publicChatSessionId) {
-    try {
-      const session = await API.newChatSession('dilara-hoca');
-      publicChatSessionId = session.sessionId;
-    } catch(e) {
-      bubble.innerHTML = '<em style="color:var(--danger)">Bağlantı hatası / Connection error</em>';
-      publicChatStreaming = false;
-      sendBtn.disabled = false;
-      sendBtn.textContent = I18N.bi('Gönder', 'chatroom_send');
-      return;
-    }
+  if (!messagesDiv) {
+    clearInterval(chatroomPollInterval);
+    return;
   }
 
-  API.sendMessage(
-    publicChatSessionId,
-    'dilara-hoca',
-    message,
-    'public-chat',
-    (text) => {
-      if (bubble.querySelector('.typing-indicator')) {
-        bubble.innerHTML = '';
-      }
-      fullText += text;
-      bubble.innerHTML = escapeHtml(fullText);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    },
-    () => {
-      publicChatStreaming = false;
-      sendBtn.disabled = false;
-      sendBtn.textContent = I18N.bi('Gönder', 'chatroom_send');
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    },
-    (error) => {
-      if (bubble.querySelector('.typing-indicator')) {
-        bubble.innerHTML = '';
-      }
-      if (error === 'RATE_LIMIT') {
-        bubble.innerHTML = `<em style="color:var(--danger)">${I18N.bi(
-          'Günlük mesaj limitiniz doldu. Devam etmek için üye girişi yapınız.',
-          'chatroom_limit_msg'
-        )}</em>`;
-        // Disable input
-        textarea.disabled = true;
-        textarea.placeholder = I18N.bi('Üye girişi gerekli...', 'chatroom_login_required');
-        sendBtn.textContent = I18N.bi('Giriş Yap', 'chatroom_login_btn');
-        sendBtn.disabled = false;
-        sendBtn.onclick = () => Auth.showLoginModal();
-        publicChatStreaming = false;
-        return;
-      }
-      bubble.innerHTML = `<em style="color:var(--danger)">${error}</em>`;
-      publicChatStreaming = false;
-      sendBtn.disabled = false;
-      sendBtn.textContent = I18N.bi('Gönder', 'chatroom_send');
-    }
-  );
+  try {
+    const res = await fetch('/api/chat/room');
+    const messages = await res.json();
+
+    // Check if new messages arrived
+    const lastMsg = messages.length > 0 ? messages[messages.length - 1].id : null;
+    if (lastMsg === lastChatroomMsgId) return;
+    lastChatroomMsgId = lastMsg;
+
+    const wasAtBottom = messagesDiv.scrollHeight - messagesDiv.scrollTop - messagesDiv.clientHeight < 50;
+
+    messagesDiv.innerHTML = messages.length === 0
+      ? `<div class="chatroom-empty">${I18N.bi('Henüz mesaj yok. İlk mesajı sen yaz!', 'chatroom_empty')}</div>`
+      : messages.map(m => `
+        <div class="chatroom-msg">
+          <span class="chatroom-nick" style="color:${nickColor(m.nickname)}">${escapeHtmlText(m.nickname)}</span>
+          <span class="chatroom-text">${escapeHtmlText(m.text)}</span>
+          <span class="chatroom-time">${chatroomTimeAgo(m.createdAt)}</span>
+        </div>
+      `).join('');
+
+    if (wasAtBottom) messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  } catch (e) {}
+}
+
+async function sendChatroomMessage() {
+  const textarea = document.getElementById('publicChatInput');
+  const nickInput = document.getElementById('publicChatNick');
+  const text = textarea.value.trim();
+  const nickname = nickInput ? nickInput.value.trim() : '';
+
+  if (!nickname) {
+    nickInput.focus();
+    nickInput.style.borderColor = 'var(--danger)';
+    setTimeout(() => nickInput.style.borderColor = '', 2000);
+    return;
+  }
+  if (!text) return;
+
+  localStorage.setItem('chatroom_nick', nickname);
+  textarea.value = '';
+
+  try {
+    await fetch('/api/chat/room', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname, text })
+    });
+    await loadChatroomMessages();
+    const messagesDiv = document.getElementById('publicChatMessages');
+    if (messagesDiv) messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  } catch (e) {
+    showToast(I18N.bi('Mesaj gönderilemedi', 'chatroom_send_error'), 'error');
+  }
+}
+
+function escapeHtmlText(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function nickColor(nick) {
+  let hash = 0;
+  for (let i = 0; i < nick.length; i++) hash = nick.charCodeAt(i) + ((hash << 5) - hash);
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 65%, 40%)`;
+}
+
+function chatroomTimeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'az önce';
+  if (diff < 3600) return Math.floor(diff / 60) + ' dk';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' sa';
+  return '1g+';
 }
 
 // ===== CATEGORY LIST (main forum page) =====
@@ -323,16 +323,14 @@ async function renderHome(container) {
       <div class="public-chat-section">
         <div class="public-chat-header">
           <h2>${I18N.bi('Sohbet Odası', 'chatroom_title')}</h2>
-          <p>${I18N.bi('Üye olmadan Türkçe pratik yap! Dilara Hoca ile serbest sohbet.', 'chatroom_subtitle')}</p>
+          <p>${I18N.bi('Herkes katılabilir! Bir nick seç ve sohbete başla.', 'chatroom_subtitle')}</p>
         </div>
         <div class="public-chat-box">
           <div class="public-chat-messages" id="publicChatMessages">
-            <div class="message assistant">
-              <div class="message-avatar">D</div>
-              <div class="message-bubble">Merhaba! 👋 Ben Dilara Hoca. Türkçe pratik yapmak ister misin? Bana istediğini sorabilirsin! / Hi! I'm Dilara Hoca. Want to practice Turkish? Ask me anything!</div>
-            </div>
+            <div class="chatroom-empty">${I18N.bi('Mesajlar yükleniyor...', 'chatroom_loading')}</div>
           </div>
           <div class="public-chat-input-area">
+            <input type="text" id="publicChatNick" class="chatroom-nick-input" placeholder="${I18N.bi('Nick', 'chatroom_nick_ph')}" maxlength="20">
             <textarea id="publicChatInput" placeholder="${I18N.bi('Mesajınızı yazın...', 'chatroom_placeholder')}" rows="1"></textarea>
             <button class="send-btn" id="publicChatSendBtn">${I18N.bi('Gönder', 'chatroom_send')}</button>
           </div>
@@ -418,7 +416,7 @@ async function renderHome(container) {
 
   initTicker();
   initCorrection();
-  initPublicChat();
+  initChatroom();
   await loadForumCategories();
 }
 

@@ -543,15 +543,40 @@
 .public-chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.25rem;
   background: #fafaf9;
 }
 
-.public-chat-messages .message {
-  max-width: 85%;
+.chatroom-msg {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 0.2rem 0;
+  animation: fadeIn 0.3s ease;
+}
+
+.chatroom-nick {
+  font-weight: 700;
+  margin-right: 0.35rem;
+}
+
+.chatroom-text {
+  word-break: break-word;
+}
+
+.chatroom-time {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  margin-left: 0.4rem;
+}
+
+.chatroom-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
 }
 
 .public-chat-input-area {
@@ -561,6 +586,22 @@
   border-top: 1px solid var(--border);
   background: var(--surface);
   align-items: flex-end;
+}
+
+.chatroom-nick-input {
+  width: 90px;
+  padding: 0.6rem 0.65rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.chatroom-nick-input:focus {
+  border-color: var(--accent);
 }
 
 .public-chat-input-area textarea {
