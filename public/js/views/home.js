@@ -230,7 +230,7 @@ async function sendPublicChatMessage() {
     publicChatSessionId,
     'dilara-hoca',
     message,
-    'genel',
+    'public-chat',
     (text) => {
       if (bubble.querySelector('.typing-indicator')) {
         bubble.innerHTML = '';

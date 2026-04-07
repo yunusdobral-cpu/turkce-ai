@@ -69,6 +69,22 @@ function buildSystemPrompt(character, topicId) {
     ? `\n\nSEÇİLEN KONU / SELECTED TOPIC: "${topic.name}"\nKonu açıklaması: ${topic.description}\nBu konuya odaklan. İlgili örnekler, alıştırmalar ve açıklamalar ver.`
     : '\n\nSerbest sohbet modu. Öğrencinin istediği konuda yardımcı ol.';
 
+  // Public chat room: Turkish only
+  if (topicId === 'public-chat') {
+    return `${character.systemPrompt}
+
+Ton: ${toneDirectives[character.tone] || toneDirectives.formal}
+
+Serbest sohbet modu. Öğrencinin istediği konuda yardımcı ol.
+
+GENEL KURALLAR:
+- HER ZAMAN SADECE TÜRKÇE YAZ. Kesinlikle İngilizce kullanma.
+- Öğrenciyi motive et ve cesaretlendir.
+- Öğrencinin seviyesini anlamaya çalış ve ona göre ayarla.
+- Yanıtlarını kısa ve doğal tut (1-3 paragraf), çok uzun yanıtlar verme.
+- Zor kelimelerin yanına parantez içinde basit Türkçe açıklama ekle.`;
+  }
+
   return `${character.systemPrompt}
 
 Ton: ${toneDirectives[character.tone] || toneDirectives.formal}
