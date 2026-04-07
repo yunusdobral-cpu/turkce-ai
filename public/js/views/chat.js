@@ -74,10 +74,17 @@ async function renderChat(container, characterId, topicId) {
     // Mobile keyboard: keep input above keyboard
     if (window.visualViewport) {
       const inputArea = document.querySelector('.chat-input-area');
+      const chatMessages = document.getElementById('chatMessages');
       const onViewportChange = () => {
         if (!inputArea) return;
         const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
-        inputArea.style.bottom = Math.max(0, bottomOffset) + 'px';
+        const safeBottom = Math.max(0, bottomOffset);
+        inputArea.style.bottom = safeBottom + 'px';
+        // Adjust messages padding so they don't hide behind the raised input
+        if (chatMessages) {
+          chatMessages.style.paddingBottom = (70 + safeBottom) + 'px';
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
       };
       window.visualViewport.addEventListener('resize', onViewportChange);
       window.visualViewport.addEventListener('scroll', onViewportChange);

@@ -156,6 +156,121 @@ function initCorrection() {
   });
 }
 
+let publicChatSessionId = null;
+let publicChatStreaming = false;
+
+function initPublicChat() {
+  const textarea = document.getElementById('publicChatInput');
+  const sendBtn = document.getElementById('publicChatSendBtn');
+  if (!textarea || !sendBtn) return;
+
+  // Create session
+  API.newChatSession('dilara-hoca').then(session => {
+    publicChatSessionId = session.sessionId;
+  }).catch(() => {});
+
+  // Auto-resize
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+  });
+
+  // Enter to send
+  textarea.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendPublicChatMessage();
+    }
+  });
+
+  sendBtn.addEventListener('click', sendPublicChatMessage);
+}
+
+async function sendPublicChatMessage() {
+  if (publicChatStreaming) return;
+
+  const textarea = document.getElementById('publicChatInput');
+  const messagesDiv = document.getElementById('publicChatMessages');
+  const sendBtn = document.getElementById('publicChatSendBtn');
+  const message = textarea.value.trim();
+  if (!message) return;
+
+  // Add user message
+  messagesDiv.appendChild(createMessageElement('user', message));
+  textarea.value = '';
+  textarea.style.height = 'auto';
+
+  // Add bot streaming message
+  const botMsg = createStreamingMessage('Dilara Hoca');
+  messagesDiv.appendChild(botMsg);
+  const bubble = botMsg.querySelector('.message-bubble');
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  publicChatStreaming = true;
+  sendBtn.disabled = true;
+  sendBtn.textContent = I18N.bi('Yazıyor...', 'chatroom_typing');
+
+  let fullText = '';
+
+  // If no session yet, create one
+  if (!publicChatSessionId) {
+    try {
+      const session = await API.newChatSession('dilara-hoca');
+      publicChatSessionId = session.sessionId;
+    } catch(e) {
+      bubble.innerHTML = '<em style="color:var(--danger)">Bağlantı hatası / Connection error</em>';
+      publicChatStreaming = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = I18N.bi('Gönder', 'chatroom_send');
+      return;
+    }
+  }
+
+  API.sendMessage(
+    publicChatSessionId,
+    'dilara-hoca',
+    message,
+    'genel',
+    (text) => {
+      if (bubble.querySelector('.typing-indicator')) {
+        bubble.innerHTML = '';
+      }
+      fullText += text;
+      bubble.innerHTML = escapeHtml(fullText);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    },
+    () => {
+      publicChatStreaming = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = I18N.bi('Gönder', 'chatroom_send');
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    },
+    (error) => {
+      if (bubble.querySelector('.typing-indicator')) {
+        bubble.innerHTML = '';
+      }
+      if (error === 'RATE_LIMIT') {
+        bubble.innerHTML = `<em style="color:var(--danger)">${I18N.bi(
+          'Günlük mesaj limitiniz doldu. Devam etmek için üye girişi yapınız.',
+          'chatroom_limit_msg'
+        )}</em>`;
+        // Disable input
+        textarea.disabled = true;
+        textarea.placeholder = I18N.bi('Üye girişi gerekli...', 'chatroom_login_required');
+        sendBtn.textContent = I18N.bi('Giriş Yap', 'chatroom_login_btn');
+        sendBtn.disabled = false;
+        sendBtn.onclick = () => Auth.showLoginModal();
+        publicChatStreaming = false;
+        return;
+      }
+      bubble.innerHTML = `<em style="color:var(--danger)">${error}</em>`;
+      publicChatStreaming = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = I18N.bi('Gönder', 'chatroom_send');
+    }
+  );
+}
+
 // ===== CATEGORY LIST (main forum page) =====
 async function renderHome(container) {
   const dailyContent = getDailyContent();
@@ -203,6 +318,25 @@ async function renderHome(container) {
           <div id="tickerTrack" class="daily-ticker-track">${slidesHtml}</div>
         </div>
         <div class="daily-ticker-dots">${dotsHtml}</div>
+      </div>
+
+      <div class="public-chat-section">
+        <div class="public-chat-header">
+          <h2>${I18N.bi('Sohbet Odası', 'chatroom_title')}</h2>
+          <p>${I18N.bi('Üye olmadan Türkçe pratik yap! Dilara Hoca ile serbest sohbet.', 'chatroom_subtitle')}</p>
+        </div>
+        <div class="public-chat-box">
+          <div class="public-chat-messages" id="publicChatMessages">
+            <div class="message assistant">
+              <div class="message-avatar">D</div>
+              <div class="message-bubble">Merhaba! 👋 Ben Dilara Hoca. Türkçe pratik yapmak ister misin? Bana istediğini sorabilirsin! / Hi! I'm Dilara Hoca. Want to practice Turkish? Ask me anything!</div>
+            </div>
+          </div>
+          <div class="public-chat-input-area">
+            <textarea id="publicChatInput" placeholder="${I18N.bi('Mesajınızı yazın...', 'chatroom_placeholder')}" rows="1"></textarea>
+            <button class="send-btn" id="publicChatSendBtn">${I18N.bi('Gönder', 'chatroom_send')}</button>
+          </div>
+        </div>
       </div>
 
       <div class="correction-section">
@@ -284,6 +418,7 @@ async function renderHome(container) {
 
   initTicker();
   initCorrection();
+  initPublicChat();
   await loadForumCategories();
 }
 

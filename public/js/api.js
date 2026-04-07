@@ -225,9 +225,12 @@ const API = {
   },
 
   sendMessage(sessionId, characterId, message, topicId, onChunk, onDone, onError) {
+    const headers = { 'Content-Type': 'application/json' };
+    const token = localStorage.getItem('turkceai_token');
+    if (token) headers['Authorization'] = `Bearer ${token}`;
     fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ sessionId, characterId, message, topicId })
     }).then(async response => {
       const reader = response.body.getReader();
