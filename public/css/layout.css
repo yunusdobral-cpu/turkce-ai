@@ -130,45 +130,119 @@
   box-shadow: var(--shadow);
 }
 
+/* Hamburger button - hidden on desktop */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 110;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2.5px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: 0.3s ease;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .navbar {
     padding: 0 0.75rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: visible;
+    flex-wrap: nowrap;
   }
 
   .nav-brand span:not(.nav-logo) {
     display: none;
   }
 
+  .nav-hamburger {
+    display: flex;
+    margin-left: auto;
+  }
+
   .nav-links {
-    margin-left: 0.5rem;
-    flex-shrink: 0;
+    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--surface);
+    flex-direction: column;
+    margin-left: 0;
+    z-index: 200;
+    overflow-y: auto;
+    padding: 1rem 0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    animation: slideDown 0.25s ease;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .nav-links-left,
   .nav-links-right {
-    gap: 0.1rem;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+
+  .nav-links-right {
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
   }
 
   .nav-link {
-    padding: 0.4rem 0.5rem;
-    font-size: 0.75rem;
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+    text-align: left;
+    border-radius: 0;
     white-space: nowrap;
   }
 
+  .nav-link:hover,
+  .nav-link.active {
+    background: var(--bg);
+  }
+
+  /* Bilingual labels in mobile menu */
+  .nav-link-tr {
+    font-size: 1rem;
+  }
+
+  .nav-link-lang {
+    font-size: 0.75rem;
+  }
+
   #app {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
   .lang-picker {
     gap: 4px;
     padding: 6px 0.5rem;
+    top: 56px;
+    flex-wrap: wrap;
   }
 
   .lang-btn {
-    font-size: 0.75rem;
-    padding: 5px 10px;
+    font-size: 0.72rem;
+    padding: 4px 8px;
   }
 }

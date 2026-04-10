@@ -77,6 +77,8 @@ window.addEventListener('hashchange', () => navigateTo(location.hash));
 
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (e) => {
+    // Close mobile menu on navigation
+    document.querySelector('.nav-links').classList.remove('open');
     const target = link.getAttribute('href');
     if (location.hash === target) {
       e.preventDefault();
