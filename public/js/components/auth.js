@@ -90,6 +90,9 @@ const Auth = {
           <label>${passwordLabel}</label>
           <input type="password" name="password" required minlength="6">
         </div>
+        <div class="auth-forgot-link">
+          <a href="#" class="auth-switch-link" id="switchToForgot">${I18N.bi('Şifremi Unuttum', 'auth_forgot_password')}</a>
+        </div>
         <div id="loginError" class="auth-error" style="display:none;"></div>
         <div class="form-actions">
           <button type="button" class="btn btn-outline" onclick="closeModal()">${cancelBtn}</button>
@@ -100,6 +103,12 @@ const Auth = {
         </div>
       </form>
     `);
+
+    document.getElementById('switchToForgot').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal();
+      this.showForgotPasswordModal();
+    });
 
     document.getElementById('switchToRegister').addEventListener('click', (e) => {
       e.preventDefault();
@@ -256,6 +265,135 @@ const Auth = {
       }
       btn.disabled = false;
       btn.textContent = I18N.bi('Tekrar Gönder', 'auth_resend');
+    });
+  },
+
+  showForgotPasswordModal() {
+    const emailLabel = I18N.bi('Email', 'auth_email');
+    const sendBtn = I18N.bi('Gönder', 'auth_send');
+    const cancelBtn = I18N.bi('İptal', 'auth_cancel');
+    const backToLogin = I18N.bi('Giriş Yap', 'auth_login');
+
+    openModal(I18N.bi('Şifremi Unuttum', 'auth_forgot_password'), `
+      <form id="forgotForm" class="auth-form">
+        <p class="auth-verify-desc">${I18N.bi('Email adresinizi girin, şifre sıfırlama bağlantısı göndereceğiz.', 'auth_forgot_desc')}</p>
+        <div class="form-group">
+          <label>${emailLabel}</label>
+          <input type="email" name="email" required placeholder="ornek@email.com">
+        </div>
+        <div id="forgotError" class="auth-error" style="display:none;"></div>
+        <div id="forgotSuccess" class="auth-success" style="display:none;"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal()">${cancelBtn}</button>
+          <button type="submit" class="btn btn-primary">${sendBtn}</button>
+        </div>
+        <div class="auth-divider">
+          <span><a href="#" class="auth-switch-link" id="switchBackToLogin">${backToLogin}</a></span>
+        </div>
+      </form>
+    `);
+
+    document.getElementById('switchBackToLogin').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal();
+      this.showLoginModal();
+    });
+
+    document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const email = form.email.value.trim();
+      const errDiv = document.getElementById('forgotError');
+      const successDiv = document.getElementById('forgotSuccess');
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '...';
+      errDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+
+      try {
+        const data = await API.forgotPassword(email);
+        if (data.error) {
+          errDiv.textContent = data.error;
+          errDiv.style.display = 'block';
+        } else {
+          successDiv.textContent = I18N.bi(
+            'Şifre sıfırlama bağlantısı gönderildi. Lütfen emailinizi kontrol edin.',
+            'auth_forgot_success'
+          );
+          successDiv.style.display = 'block';
+          form.email.disabled = true;
+          submitBtn.style.display = 'none';
+        }
+      } catch (err) {
+        errDiv.textContent = 'Bağlantı hatası / Connection error';
+        errDiv.style.display = 'block';
+      }
+      submitBtn.disabled = false;
+      submitBtn.textContent = I18N.bi('Gönder', 'auth_send');
+    });
+  },
+
+  showResetPasswordModal(accessToken) {
+    const newPassLabel = I18N.bi('Yeni Şifre', 'auth_new_password');
+    const confirmLabel = I18N.bi('Şifre Tekrar', 'auth_confirm_password');
+    const resetBtn = I18N.bi('Şifreyi Güncelle', 'auth_reset_btn');
+    const passwordHint = I18N.bi('En az 6 karakter', 'auth_password_min');
+
+    openModal(I18N.bi('Yeni Şifre Belirle', 'auth_reset_title'), `
+      <form id="resetForm" class="auth-form">
+        <div class="form-group">
+          <label>${newPassLabel}</label>
+          <input type="password" name="newPassword" required minlength="6" placeholder="******">
+          <div class="help-text">${passwordHint}</div>
+        </div>
+        <div class="form-group">
+          <label>${confirmLabel}</label>
+          <input type="password" name="confirmPassword" required minlength="6" placeholder="******">
+        </div>
+        <div id="resetError" class="auth-error" style="display:none;"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-block">${resetBtn}</button>
+        </div>
+      </form>
+    `);
+
+    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const newPassword = form.newPassword.value;
+      const confirmPassword = form.confirmPassword.value;
+      const errDiv = document.getElementById('resetError');
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      errDiv.style.display = 'none';
+
+      if (newPassword !== confirmPassword) {
+        errDiv.textContent = I18N.bi('Şifreler eşleşmiyor', 'auth_password_mismatch');
+        errDiv.style.display = 'block';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '...';
+
+      try {
+        const data = await API.updatePassword(accessToken, newPassword);
+        if (data.error) {
+          errDiv.textContent = data.error;
+          errDiv.style.display = 'block';
+        } else {
+          closeModal();
+          showToast(I18N.bi('Şifre güncellendi! Giriş yapabilirsiniz.', 'auth_reset_success'), 'success');
+          this.showLoginModal();
+        }
+      } catch (err) {
+        errDiv.textContent = 'Bağlantı hatası / Connection error';
+        errDiv.style.display = 'block';
+      }
+      submitBtn.disabled = false;
+      submitBtn.textContent = I18N.bi('Şifreyi Güncelle', 'auth_reset_btn');
     });
   },
 

@@ -4,6 +4,24 @@
   margin-bottom: 2.5rem;
 }
 
+.home-logo-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.home-logo-link:hover {
+  transform: scale(1.05);
+}
+
+.home-logo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
 .gallery-header h1 {
   font-size: 2rem;
   margin-bottom: 0.3rem;
@@ -1168,6 +1186,15 @@
 
   .gallery-header {
     margin-bottom: 1.5rem;
+  }
+
+  .home-logo {
+    width: 90px;
+    height: 90px;
+  }
+
+  .home-logo-link {
+    margin-bottom: 0.5rem;
   }
 
   .gallery-header h1 {

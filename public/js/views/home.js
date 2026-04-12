@@ -342,6 +342,9 @@ async function renderHome(container) {
       </div>
 
       <div class="gallery-header">
+        <a href="https://www.instagram.com/lingual.work/" target="_blank" rel="noopener" class="home-logo-link">
+          <img src="/logo.png" alt="Lingual.work" class="home-logo">
+        </a>
         <h1>Lingual.work</h1>
         <p class="gallery-subtitle">${I18N.bi('Yapay Zeka ile Türkçe Öğren', 'home_subtitle')}</p>
       </div>

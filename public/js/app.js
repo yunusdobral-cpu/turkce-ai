@@ -95,4 +95,18 @@ document.querySelector('.nav-brand').addEventListener('click', (e) => {
 
 I18N.init();
 Auth.init();
-navigateTo(location.hash || '#/');
+
+// Supabase password reset callback: #access_token=...&type=recovery
+(function checkPasswordReset() {
+  const hash = location.hash;
+  if (hash.includes('access_token=') && hash.includes('type=recovery')) {
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    if (accessToken) {
+      location.hash = '#/';
+      setTimeout(() => Auth.showResetPasswordModal(accessToken), 500);
+      return;
+    }
+  }
+  navigateTo(hash || '#/');
+})();

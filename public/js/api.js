@@ -200,6 +200,24 @@ const API = {
     return res.json();
   },
 
+  async forgotPassword(email) {
+    const res = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    return res.json();
+  },
+
+  async updatePassword(accessToken, newPassword) {
+    const res = await fetch('/api/auth/update-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ accessToken, newPassword })
+    });
+    return res.json();
+  },
+
   async getUsers() {
     const res = await fetch('/api/auth/users', {
       headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminPassword')}` }

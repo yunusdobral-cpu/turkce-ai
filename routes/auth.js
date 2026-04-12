@@ -123,6 +123,58 @@ router.post('/resend', async (req, res) => {
   }
 });
 
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({ error: 'Geçerli bir email adresi giriniz' });
+    }
+
+    const { error } = await supabaseAdmin.auth.resetPasswordForEmail(
+      email.toLowerCase().trim(),
+      { redirectTo: `${req.protocol}://${req.get('host')}/#/reset-password` }
+    );
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ success: true, message: 'Şifre sıfırlama bağlantısı gönderildi' });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    res.status(500).json({ error: 'Sunucu hatası' });
+  }
+});
+
+// POST /api/auth/update-password
+router.post('/update-password', async (req, res) => {
+  try {
+    const { accessToken, newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ error: 'Şifre en az 6 karakter olmalıdır' });
+    }
+
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(accessToken);
+    if (userError || !user) {
+      return res.status(401).json({ error: 'Geçersiz veya süresi dolmuş bağlantı' });
+    }
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
+      password: newPassword
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ success: true, message: 'Şifre başarıyla güncellendi' });
+  } catch (err) {
+    console.error('Update password error:', err);
+    res.status(500).json({ error: 'Sunucu hatası' });
+  }
+});
+
 // GET /api/auth/me
 router.get('/me', userAuth, async (req, res) => {
   const displayName = req.user.user_metadata?.displayName || 'User';
