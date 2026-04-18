@@ -81,13 +81,48 @@ function formatPostContent(text) {
     .replace(/\n/g, '<br>');
 }
 
+function getCorrectionUsage() {
+  const today = new Date().toISOString().slice(0, 10);
+  const stored = JSON.parse(localStorage.getItem('correction_usage') || '{}');
+  if (stored.date !== today) return { date: today, count: 0 };
+  return stored;
+}
+
+function incrementCorrectionUsage() {
+  const usage = getCorrectionUsage();
+  usage.count++;
+  localStorage.setItem('correction_usage', JSON.stringify(usage));
+  return usage;
+}
+
+function updateCorrectionCounter() {
+  const counter = document.getElementById('correctionCounter');
+  if (!counter) return;
+  if (Auth.isLoggedIn()) {
+    counter.style.display = 'none';
+    return;
+  }
+  const usage = getCorrectionUsage();
+  const remaining = Math.max(0, 3 - usage.count);
+  counter.textContent = I18N.bi(
+    `Günlük ${remaining}/3 hak kaldı`,
+    'correction_daily_limit'
+  ).replace('${remaining}', remaining);
+  counter.style.display = 'block';
+}
+
 function initCorrection() {
   const btn = document.getElementById('correctionCheck');
   if (!btn) return;
+  updateCorrectionCounter();
   const doCheck = async () => {
     if (!Auth.isLoggedIn() && !sessionStorage.getItem('adminPassword')) {
-      Auth.showLoginModal();
-      return;
+      const usage = getCorrectionUsage();
+      if (usage.count >= 3) {
+        Auth.showLoginModal();
+        showToast(I18N.bi('Günlük ücretsiz hakkınız doldu. Üye olun!', 'correction_limit_reached'), 'error');
+        return;
+      }
     }
     const text = document.getElementById('correctionText').value.trim();
     const intended = document.getElementById('correctionIntended').value.trim();
@@ -141,6 +176,10 @@ function initCorrection() {
       }
       resultEl.innerHTML = html;
       resultEl.style.display = 'block';
+      if (!Auth.isLoggedIn()) {
+        incrementCorrectionUsage();
+        updateCorrectionCounter();
+      }
     } catch (err) {
       showToast(I18N.bi('Düzeltme yapılamadı', 'correction_error'), 'error');
     }
@@ -400,6 +439,7 @@ async function renderHome(container) {
           <button class="btn btn-primary correction-btn" id="correctionCheck">
             ${I18N.bi('Kontrol Et', 'correction_check')}
           </button>
+          <div id="correctionCounter" class="correction-counter"></div>
         </div>
         <div id="correctionResult" class="correction-result" style="display:none"></div>
       </div>

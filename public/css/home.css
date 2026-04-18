@@ -828,6 +828,14 @@
   line-height: 1.5;
 }
 
+.correction-counter {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
 .correction-perfect {
   text-align: center;
   padding: 1rem;

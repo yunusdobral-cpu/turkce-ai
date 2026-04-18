@@ -27,11 +27,9 @@ function navigateTo(hash) {
     links.forEach(l => { if (l.dataset.route === 'admin') l.classList.add('active'); });
     renderAdmin(app);
   } else if (hash === '#/grammar') {
-    if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'grammar') l.classList.add('active'); });
     renderGrammar(app);
   } else if (hash === '#/reading') {
-    if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'reading') l.classList.add('active'); });
     renderReading(app);
   } else if (hash === '#/teachers') {
@@ -39,7 +37,6 @@ function navigateTo(hash) {
     links.forEach(l => { if (l.dataset.route === 'teachers') l.classList.add('active'); });
     renderGallery(app);
   } else if (hash === '#/vocab') {
-    if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'vocab') l.classList.add('active'); });
     renderVocab(app);
   } else if (hash === '#/privacy') {
@@ -49,21 +46,17 @@ function navigateTo(hash) {
   } else if (hash === '#/contact') {
     renderContact(app);
   } else if (hash === '#/millionaire') {
-    if (!requireAuth(hash)) return;
     renderMillionaireMenu(app);
   } else if (hash.startsWith('#/quiz')) {
-    if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'quiz') l.classList.add('active'); });
     const params = new URLSearchParams(hash.split('?')[1] || '');
     const mode = params.get('mode');
     renderQuiz(app, mode);
   } else if (hash.startsWith('#/forum/thread/')) {
-    if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'home') l.classList.add('active'); });
     const threadId = hash.replace('#/forum/thread/', '');
     renderForumThread(app, threadId);
   } else if (hash.startsWith('#/forum/')) {
-    if (!requireAuth(hash)) return;
     links.forEach(l => { if (l.dataset.route === 'home') l.classList.add('active'); });
     const catId = hash.replace('#/forum/', '');
     renderForumCategory(app, catId);
