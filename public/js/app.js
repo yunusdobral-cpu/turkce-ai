@@ -29,6 +29,9 @@ function navigateTo(hash) {
   } else if (hash === '#/grammar') {
     links.forEach(l => { if (l.dataset.route === 'grammar') l.classList.add('active'); });
     renderGrammar(app);
+  } else if (hash === '#/phrases') {
+    links.forEach(l => { if (l.dataset.route === 'phrases') l.classList.add('active'); });
+    renderPhrases(app);
   } else if (hash === '#/reading') {
     links.forEach(l => { if (l.dataset.route === 'reading') l.classList.add('active'); });
     renderReading(app);

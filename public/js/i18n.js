@@ -18,6 +18,12 @@ const I18N = {
     // Navbar
     nav_home:       { en: 'Home', es: 'Inicio', ar: 'الرئيسية', ru: 'Главная', de: 'Startseite', fr: 'Accueil' },
     nav_grammar:    { en: 'Grammar', es: 'Gramática', ar: 'القواعد', ru: 'Грамматика', de: 'Grammatik', fr: 'Grammaire' },
+    nav_phrases:    { en: 'Daily Phrases', es: 'Frases diarias', ar: 'عبارات يومية', ru: 'Повседневные фразы', de: 'Alltagsausdrücke', fr: 'Expressions quotidiennes' },
+    phrases_title:    { en: 'Daily Phrases', es: 'Frases diarias', ar: 'عبارات يومية', ru: 'Повседневные фразы', de: 'Alltagsausdrücke', fr: 'Expressions quotidiennes' },
+    phrases_subtitle: { en: 'Most used Turkish phrases in daily life', es: 'Frases turcas más usadas en la vida diaria', ar: 'أكثر العبارات التركية استخداماً في الحياة اليومية', ru: 'Самые используемые турецкие фразы в повседневной жизни', de: 'Die meistbenutzten türkischen Ausdrücke im Alltag', fr: 'Expressions turques les plus utilisées au quotidien' },
+    phrases_example:  { en: 'Example', es: 'Ejemplo', ar: 'مثال', ru: 'Пример', de: 'Beispiel', fr: 'Exemple' },
+    phrases_count:    { en: 'phrases', es: 'frases', ar: 'عبارات', ru: 'фраз', de: 'Ausdrücke', fr: 'expressions' },
+    phrases_select:   { en: 'Select a category', es: 'Selecciona una categoría', ar: 'اختر فئة', ru: 'Выберите категорию', de: 'Wähle eine Kategorie', fr: 'Choisissez une catégorie' },
     nav_reading:    { en: 'Reading', es: 'Lectura', ar: 'القراءة', ru: 'Чтение', de: 'Lesen', fr: 'Lecture' },
     nav_teachers:   { en: 'Teachers', es: 'Profesores', ar: 'المعلمون', ru: 'Учителя', de: 'Lehrer', fr: 'Professeurs' },
     nav_vocab:      { en: 'Vocabulary', es: 'Vocabulario', ar: 'المفردات', ru: 'Словарь', de: 'Wortschatz', fr: 'Vocabulaire' },
@@ -183,6 +189,7 @@ const I18N = {
     const navMap = {
       home: 'nav_home',
       grammar: 'nav_grammar',
+      phrases: 'nav_phrases',
       reading: 'nav_reading',
       teachers: 'nav_teachers',
       vocab: 'nav_vocab',
@@ -197,6 +204,7 @@ const I18N = {
       const trTexts = {
         home: 'Anasayfa',
         grammar: 'Dilbilgisi',
+        phrases: 'Günlük İfadeler',
         reading: 'Okuma',
         teachers: 'Öğretmenler',
         vocab: 'Kelime',
