@@ -37,7 +37,18 @@ function getDailyContent() {
   const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
   const shuffled = items.map((item, i) => ({ item, sort: (dayOfYear + i * 7) % items.length }));
   shuffled.sort((a, b) => a.sort - b.sort);
-  return shuffled.map(s => s.item);
+  const result = shuffled.map(s => s.item);
+  const isApril23 = today.getMonth() === 3 && (today.getDate() === 22 || today.getDate() === 23);
+  if (isApril23) {
+    result.unshift({
+      icon: '🇹🇷',
+      label: '23 Nisan Özel',
+      text: 'Ulusal Egemenlik ve Çocuk Bayramı',
+      sub: '🇬🇧 National Sovereignty & Children\'s Day · 🇩🇪 Tag der nationalen Souveränität · 🇫🇷 Fête de la Souveraineté Nationale',
+      special: 'april23'
+    });
+  }
+  return result;
 }
 
 function initTicker() {
@@ -355,7 +366,7 @@ async function renderHome(container) {
   const dailyContent = getDailyContent();
 
   const slidesHtml = dailyContent.map(item => `
-    <div class="daily-ticker-slide">
+    <div class="daily-ticker-slide${item.special ? ` daily-ticker-slide--${item.special}` : ''}">
       <div class="daily-ticker-icon">${item.icon}</div>
       <div class="daily-ticker-content">
         <div class="daily-ticker-label">${item.label}</div>

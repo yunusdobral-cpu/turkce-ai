@@ -186,6 +186,29 @@
   transform: scale(1.3);
 }
 
+/* 23 Nisan Özel Slayt */
+.daily-ticker-slide--april23 {
+  background: linear-gradient(135deg, #E30A17, #b80812);
+}
+.daily-ticker-slide--april23 .daily-ticker-icon {
+  background: rgba(255,255,255,0.2);
+  font-size: 2rem;
+}
+.daily-ticker-slide--april23 .daily-ticker-label {
+  opacity: 1;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.12em;
+}
+.daily-ticker-slide--april23 .daily-ticker-text {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.daily-ticker-slide--april23 .daily-ticker-sub {
+  opacity: 0.88;
+  font-size: 0.74rem;
+  line-height: 1.6;
+}
+
 /* Vocabulary Bot */
 .vocab-bot {
   flex: 1;
