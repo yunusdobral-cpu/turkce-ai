@@ -8,6 +8,7 @@ const chatRouter = require('./routes/chat');
 const forumRouter = require('./routes/forum');
 const authRouter = require('./routes/auth');
 const correctionRouter = require('./routes/correction');
+const streakRouter = require('./routes/streak');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use('/api/chat', chatRouter);
 app.use('/api/forum', forumRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/correction', correctionRouter);
+app.use('/api/streak', streakRouter);
 
 // SPA fallback — inject cache-busting version into HTML
 const indexHtmlPath = path.join(__dirname, 'public', 'index.html');

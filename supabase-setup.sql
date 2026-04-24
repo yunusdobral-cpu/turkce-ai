@@ -30,7 +30,22 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 2. Forum Kategorileri
+-- 2. Kullanıcı Serileri (Streak)
+CREATE TABLE public.user_streaks (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  current_streak INT DEFAULT 1,
+  longest_streak INT DEFAULT 1,
+  last_activity_date DATE DEFAULT CURRENT_DATE,
+  total_days INT DEFAULT 1,
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE public.user_streaks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Streaks readable by owner" ON public.user_streaks FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Streaks insertable by service" ON public.user_streaks FOR INSERT WITH CHECK (true);
+CREATE POLICY "Streaks updatable by service" ON public.user_streaks FOR UPDATE USING (true);
+
+-- 3. Forum Kategorileri
 CREATE TABLE public.forum_categories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,

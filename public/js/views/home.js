@@ -399,6 +399,8 @@ async function renderHome(container) {
         <p class="gallery-subtitle">${I18N.bi('Yapay Zeka ile Türkçe Öğren', 'home_subtitle')}</p>
       </div>
 
+      <div id="streakWidget" class="streak-widget" style="display:none"></div>
+
       <div class="daily-ticker">
         <div class="daily-ticker-header">
           <div class="daily-ticker-title">${I18N.bi('Günlük İçerik', 'daily_title')}</div>
@@ -514,6 +516,7 @@ async function renderHome(container) {
   initTicker();
   initCorrection();
   initChatroom();
+  initStreak();
   await loadForumCategories();
 }
 
@@ -1137,4 +1140,90 @@ function showLastLevelTestResult() {
       `;
     }
   } catch(e) {}
+}
+
+// ===== STREAK =====
+function getLocalStreak() {
+  const today = new Date().toISOString().slice(0, 10);
+  const stored = JSON.parse(localStorage.getItem('lingual_streak') || '{}');
+  if (!stored.lastDate) return { current: 0, longest: 0, total: 0 };
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yStr = yesterday.toISOString().slice(0, 10);
+
+  if (stored.lastDate === today) return stored;
+  if (stored.lastDate === yStr) {
+    const updated = { ...stored, current: stored.current + 1, longest: Math.max(stored.current + 1, stored.longest), total: stored.total + 1, lastDate: today };
+    localStorage.setItem('lingual_streak', JSON.stringify(updated));
+    return updated;
+  }
+  const reset = { current: 1, longest: stored.longest || 1, total: (stored.total || 0) + 1, lastDate: today };
+  localStorage.setItem('lingual_streak', JSON.stringify(reset));
+  return reset;
+}
+
+function saveLocalStreakToday() {
+  const today = new Date().toISOString().slice(0, 10);
+  const stored = JSON.parse(localStorage.getItem('lingual_streak') || '{}');
+  if (stored.lastDate === today) return stored;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yStr = yesterday.toISOString().slice(0, 10);
+  const continued = stored.lastDate === yStr;
+  const current = continued ? (stored.current || 0) + 1 : 1;
+  const updated = { current, longest: Math.max(current, stored.longest || 0), total: (stored.total || 0) + 1, lastDate: today };
+  localStorage.setItem('lingual_streak', JSON.stringify(updated));
+  return updated;
+}
+
+async function initStreak() {
+  const widget = document.getElementById('streakWidget');
+  if (!widget) return;
+
+  const isLoggedIn = Auth.isLoggedIn();
+  let streak;
+
+  if (isLoggedIn) {
+    const result = await API.streakCheckin();
+    streak = result || { current_streak: 1, longest_streak: 1, total_days: 1 };
+    const current = streak.current_streak;
+    const longest = streak.longest_streak;
+    const total = streak.total_days;
+    const flame = current >= 30 ? '🔥' : current >= 7 ? '🔥' : '🔥';
+    widget.innerHTML = `
+      <div class="streak-inner">
+        <div class="streak-main">
+          <span class="streak-flame">${flame}</span>
+          <span class="streak-count">${current}</span>
+          <span class="streak-label">günlük seri</span>
+        </div>
+        <div class="streak-stats">
+          <span>En uzun: <strong>${longest}</strong></span>
+          <span>Toplam: <strong>${total}</strong> gün</span>
+        </div>
+        ${streak.streakReset ? '<div class="streak-reset">Serin sıfırlandı — bugün yeniden başladın 💪</div>' : ''}
+        ${current >= 7 ? `<div class="streak-badge">🏅 ${current} günlük seri!</div>` : ''}
+      </div>
+    `;
+  } else {
+    const local = saveLocalStreakToday();
+    const current = local.current;
+    widget.innerHTML = `
+      <div class="streak-inner">
+        <div class="streak-main">
+          <span class="streak-flame">🔥</span>
+          <span class="streak-count">${current}</span>
+          <span class="streak-label">günlük seri</span>
+        </div>
+        ${current >= 3 ? `
+          <div class="streak-save-prompt">
+            Serini kaybetme! <a href="#" onclick="Auth.showLoginModal();return false;">Üye ol → kaydet</a>
+          </div>
+        ` : '<div class="streak-guest">Her gün gir, serinii büyüt!</div>'}
+      </div>
+    `;
+  }
+
+  widget.style.display = 'block';
 }

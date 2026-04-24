@@ -542,6 +542,81 @@
   transform: translateX(3px);
 }
 
+/* ===== Streak Widget ===== */
+.streak-widget {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  border-radius: var(--radius);
+  padding: 0.85rem 1.2rem;
+  margin-bottom: 1rem;
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+.streak-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+.streak-main {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.streak-flame {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.streak-count {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.streak-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0.9;
+  line-height: 1.2;
+}
+.streak-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.78rem;
+  opacity: 0.88;
+}
+.streak-stats strong {
+  font-weight: 700;
+}
+.streak-save-prompt {
+  font-size: 0.82rem;
+  background: rgba(0,0,0,0.2);
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  margin-left: auto;
+}
+.streak-save-prompt a {
+  color: white;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.streak-guest {
+  font-size: 0.78rem;
+  opacity: 0.8;
+  margin-left: auto;
+}
+.streak-badge {
+  font-size: 0.82rem;
+  background: rgba(255,255,255,0.2);
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.streak-reset {
+  font-size: 0.78rem;
+  opacity: 0.85;
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
 /* ===== Home Page ===== */
 .home-page .daily-ticker {
   margin-bottom: 2rem;
