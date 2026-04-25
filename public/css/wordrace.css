@@ -286,6 +286,44 @@
 .wr-result-name { flex: 1; font-weight: 600; text-align: left; }
 .wr-result-score { font-weight: 800; color: var(--primary); }
 
+/* ── Sonuç Paylaşım ── */
+.wr-share-result {
+  margin: 1rem 0 0.5rem;
+}
+.wr-share-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+.wr-share-btns {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.wr-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.wr-share-btn:hover { opacity: 0.82; }
+.wr-share-btn:active { transform: scale(0.96); }
+.wr-share-twitter { background: #000; }
+.wr-share-facebook { background: #1877f2; }
+.wr-share-instagram { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); }
+
 /* Mobile */
 @media (max-width: 480px) {
   .wr-word-tr { font-size: 2.2rem; }

@@ -90,6 +90,7 @@ function renderWordRace(container) {
         <div class="wr-card">
           <div class="wr-title">🏁 Oyun Bitti!</div>
           <div class="wr-results" id="wr-results"></div>
+          <div class="wr-share-result" id="wr-share-result"></div>
           <div class="wr-btn-group">
             <button class="wr-btn wr-btn-primary" id="wr-btn-again">Tekrar Oyna</button>
             <button class="wr-btn wr-btn-outline" id="wr-btn-home">Ana Sayfa</button>
@@ -327,6 +328,27 @@ function wrBindSocketEvents() {
         <span class="wr-result-score">${r.score} puan</span>
       </div>
     `).join('');
+
+    // Paylaşım butonları
+    const me = results.find(r => r.id === wrMySocketId);
+    if (me) {
+      const shareEl = document.getElementById('wr-share-result');
+      const isWinner = me.rank === 1;
+      const total = results[0]?.score !== undefined ? 10 : 10;
+      const text = isWinner
+        ? `🥇 Kelime Yarışması'nı kazandım! ${me.score}/${total} puan. Türkçe öğrenmede sana da meydan okuyorum! lingual.work`
+        : `🏆 Kelime Yarışması'nda ${me.score}/${total} puan aldım! Sen kaç alırsın? lingual.work`;
+      const encoded = encodeURIComponent(text);
+      const siteUrl = encodeURIComponent('https://lingual.work');
+      shareEl.innerHTML = `
+        <div class="wr-share-label">Sonucunu paylaş:</div>
+        <div class="wr-share-btns">
+          <a href="https://twitter.com/intent/tweet?text=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-twitter">𝕏 Twitter</a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-facebook">f Facebook</a>
+          <button class="wr-share-btn wr-share-instagram" onclick="wrCopyResult(this, ${JSON.stringify(text)})">📷 Instagram</button>
+        </div>
+      `;
+    }
   });
 
   wrSocket.on('room_error', (msg) => {
@@ -337,4 +359,12 @@ function wrBindSocketEvents() {
     showToast('Bağlantı kesildi', 'error');
     wrShow('wr-screen-lobby');
   });
+}
+
+function wrCopyResult(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Kopyalandı!';
+    showToast('Instagram için kopyalandı! Yapıştırarak paylaşabilirsin 📋', 'success');
+    setTimeout(() => { btn.textContent = '📷 Instagram'; }, 2500);
+  }).catch(() => showToast('Kopyalanamadı', 'error'));
 }
