@@ -361,9 +361,11 @@ function wrBindSocketEvents() {
         <div class="wr-share-btns">
           <a href="https://twitter.com/intent/tweet?text=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-twitter">𝕏 Twitter</a>
           <a href="https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-facebook">f Facebook</a>
-          <button class="wr-share-btn wr-share-instagram" onclick="wrCopyResult(this, ${JSON.stringify(text)})">📷 Instagram</button>
+          <button class="wr-share-btn wr-share-instagram" id="wr-ig-btn">📷 Instagram</button>
         </div>
       `;
+      const igBtn = document.getElementById('wr-ig-btn');
+      if (igBtn) igBtn.addEventListener('click', () => wrCopyResult(igBtn, text));
     }
   });
 
@@ -378,7 +380,20 @@ function wrBindSocketEvents() {
 }
 
 function wrCopyResult(btn, text) {
-  navigator.clipboard.writeText(text).then(() => {
+  const doCopy = () => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  };
+  doCopy().then(() => {
     btn.textContent = '✓ Kopyalandı!';
     showToast('Instagram için kopyalandı! Yapıştırarak paylaşabilirsin 📋', 'success');
     setTimeout(() => { btn.textContent = '📷 Instagram'; }, 2500);
