@@ -6,6 +6,7 @@ let wrMySocketId = null;
 let wrMyName = '';
 let wrIsHost = false;
 let wrMode = 'tr_en';
+let wrPrevScores = {};
 
 function renderWordRace(container) {
   wrDestroy();
@@ -56,7 +57,19 @@ function renderWordRace(container) {
       <div id="wr-screen-room" class="wr-screen">
         <div class="wr-card">
           <div class="wr-title">🏠 ${I18N.bi('Masa', 'wr_table_title')}</div>
-          <p class="wr-hint-small" style="margin-bottom:1rem">${t('wr_table_hint')}</p>
+          <div class="wr-room-visual">
+            <div class="wr-room-beacon">
+              <div class="wr-beacon-ring wr-ring-1"></div>
+              <div class="wr-beacon-ring wr-ring-2"></div>
+              <div class="wr-beacon-ring wr-ring-3"></div>
+              <div class="wr-beacon-icon">🏠</div>
+            </div>
+            <div class="wr-open-badge">
+              <span class="wr-badge-dot"></span>
+              AÇIK · Oyuncular bekleniyor
+            </div>
+          </div>
+          <p class="wr-hint-small" style="margin-bottom:0.8rem">${t('wr_table_hint')}</p>
           <div class="wr-players-list" id="wr-players-list"></div>
           <div id="wr-host-controls" style="display:none">
             <button class="wr-btn wr-btn-primary" id="wr-btn-start" style="width:100%">${t('wr_start_game')}</button>
@@ -207,26 +220,46 @@ function wrSubmit() {
 function wrRenderScores(scores) {
   const el = document.getElementById('wr-scores');
   if (!el) return;
+  const medals = ['🥇', '🥈', '🥉'];
   const sorted = [...scores].sort((a, b) => b.score - a.score);
-  el.innerHTML = sorted.map(s => `
-    <div class="wr-score-row ${s.id === wrMySocketId ? 'wr-me' : ''}">
-      <span>${s.id === wrMySocketId ? '👤 ' : ''}${s.name}</span>
-      <span class="wr-score-pts">${s.score}</span>
-    </div>
-  `).join('');
+  el.innerHTML = sorted.map((s, i) => {
+    const popped = wrPrevScores[s.id] !== undefined && wrPrevScores[s.id] < s.score;
+    return `
+      <div class="wr-score-row ${s.id === wrMySocketId ? 'wr-me' : ''}">
+        <span>${medals[i] || (i + 1) + '.'} ${s.id === wrMySocketId ? '👤 ' : ''}${s.name}</span>
+        <span class="wr-score-pts${popped ? ' wr-pop' : ''}">${s.score}</span>
+      </div>
+    `;
+  }).join('');
+  scores.forEach(s => { wrPrevScores[s.id] = s.score; });
 }
 
 function wrStartTimer(duration) {
   clearInterval(wrTimerInterval);
   const bar = document.getElementById('wr-timer-fill');
+  const wordBox = document.querySelector('.wr-word-box');
   if (!bar) return;
   const start = Date.now();
+  let wasCrit = false;
   wrTimerInterval = setInterval(() => {
     const pct = Math.max(0, 100 - ((Date.now() - start) / duration * 100));
     bar.style.width = pct + '%';
     bar.style.background = pct > 50 ? '#22c55e' : pct > 25 ? '#f59e0b' : '#ef4444';
+    const isCrit = pct <= 25 && pct > 0;
+    if (isCrit !== wasCrit) {
+      bar.classList.toggle('wr-crit', isCrit);
+      if (wordBox) wordBox.classList.toggle('wr-crit', isCrit);
+      wasCrit = isCrit;
+    }
     if (pct === 0) clearInterval(wrTimerInterval);
   }, 50);
+}
+
+function wrFlash(type) {
+  const el = document.createElement('div');
+  el.className = `wr-flash wr-flash-${type}`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 600);
 }
 
 function wrRenderLetterBoxes(answerLens) {
@@ -328,6 +361,7 @@ function wrBindSocketEvents() {
 
   wrSocket.on('round_start', ({ word, roundNum, total, duration, mode, answerLens }) => {
     clearInterval(wrTimerInterval);
+    wrPrevScores = {};
     wrShow('wr-screen-game');
     document.getElementById('wr-round-label').textContent = `${roundNum}/${total}`;
     document.getElementById('wr-word-tr').textContent = word;
@@ -336,6 +370,12 @@ function wrBindSocketEvents() {
       ? I18N.bi('Türkçe çevirisi nedir?', 'wr_word_hint_tr')
       : I18N.bi('İngilizce çevirisi nedir?', 'wr_word_hint');
     wrRenderLetterBoxes(answerLens);
+    const wordBox = document.querySelector('.wr-word-box');
+    if (wordBox) {
+      wordBox.classList.remove('wr-new', 'wr-crit');
+      void wordBox.offsetWidth;
+      wordBox.classList.add('wr-new');
+    }
     const input = document.getElementById('wr-answer');
     if (input) { input.value = ''; input.disabled = false; input.focus(); }
     wrFeedback('', '');
@@ -344,14 +384,25 @@ function wrBindSocketEvents() {
 
   wrSocket.on('wrong_answer', () => {
     wrFeedback(I18N.t('wr_wrong'), 'wrong');
+    const input = document.getElementById('wr-answer');
+    if (input) {
+      input.classList.remove('wr-shake');
+      void input.offsetWidth;
+      input.classList.add('wr-shake');
+      input.value = '';
+    }
   });
 
   wrSocket.on('round_win', ({ winnerId, winnerName, answer, scores }) => {
     clearInterval(wrTimerInterval);
     const input = document.getElementById('wr-answer');
     if (input) input.disabled = true;
-    document.getElementById('wr-timer-fill').style.width = '0%';
+    const bar = document.getElementById('wr-timer-fill');
+    if (bar) { bar.style.width = '0%'; bar.classList.remove('wr-crit'); }
+    const wordBox = document.querySelector('.wr-word-box');
+    if (wordBox) wordBox.classList.remove('wr-crit');
     const isMe = winnerId === wrMySocketId;
+    wrFlash(isMe ? 'win' : 'lose');
     wrFeedback(
       isMe
         ? `${I18N.t('wr_you_won')}"${answer}"`
@@ -365,7 +416,11 @@ function wrBindSocketEvents() {
     clearInterval(wrTimerInterval);
     const input = document.getElementById('wr-answer');
     if (input) input.disabled = true;
-    document.getElementById('wr-timer-fill').style.width = '0%';
+    const bar = document.getElementById('wr-timer-fill');
+    if (bar) { bar.style.width = '0%'; bar.classList.remove('wr-crit'); }
+    const wordBox = document.querySelector('.wr-word-box');
+    if (wordBox) wordBox.classList.remove('wr-crit');
+    wrFlash('lose');
     wrFeedback(`${I18N.t('wr_timeout')}"${answer}"`, 'timeout');
     wrRenderScores(scores);
   });
