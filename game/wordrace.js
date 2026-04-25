@@ -118,8 +118,8 @@ const BOT_NAMES = [
   '🤖 Mason', '🤖 Ava', '🤖 Logan', '🤖 Charlotte', '🤖 Aiden', '🤖 Amelia',
   '🤖 Ryan', '🤖 Harper', '🤖 Daniel', '🤖 Evelyn', '🤖 Jack', '🤖 Luna',
   '🤖 Henry', '🤖 Ella', '🤖 Owen', '🤖 Chloe', '🤖 Sebastian', '🤖 Lily',
-  '🤖 Nathan', '🤖 Grace', '🤖 Leo', '🤖 Zoey', '🤖 Isaac', '🤖 Nora',
-  '🤖 Julian', '🤖 Riley', '🤖 Adrian', '🤖 Layla',
+  '🤖 Omar', '🤖 Fatima', '🤖 Ahmed', '🤖 Leila', '🤖 Hassan', '🤖 Nour',
+  '🤖 Yusuf', '🤖 Yasmin', '🤖 Karim', '🤖 Salma',
 ];
 
 function shuffle(arr) {
