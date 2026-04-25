@@ -112,7 +112,15 @@ const WORDS = [
 
 const ROUND_DURATION = 12000;
 const TOTAL_ROUNDS = 10;
-const BOT_NAMES = ['🤖 Ayla', '🤖 Kerem', '🤖 Zeynep', '🤖 Can', '🤖 Elif', '🤖 Burak'];
+const BOT_NAMES = [
+  '🤖 Alex', '🤖 Maria', '🤖 Lucas', '🤖 Sophie', '🤖 James', '🤖 Emma',
+  '🤖 Noah', '🤖 Olivia', '🤖 Liam', '🤖 Isabella', '🤖 Ethan', '🤖 Mia',
+  '🤖 Mason', '🤖 Ava', '🤖 Logan', '🤖 Charlotte', '🤖 Aiden', '🤖 Amelia',
+  '🤖 Ryan', '🤖 Harper', '🤖 Daniel', '🤖 Evelyn', '🤖 Jack', '🤖 Luna',
+  '🤖 Henry', '🤖 Ella', '🤖 Owen', '🤖 Chloe', '🤖 Sebastian', '🤖 Lily',
+  '🤖 Nathan', '🤖 Grace', '🤖 Leo', '🤖 Zoey', '🤖 Isaac', '🤖 Nora',
+  '🤖 Julian', '🤖 Riley', '🤖 Adrian', '🤖 Layla',
+];
 
 function shuffle(arr) {
   const a = [...arr];
@@ -197,6 +205,7 @@ module.exports = function (io) {
       currentWord: null,
       currentWordAnswered: false,
       roundTimer: null,
+      botTimer: null,
     };
     rooms.set(code, room);
     return room;
@@ -270,6 +279,7 @@ module.exports = function (io) {
     socket.roomCode = null;
     if (room.players.length === 0) {
       if (room.roundTimer) clearTimeout(room.roundTimer);
+      if (room.botTimer) clearTimeout(room.botTimer);
       rooms.delete(room.code);
       broadcastOpenRooms();
       return;
@@ -338,18 +348,6 @@ module.exports = function (io) {
       }
     });
 
-    socket.on('join_with_bot', ({ name }) => {
-      if (socket.roomCode) return;
-      socket.playerName = (name || 'Anonim').slice(0, 20);
-      const room = createRoom(false);
-      socket.join(room.code);
-      socket.roomCode = room.code;
-      room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
-      addBot(room);
-      socket.emit('room_joined', { players: room.players.map(p => ({ name: p.name })) });
-      setTimeout(() => startCountdown(room), 1500);
-    });
-
     socket.on('create_room', ({ name }) => {
       if (socket.roomCode) return;
       socket.playerName = (name || 'Anonim').slice(0, 20);
@@ -359,6 +357,16 @@ module.exports = function (io) {
       room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
       socket.emit('room_created', { players: [{ name: socket.playerName }] });
       broadcastOpenRooms();
+      room.botTimer = setTimeout(() => {
+        if (room.state !== 'lobby' || room.players.length >= 2) return;
+        addBot(room);
+        io.to(room.code).emit('player_joined', {
+          name: room.players[room.players.length - 1].name,
+          players: room.players.map(p => ({ name: p.name })),
+        });
+        setTimeout(() => startCountdown(room), 1500);
+        broadcastOpenRooms();
+      }, 8000);
     });
 
     socket.on('join_room', ({ code, name }) => {
@@ -371,6 +379,7 @@ module.exports = function (io) {
       socket.join(room.code);
       socket.roomCode = room.code;
       room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
+      if (room.botTimer) { clearTimeout(room.botTimer); room.botTimer = null; }
       socket.emit('room_joined', { players: room.players.map(p => ({ name: p.name })) });
       socket.to(room.code).emit('player_joined', { name: socket.playerName, players: room.players.map(p => ({ name: p.name })) });
       broadcastOpenRooms();

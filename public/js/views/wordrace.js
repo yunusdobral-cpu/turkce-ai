@@ -28,7 +28,6 @@ function renderWordRace(container) {
           <div class="wr-btn-group">
             <button class="wr-btn wr-btn-primary" id="wr-btn-queue">${t('wr_quick_match')}</button>
             <button class="wr-btn wr-btn-secondary" id="wr-btn-create">${t('wr_create_table')}</button>
-            <button class="wr-btn wr-btn-bot" id="wr-btn-bot">${t('wr_play_bot')}</button>
           </div>
           <div class="wr-open-rooms-section">
             <div class="wr-open-rooms-title">${t('wr_open_tables')}</div>
@@ -149,11 +148,6 @@ function wrBindButtons() {
   document.getElementById('wr-btn-create')?.addEventListener('click', () => {
     wrMyName = wrName();
     wrSocket.emit('create_room', { name: wrMyName });
-  });
-
-  document.getElementById('wr-btn-bot')?.addEventListener('click', () => {
-    wrMyName = wrName();
-    wrSocket.emit('join_with_bot', { name: wrMyName });
   });
 
   document.getElementById('wr-btn-start')?.addEventListener('click', () => {
