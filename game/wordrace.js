@@ -112,6 +112,7 @@ const WORDS = [
 
 const ROUND_DURATION = 12000;
 const TOTAL_ROUNDS = 10;
+const BOT_NAMES = ['🤖 Ayla', '🤖 Kerem', '🤖 Zeynep', '🤖 Can', '🤖 Elif', '🤖 Burak'];
 
 function shuffle(arr) {
   const a = [...arr];
@@ -152,6 +153,35 @@ module.exports = function (io) {
 
   function broadcastOpenRooms() {
     io.emit('open_rooms', getOpenRooms());
+  }
+
+  function addBot(room) {
+    const name = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
+    const bot = { id: 'bot_' + Date.now(), name, score: 0, isBot: true, answerTimer: null };
+    room.players.push(bot);
+    return bot;
+  }
+
+  function scheduleBotAnswer(room) {
+    room.players.filter(p => p.isBot).forEach(bot => {
+      if (bot.answerTimer) clearTimeout(bot.answerTimer);
+      const willAnswer = Math.random() < 0.62;
+      if (!willAnswer) return;
+      const delay = 2800 + Math.random() * 7200;
+      bot.answerTimer = setTimeout(() => {
+        if (room.currentWordAnswered || room.state !== 'playing') return;
+        room.currentWordAnswered = true;
+        clearTimeout(room.roundTimer);
+        bot.score++;
+        io.to(room.code).emit('round_win', {
+          winnerId: bot.id,
+          winnerName: bot.name,
+          answer: room.currentWord.en,
+          scores: getScores(room),
+        });
+        scheduleNext(room);
+      }, delay);
+    });
   }
 
   function createRoom(isPrivate = false) {
@@ -199,6 +229,7 @@ module.exports = function (io) {
       total: room.totalRounds,
       duration: ROUND_DURATION,
     });
+    scheduleBotAnswer(room);
     room.roundTimer = setTimeout(() => {
       if (!room.currentWordAnswered) {
         room.currentWordAnswered = true;
@@ -222,6 +253,7 @@ module.exports = function (io) {
   function endGame(room) {
     room.state = 'finished';
     if (room.roundTimer) clearTimeout(room.roundTimer);
+    room.players.filter(p => p.isBot).forEach(bot => { if (bot.answerTimer) clearTimeout(bot.answerTimer); });
     const sorted = [...room.players].sort((a, b) => b.score - a.score);
     io.to(room.code).emit('game_over', {
       results: sorted.map((p, i) => ({ rank: i + 1, id: p.id, name: p.name, score: p.score })),
@@ -265,10 +297,13 @@ module.exports = function (io) {
     socket.on('join_queue', ({ name }) => {
       if (socket.roomCode) return;
       socket.playerName = (name || 'Anonim').slice(0, 20);
-      queue.push({ id: socket.id, name: socket.playerName });
+      const entry = { id: socket.id, name: socket.playerName, botTimer: null };
+      queue.push(entry);
       socket.emit('waiting', { position: queue.length });
+
       if (queue.length >= 2) {
         const matched = queue.splice(0, Math.min(8, queue.length));
+        matched.forEach(p => { if (p.botTimer) clearTimeout(p.botTimer); });
         const room = createRoom(false);
         matched.forEach(p => {
           const s = io.sockets.sockets.get(p.id);
@@ -277,17 +312,42 @@ module.exports = function (io) {
           s.roomCode = room.code;
           room.players.push({ id: p.id, name: p.name, score: 0 });
         });
-        io.to(room.code).emit('room_ready', {
-          code: room.code,
-          players: room.players.map(p => ({ name: p.name })),
-        });
+        io.to(room.code).emit('room_ready', { players: room.players.map(p => ({ name: p.name })) });
         setTimeout(() => startCountdown(room), 1500);
+      } else {
+        entry.botTimer = setTimeout(() => {
+          const idx = queue.indexOf(entry);
+          if (idx === -1 || socket.roomCode) return;
+          queue.splice(idx, 1);
+          const room = createRoom(false);
+          socket.join(room.code);
+          socket.roomCode = room.code;
+          room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
+          addBot(room);
+          socket.emit('room_ready', { players: room.players.map(p => ({ name: p.name })) });
+          setTimeout(() => startCountdown(room), 1200);
+        }, 8000);
       }
     });
 
     socket.on('cancel_queue', () => {
       const i = queue.findIndex(q => q.id === socket.id);
-      if (i !== -1) queue.splice(i, 1);
+      if (i !== -1) {
+        if (queue[i].botTimer) clearTimeout(queue[i].botTimer);
+        queue.splice(i, 1);
+      }
+    });
+
+    socket.on('join_with_bot', ({ name }) => {
+      if (socket.roomCode) return;
+      socket.playerName = (name || 'Anonim').slice(0, 20);
+      const room = createRoom(false);
+      socket.join(room.code);
+      socket.roomCode = room.code;
+      room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
+      addBot(room);
+      socket.emit('room_joined', { players: room.players.map(p => ({ name: p.name })) });
+      setTimeout(() => startCountdown(room), 1500);
     });
 
     socket.on('create_room', ({ name }) => {
@@ -350,7 +410,10 @@ module.exports = function (io) {
 
     socket.on('disconnect', () => {
       const i = queue.findIndex(q => q.id === socket.id);
-      if (i !== -1) queue.splice(i, 1);
+      if (i !== -1) {
+        if (queue[i].botTimer) clearTimeout(queue[i].botTimer);
+        queue.splice(i, 1);
+      }
       handleLeave(socket);
     });
   });

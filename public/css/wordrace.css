@@ -70,6 +70,7 @@
 .wr-btn-primary { background: var(--primary); color: white; }
 .wr-btn-secondary { background: #059669; color: white; }
 .wr-btn-outline { background: transparent; color: var(--text); border: 2px solid var(--border); }
+.wr-btn-bot { background: #7c3aed; color: white; }
 
 .wr-btn-group { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.2rem; }
 .wr-btn-group .wr-btn { flex: 1; min-width: 130px; }

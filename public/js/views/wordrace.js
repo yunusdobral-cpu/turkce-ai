@@ -24,6 +24,7 @@ function renderWordRace(container) {
           <div class="wr-btn-group">
             <button class="wr-btn wr-btn-primary" id="wr-btn-queue">⚡ Hızlı Eşleşme</button>
             <button class="wr-btn wr-btn-secondary" id="wr-btn-create">🏠 Masa Kur</button>
+            <button class="wr-btn wr-btn-bot" id="wr-btn-bot">🤖 Bot ile Oyna</button>
           </div>
           <div class="wr-open-rooms-section">
             <div class="wr-open-rooms-title">Açık Masalar</div>
@@ -38,6 +39,7 @@ function renderWordRace(container) {
           <span class="wr-waiting-anim">🔍</span>
           <div class="wr-title">Rakip aranıyor</div>
           <div class="wr-dots"><span>.</span><span>.</span><span>.</span></div>
+          <p class="wr-hint-small" style="margin-bottom:1rem">8 saniye içinde rakip bulunamazsa bot eklenir</p>
           <button class="wr-btn wr-btn-outline" id="wr-btn-cancel">İptal</button>
         </div>
       </div>
@@ -143,6 +145,11 @@ function wrBindButtons() {
   document.getElementById('wr-btn-create')?.addEventListener('click', () => {
     wrMyName = wrName();
     wrSocket.emit('create_room', { name: wrMyName });
+  });
+
+  document.getElementById('wr-btn-bot')?.addEventListener('click', () => {
+    wrMyName = wrName();
+    wrSocket.emit('join_with_bot', { name: wrMyName });
   });
 
   document.getElementById('wr-btn-start')?.addEventListener('click', () => {
