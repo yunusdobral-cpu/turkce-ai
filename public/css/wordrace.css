@@ -415,6 +415,91 @@
   50%     { box-shadow: 0 0 0 6px rgba(22,163,74,0); }
 }
 
+/* ── Masa Sahnesi (top-down) ── */
+.wr-ts-wrap {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 0.6rem;
+}
+.wr-ts-table {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 96px; height: 96px;
+  background: radial-gradient(circle at 38% 32%, #1a6b3c, #0d3d22);
+  border-radius: 50%;
+  border: 4px solid #22c55e;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22), 0 0 0 3px rgba(34,197,94,0.15), inset 0 2px 6px rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  z-index: 1;
+}
+.wr-ts-table-icon { font-size: 1.7rem; line-height: 1; }
+.wr-ts-table-lbl {
+  font-size: 0.48rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+}
+.wr-ts-seat {
+  position: absolute;
+  width: 48px;
+  text-align: center;
+  z-index: 2;
+}
+.wr-ts-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  border: 3px solid white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+  margin: 0 auto 3px;
+}
+.wr-ts-avatar.wr-ts-host {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-color: #fde68a;
+}
+.wr-ts-empty {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 2.5px dashed #d1d5db;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  margin: 0 auto 3px;
+  animation: wr-empty-seat 2s ease-in-out infinite;
+}
+@keyframes wr-empty-seat {
+  0%,100% { border-color: #d1d5db; opacity: 0.55; }
+  50%     { border-color: var(--primary); opacity: 1; color: var(--primary); }
+}
+.wr-ts-name {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 58px;
+  margin: 0 auto;
+  line-height: 1.2;
+}
+.wr-ts-empty-lbl { color: var(--text-muted); font-weight: 400; }
+
 /* ── Oyun Animasyonları ── */
 @keyframes wr-word-bounce {
   0%   { transform: translateY(-18px) scale(0.9); opacity: 0; }

@@ -55,27 +55,17 @@ function renderWordRace(container) {
 
       <!-- Masa bekleme -->
       <div id="wr-screen-room" class="wr-screen">
-        <div class="wr-card">
-          <div class="wr-title">🏠 ${I18N.bi('Masa', 'wr_table_title')}</div>
-          <div class="wr-room-visual">
-            <div class="wr-room-beacon">
-              <div class="wr-beacon-ring wr-ring-1"></div>
-              <div class="wr-beacon-ring wr-ring-2"></div>
-              <div class="wr-beacon-ring wr-ring-3"></div>
-              <div class="wr-beacon-icon">🏠</div>
-            </div>
-            <div class="wr-open-badge">
-              <span class="wr-badge-dot"></span>
-              AÇIK · Oyuncular bekleniyor
-            </div>
+        <div class="wr-card" style="padding:1.5rem 1rem">
+          <div class="wr-open-badge" style="justify-content:center;margin-bottom:0.8rem">
+            <span class="wr-badge-dot"></span>
+            AÇIK · ${t('wr_table_hint')}
           </div>
-          <p class="wr-hint-small" style="margin-bottom:0.8rem">${t('wr_table_hint')}</p>
-          <div class="wr-players-list" id="wr-players-list"></div>
-          <div id="wr-host-controls" style="display:none">
+          <div id="wr-table-scene"></div>
+          <div id="wr-host-controls" style="display:none;margin-top:0.8rem">
             <button class="wr-btn wr-btn-primary" id="wr-btn-start" style="width:100%">${t('wr_start_game')}</button>
             <p class="wr-hint-small">${t('wr_min_players')}</p>
           </div>
-          <p id="wr-guest-wait" class="wr-hint-small" style="display:none">${t('wr_host_starts')}</p>
+          <p id="wr-guest-wait" class="wr-hint-small" style="display:none;margin-top:0.8rem">${t('wr_host_starts')}</p>
           <button class="wr-btn wr-btn-outline wr-mt" id="wr-btn-leave">${t('wr_leave_table')}</button>
         </div>
       </div>
@@ -302,15 +292,47 @@ function wrRenderOpenRooms(openRooms) {
 }
 
 function wrRenderPlayers(players, isHost) {
-  const el = document.getElementById('wr-players-list');
+  const el = document.getElementById('wr-table-scene');
   if (!el) return;
-  el.innerHTML = players.map((p, i) => `
-    <div class="wr-player-item">
-      <span class="wr-player-avatar">${(p.name[0] || '?').toUpperCase()}</span>
-      <span>${p.name}</span>
-      ${i === 0 ? '<span class="wr-host-badge">👑</span>' : ''}
-    </div>
-  `).join('');
+
+  const MAX = 8;
+  const cx = 120, cy = 120, r = 86, sz = 48;
+  const positions = Array.from({ length: MAX }, (_, i) => {
+    const a = i * (2 * Math.PI / MAX) - Math.PI / 2;
+    return { left: Math.round(cx + r * Math.cos(a) - sz / 2), top: Math.round(cy + r * Math.sin(a) - sz / 2) };
+  });
+
+  const emptyShow = Math.min(Math.max(1, 3 - players.length + 1), MAX - players.length);
+  let seats = '';
+
+  players.forEach((p, i) => {
+    const { left, top } = positions[i];
+    const isH = i === 0;
+    seats += `
+      <div class="wr-ts-seat" style="left:${left}px;top:${top}px">
+        <div class="wr-ts-avatar${isH ? ' wr-ts-host' : ''}">${(p.name[0] || '?').toUpperCase()}</div>
+        <div class="wr-ts-name">${isH ? '👑 ' : ''}${p.name}</div>
+      </div>`;
+  });
+
+  for (let i = 0; i < emptyShow; i++) {
+    const { left, top } = positions[players.length + i];
+    seats += `
+      <div class="wr-ts-seat" style="left:${left}px;top:${top}px">
+        <div class="wr-ts-empty">＋</div>
+        <div class="wr-ts-name wr-ts-empty-lbl">bekliyor...</div>
+      </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="wr-ts-wrap">
+      <div class="wr-ts-table">
+        <span class="wr-ts-table-icon">🎮</span>
+        <span class="wr-ts-table-lbl">MASA</span>
+      </div>
+      ${seats}
+    </div>`;
+
   const hostCtrl = document.getElementById('wr-host-controls');
   const guestWait = document.getElementById('wr-guest-wait');
   if (hostCtrl) hostCtrl.style.display = isHost ? 'block' : 'none';
