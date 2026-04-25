@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const { Server: SocketIO } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -11,6 +13,9 @@ const correctionRouter = require('./routes/correction');
 const streakRouter = require('./routes/streak');
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new SocketIO(httpServer, { cors: { origin: '*' } });
+require('./game/wordrace')(io);
 const PORT = process.env.PORT || 3000;
 const BUILD_VERSION = Date.now().toString(36);
 
@@ -49,7 +54,7 @@ app.get('*', (req, res) => {
   res.send(getIndexHtml());
 });
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Sunucu http://localhost:${PORT} adresinde çalışıyor`);
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your-api-key-here') {
     console.warn('UYARI: .env dosyasında geçerli bir OPENAI_API_KEY ayarlayın!');

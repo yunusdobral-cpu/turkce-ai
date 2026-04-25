@@ -12,6 +12,11 @@ function requireAuth(hash) {
 }
 
 function navigateTo(hash) {
+  // Yarışma sayfasından ayrılırken socket'i kapat
+  if (typeof wrSocket !== 'undefined' && wrSocket && hash !== '#/wordrace') {
+    wrDestroy();
+  }
+
   const app = document.getElementById('app');
   const links = document.querySelectorAll('.nav-link');
 
@@ -55,6 +60,9 @@ function navigateTo(hash) {
     const params = new URLSearchParams(hash.split('?')[1] || '');
     const mode = params.get('mode');
     renderQuiz(app, mode);
+  } else if (hash === '#/wordrace') {
+    links.forEach(l => { if (l.dataset.route === 'wordrace') l.classList.add('active'); });
+    renderWordRace(app);
   } else if (hash.startsWith('#/forum/thread/')) {
     links.forEach(l => { if (l.dataset.route === 'home') l.classList.add('active'); });
     const threadId = hash.replace('#/forum/thread/', '');

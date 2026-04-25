@@ -144,6 +144,10 @@ const Auth = {
           closeModal();
           this.updateNavbar();
           showToast('Giriş başarılı! / Login successful!', 'success');
+          const localStreak = JSON.parse(localStorage.getItem('lingual_streak') || '{}');
+          if (localStreak.current >= 1) {
+            API.importStreak({ current: localStreak.current, longest: localStreak.longest, total: localStreak.total }).catch(() => {});
+          }
         }
       } catch (err) {
         errDiv.textContent = 'Bağlantı hatası / Connection error';

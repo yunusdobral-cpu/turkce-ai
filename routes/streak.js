@@ -72,4 +72,55 @@ router.post('/checkin', userAuth, async (req, res) => {
   }
 });
 
+// POST /api/streak/import — yerel seriyi Supabase'e aktar (giriş sonrası)
+router.post('/import', userAuth, async (req, res) => {
+  try {
+    const { current, longest, total } = req.body;
+    const today = new Date().toISOString().slice(0, 10);
+    const userId = req.user.id;
+
+    const { data: existing } = await supabaseAdmin
+      .from('user_streaks')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (!existing) {
+      const { data } = await supabaseAdmin
+        .from('user_streaks')
+        .insert({
+          user_id: userId,
+          current_streak: current || 1,
+          longest_streak: Math.max(longest || 1, current || 1),
+          last_activity_date: today,
+          total_days: total || current || 1
+        })
+        .select()
+        .single();
+      return res.json({ ...data, imported: true });
+    }
+
+    const newCurrent = Math.max(existing.current_streak, current || 1);
+    const newLongest = Math.max(existing.longest_streak, longest || 1, newCurrent);
+    const newTotal = Math.max(existing.total_days, total || 1);
+
+    const { data } = await supabaseAdmin
+      .from('user_streaks')
+      .update({
+        current_streak: newCurrent,
+        longest_streak: newLongest,
+        last_activity_date: today,
+        total_days: newTotal,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', userId)
+      .select()
+      .single();
+
+    res.json({ ...data, imported: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Import başarısız' });
+  }
+});
+
 module.exports = router;

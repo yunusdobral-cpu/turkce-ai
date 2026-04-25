@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="/css/auth.css">
   <link rel="stylesheet" href="/css/millionaire.css">
   <link rel="stylesheet" href="/css/legal.css">
+  <link rel="stylesheet" href="/css/wordrace.css">
 </head>
 <body>
   <nav class="navbar">
@@ -45,6 +46,7 @@
         <a href="#/teachers" class="nav-link" data-route="teachers">Öğretmenler</a>
         <a href="#/vocab" class="nav-link" data-route="vocab">Kelime</a>
         <a href="#/quiz" class="nav-link" data-route="quiz">Sınav</a>
+        <a href="#/wordrace" class="nav-link" data-route="wordrace">🏆 Yarışma</a>
       </div>
       <div class="nav-links-right">
         <div id="navAuth"></div>
@@ -62,6 +64,7 @@
     <a href="#/contact">Iletisim</a>
   </footer>
 
+  <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="/js/data/vocab-a1a2.js"></script>
   <script src="/js/data/vocab-b1b2.js"></script>
@@ -88,6 +91,7 @@
   <script src="/js/views/legal.js"></script>
   <script src="/js/views/chat.js"></script>
   <script src="/js/views/admin.js"></script>
+  <script src="/js/views/wordrace.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>

@@ -1191,12 +1191,23 @@ async function initStreak() {
     const longest = streak.longest_streak;
     const total = streak.total_days;
     const flame = current >= 30 ? '🔥' : current >= 7 ? '🔥' : '🔥';
+    const shareText = encodeURIComponent(`🔥 ${current} günlük Türkçe serim var! Her gün öğreniyorum. lingual.work`);
+    const shareUrl = encodeURIComponent('https://lingual.work');
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${shareText}`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${shareText}`;
     widget.innerHTML = `
       <div class="streak-inner">
-        <div class="streak-main">
-          <span class="streak-flame">${flame}</span>
-          <span class="streak-count">${current}</span>
-          <span class="streak-label">günlük seri</span>
+        <div class="streak-top">
+          <div class="streak-main">
+            <span class="streak-flame">${flame}</span>
+            <span class="streak-count">${current}</span>
+            <span class="streak-label">günlük seri</span>
+          </div>
+          <div class="streak-share">
+            <a href="${twitterUrl}" target="_blank" rel="noopener" class="streak-share-btn streak-share-twitter" title="X/Twitter'da paylaş">𝕏</a>
+            <a href="${facebookUrl}" target="_blank" rel="noopener" class="streak-share-btn streak-share-facebook" title="Facebook'ta paylaş">f</a>
+            <button class="streak-share-btn streak-share-instagram" onclick="copyStreakText(${current})" title="Instagram için kopyala">📷</button>
+          </div>
         </div>
         <div class="streak-stats">
           <span>En uzun: <strong>${longest}</strong></span>
@@ -1209,12 +1220,23 @@ async function initStreak() {
   } else {
     const local = saveLocalStreakToday();
     const current = local.current;
+    const shareTextG = encodeURIComponent(`🔥 ${current} günlük Türkçe serim var! Her gün öğreniyorum. lingual.work`);
+    const shareUrlG = encodeURIComponent('https://lingual.work');
+    const twitterUrlG = `https://twitter.com/intent/tweet?text=${shareTextG}`;
+    const facebookUrlG = `https://www.facebook.com/sharer/sharer.php?u=${shareUrlG}&quote=${shareTextG}`;
     widget.innerHTML = `
       <div class="streak-inner">
-        <div class="streak-main">
-          <span class="streak-flame">🔥</span>
-          <span class="streak-count">${current}</span>
-          <span class="streak-label">günlük seri</span>
+        <div class="streak-top">
+          <div class="streak-main">
+            <span class="streak-flame">🔥</span>
+            <span class="streak-count">${current}</span>
+            <span class="streak-label">günlük seri</span>
+          </div>
+          <div class="streak-share">
+            <a href="${twitterUrlG}" target="_blank" rel="noopener" class="streak-share-btn streak-share-twitter" title="X/Twitter'da paylaş">𝕏</a>
+            <a href="${facebookUrlG}" target="_blank" rel="noopener" class="streak-share-btn streak-share-facebook" title="Facebook'ta paylaş">f</a>
+            <button class="streak-share-btn streak-share-instagram" onclick="copyStreakText(${current})" title="Instagram için kopyala">📷</button>
+          </div>
         </div>
         ${current >= 3 ? `
           <div class="streak-save-prompt">
@@ -1226,4 +1248,13 @@ async function initStreak() {
   }
 
   widget.style.display = 'block';
+}
+
+function copyStreakText(days) {
+  const text = `🔥 ${days} günlük Türkçe serim var! Her gün öğreniyorum. lingual.work #TürkçeÖğren #LingualWork`;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Instagram için kopyalandı! 📋 Yapıştırarak paylaşabilirsin.', 'success');
+  }).catch(() => {
+    showToast('Kopyalanamadı, lütfen manuel seçin.', 'error');
+  });
 }

@@ -290,6 +290,17 @@ const API = {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     return res.ok ? res.json() : null;
+  },
+
+  async importStreak(localData) {
+    const token = localStorage.getItem('turkceai_token');
+    if (!token) return null;
+    const res = await fetch('/api/streak/import', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(localData)
+    });
+    return res.ok ? res.json() : null;
   }
 };
 

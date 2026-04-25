@@ -553,9 +553,14 @@
 }
 .streak-inner {
   display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.streak-top {
+  display: flex;
   align-items: center;
-  gap: 1.2rem;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.8rem;
 }
 .streak-main {
   display: flex;
@@ -591,7 +596,6 @@
   background: rgba(0,0,0,0.2);
   padding: 0.3rem 0.7rem;
   border-radius: 20px;
-  margin-left: auto;
 }
 .streak-save-prompt a {
   color: white;
@@ -601,8 +605,34 @@
 .streak-guest {
   font-size: 0.78rem;
   opacity: 0.8;
-  margin-left: auto;
 }
+.streak-share {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.streak-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  line-height: 1;
+  flex-shrink: 0;
+  padding: 0;
+}
+.streak-share-btn:hover { opacity: 0.75; }
+.streak-share-twitter { background: #000; font-family: serif; }
+.streak-share-facebook { background: #1877f2; font-size: 0.88rem; }
+.streak-share-instagram { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); }
 .streak-badge {
   font-size: 0.82rem;
   background: rgba(255,255,255,0.2);
