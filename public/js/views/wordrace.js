@@ -354,18 +354,30 @@ function wrBindSocketEvents() {
       const isWinner = me.rank === 1;
       const shareKey = isWinner ? 'wr_share_won' : 'wr_share_played';
       const text = I18N.t(shareKey).replace('{score}', me.score);
-      const encoded = encodeURIComponent(text);
-      const siteUrl = encodeURIComponent('https://lingual.work');
       shareEl.innerHTML = `
         <div class="wr-share-label">${I18N.t('wr_share_label')}</div>
         <div class="wr-share-btns">
-          <a href="https://twitter.com/intent/tweet?text=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-twitter">𝕏 Twitter</a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-facebook">f Facebook</a>
+          <button class="wr-share-btn wr-share-twitter" id="wr-twitter-btn">𝕏 Twitter</button>
+          <button class="wr-share-btn wr-share-facebook" id="wr-fb-btn">f Facebook</button>
           <button class="wr-share-btn wr-share-instagram" id="wr-ig-btn">📷 Instagram</button>
         </div>
       `;
-      const igBtn = document.getElementById('wr-ig-btn');
-      if (igBtn) igBtn.addEventListener('click', () => wrCopyResult(igBtn, text));
+      const _setLoading = (btn, on) => { btn.disabled = on; btn.style.opacity = on ? '0.55' : ''; };
+      document.getElementById('wr-twitter-btn').addEventListener('click', async function () {
+        _setLoading(this, true);
+        await wrShareCard(results, wrMySocketId, text, 'twitter');
+        _setLoading(this, false);
+      });
+      document.getElementById('wr-fb-btn').addEventListener('click', async function () {
+        _setLoading(this, true);
+        await wrShareCard(results, wrMySocketId, text, 'facebook');
+        _setLoading(this, false);
+      });
+      document.getElementById('wr-ig-btn').addEventListener('click', async function () {
+        _setLoading(this, true);
+        await wrShareCard(results, wrMySocketId, text, 'instagram');
+        _setLoading(this, false);
+      });
     }
   });
 
@@ -377,6 +389,115 @@ function wrBindSocketEvents() {
     showToast('Bağlantı kesildi', 'error');
     wrShow('wr-screen-lobby');
   });
+}
+
+function wrBuildShareCard(results, mySocketId) {
+  const me = results.find(r => r.id === mySocketId) || results[0];
+  const medals = ['🥇', '🥈', '🥉'];
+  const rankLabel = ['🥇 Birinci!', '🥈 İkinci', '🥉 Üçüncü'][me.rank - 1] || `${me.rank}. Sıra`;
+
+  const card = document.createElement('div');
+  card.style.cssText = [
+    'position:fixed', 'top:-9999px', 'left:-9999px',
+    'width:360px', 'height:640px',
+    'background:linear-gradient(160deg,#1e1b4b 0%,#312e81 45%,#4c1d95 100%)',
+    'display:flex', 'flex-direction:column', 'align-items:center',
+    'justify-content:space-between', 'padding:48px 28px 40px',
+    'box-sizing:border-box',
+    "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif",
+    'color:white', 'overflow:hidden',
+  ].join(';');
+
+  const topList = results.slice(0, 4).map(r => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-size:13px;${r.id === mySocketId ? 'font-weight:800;color:#fbbf24' : 'color:rgba(255,255,255,0.8)'}">${medals[r.rank - 1] || r.rank + '.'} ${r.name}</span>
+      <span style="font-size:14px;font-weight:800;${r.id === mySocketId ? 'color:#fbbf24' : 'color:rgba(255,255,255,0.55)'}">${r.score}</span>
+    </div>
+  `).join('');
+
+  card.innerHTML = `
+    <div style="text-align:center">
+      <div style="font-size:38px;line-height:1;margin-bottom:10px">🏆</div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.5)">KELIME YARIŞMASI</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:1px">lingual.work</div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:6px;font-weight:500">${me.name}</div>
+      <div style="font-size:88px;font-weight:900;line-height:1;color:#fbbf24;text-shadow:0 0 40px rgba(251,191,36,0.35)">${me.score}</div>
+      <div style="font-size:16px;color:rgba(255,255,255,0.45);margin-top:2px">/ 10 puan</div>
+      <div style="margin-top:12px;font-size:24px;font-weight:700">${rankLabel}</div>
+    </div>
+
+    <div style="width:100%;background:rgba(255,255,255,0.07);border-radius:14px;padding:14px 18px;box-sizing:border-box">
+      ${topList}
+    </div>
+
+    <div style="text-align:center">
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase">Türkçe öğren · Yarış · Kazan</div>
+      <div style="font-size:15px;font-weight:800;color:white;margin-top:5px;letter-spacing:1px">lingual.work</div>
+    </div>
+  `;
+  return card;
+}
+
+async function wrGenerateShareImage(results, mySocketId) {
+  if (typeof html2canvas === 'undefined') return null;
+  const card = wrBuildShareCard(results, mySocketId);
+  document.body.appendChild(card);
+  try {
+    const canvas = await html2canvas(card, { scale: 2, useCORS: true, logging: false, backgroundColor: null });
+    return await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  } catch (e) {
+    return null;
+  } finally {
+    document.body.removeChild(card);
+  }
+}
+
+function wrDownloadImage(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function wrShareCard(results, mySocketId, text, platform) {
+  const blob = await wrGenerateShareImage(results, mySocketId);
+
+  // Mobile Web Share API — opens native sheet (Instagram, WhatsApp, etc.)
+  if (blob && navigator.share && navigator.canShare) {
+    const file = new File([blob], 'kelime-yarismasi.png', { type: 'image/png' });
+    if (navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ title: 'Kelime Yarışması', text, files: [file] }); return; }
+      catch (e) { /* kullanıcı iptal etti, aşağı düş */ }
+    }
+  }
+
+  const encoded = encodeURIComponent(text);
+  const siteUrl = encodeURIComponent('https://lingual.work');
+
+  if (blob) {
+    wrDownloadImage(blob, 'kelime-yarismasi.png');
+    const msgs = {
+      instagram: 'Karne indirildi! Instagram story olarak yükle 📸',
+      twitter:   'Karne indirildi! Tweet\'e resmi ekleyebilirsin 🐦',
+      facebook:  'Karne indirildi! Gönderiyi açtık, resmi ekleyebilirsin 👍',
+    };
+    showToast(msgs[platform] || 'İndirildi!', 'success');
+    if (platform === 'twitter')  setTimeout(() => window.open(`https://twitter.com/intent/tweet?text=${encoded}`, '_blank'), 400);
+    if (platform === 'facebook') setTimeout(() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${encoded}`, '_blank'), 400);
+  } else {
+    // html2canvas yoksa metin paylaş
+    if (platform === 'twitter')  { window.open(`https://twitter.com/intent/tweet?text=${encoded}`, '_blank'); return; }
+    if (platform === 'facebook') { window.open(`https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${encoded}`, '_blank'); return; }
+    const btn = document.getElementById('wr-ig-btn');
+    if (btn) wrCopyResult(btn, text);
+  }
 }
 
 function wrCopyResult(btn, text) {
