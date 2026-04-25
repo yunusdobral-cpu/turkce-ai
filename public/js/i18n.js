@@ -28,7 +28,44 @@ const I18N = {
     nav_teachers:   { en: 'Teachers', es: 'Profesores', ar: 'المعلمون', ru: 'Учителя', de: 'Lehrer', fr: 'Professeurs' },
     nav_vocab:      { en: 'Vocabulary', es: 'Vocabulario', ar: 'المفردات', ru: 'Словарь', de: 'Wortschatz', fr: 'Vocabulaire' },
     nav_quiz:       { en: 'Quiz', es: 'Examen', ar: 'اختبار', ru: 'Тест', de: 'Quiz', fr: 'Quiz' },
+    nav_wordrace:   { en: 'Word Race', es: 'Carrera', ar: 'سباق', ru: 'Гонка', de: 'Wortrennen', fr: 'Course' },
     nav_admin:      { en: 'Admin', es: 'Admin', ar: 'الإدارة', ru: 'Админ', de: 'Verwaltung', fr: 'Admin' },
+
+    // Word Race
+    wr_title:        { en: 'Word Race', es: 'Carrera de Palabras', ar: 'سباق الكلمات', ru: 'Гонка слов', de: 'Wortrennen', fr: 'Course de mots' },
+    wr_subtitle:     { en: 'Translate Turkish words as fast as possible!', es: '¡Traduce palabras turcas lo más rápido posible!', ar: 'ترجم الكلمات التركية بأسرع ما يمكن!', ru: 'Переводи турецкие слова как можно быстрее!', de: 'Übersetze türkische Wörter so schnell wie möglich!', fr: 'Traduis les mots turcs le plus vite possible !' },
+    wr_subtitle2:    { en: '2–8 players · 10 rounds · 12 sec/round', es: '2–8 jugadores · 10 rondas · 12 seg/ronda', ar: '٢–٨ لاعبين · ١٠ جولات · ١٢ ث/جولة', ru: '2–8 игроков · 10 раундов · 12 сек/раунд', de: '2–8 Spieler · 10 Runden · 12 Sek./Runde', fr: '2–8 joueurs · 10 tours · 12 s/tour' },
+    wr_name_ph:      { en: 'Your name', es: 'Tu nombre', ar: 'اسمك', ru: 'Ваше имя', de: 'Ihr Name', fr: 'Votre nom' },
+    wr_quick_match:  { en: '⚡ Quick Match', es: '⚡ Partida rápida', ar: '⚡ مباراة سريعة', ru: '⚡ Быстрый матч', de: '⚡ Schnellspiel', fr: '⚡ Partie rapide' },
+    wr_create_table: { en: '🏠 Create Table', es: '🏠 Crear Mesa', ar: '🏠 إنشاء طاولة', ru: '🏠 Создать стол', de: '🏠 Tisch erstellen', fr: '🏠 Créer une table' },
+    wr_play_bot:     { en: '🤖 Play vs Bot', es: '🤖 Jugar vs Bot', ar: '🤖 العب ضد البوت', ru: '🤖 Играть с ботом', de: '🤖 Gegen Bot spielen', fr: '🤖 Jouer contre Bot' },
+    wr_open_tables:  { en: 'Open Tables', es: 'Mesas abiertas', ar: 'الطاولات المفتوحة', ru: 'Открытые столы', de: 'Offene Tische', fr: 'Tables ouvertes' },
+    wr_no_tables:    { en: 'No open tables — create one!', es: 'No hay mesas — ¡crea una!', ar: 'لا توجد طاولات — أنشئ واحدة!', ru: 'Нет открытых столов — создайте!', de: 'Keine Tische — erstelle einen!', fr: 'Pas de tables — créez-en une !' },
+    wr_join_btn:     { en: 'Join →', es: 'Unirse →', ar: '← انضم', ru: 'Войти →', de: 'Beitreten →', fr: 'Rejoindre →' },
+    wr_players:      { en: 'players', es: 'jugadores', ar: 'لاعبين', ru: 'игроков', de: 'Spieler', fr: 'joueurs' },
+    wr_searching:    { en: 'Searching for opponent', es: 'Buscando oponente', ar: 'البحث عن خصم', ru: 'Поиск соперника', de: 'Gegner wird gesucht', fr: 'Recherche d\'adversaire' },
+    wr_bot_hint:     { en: 'A bot joins if no opponent found in 8 seconds', es: 'Un bot se une si no hay oponente en 8 segundos', ar: 'سيُضاف بوت إذا لم يُعثر على خصم خلال ٨ ثوانٍ', ru: 'Бот добавится, если нет соперника за 8 сек', de: 'Bot tritt bei, wenn kein Gegner in 8 Sek. gefunden', fr: 'Un bot rejoindra si aucun adversaire en 8 sec' },
+    wr_cancel:       { en: 'Cancel', es: 'Cancelar', ar: 'إلغاء', ru: 'Отмена', de: 'Abbrechen', fr: 'Annuler' },
+    wr_table_title:  { en: 'Table', es: 'Mesa', ar: 'الطاولة', ru: 'Стол', de: 'Tisch', fr: 'Table' },
+    wr_table_hint:   { en: 'Others can join from the open tables list', es: 'Otros pueden unirse desde la lista', ar: 'يمكن للآخرين الانضمام من القائمة', ru: 'Другие могут присоединиться из списка', de: 'Andere können über die Liste beitreten', fr: 'Les autres peuvent rejoindre via la liste' },
+    wr_start_game:   { en: '▶ Start Game', es: '▶ Iniciar juego', ar: '▶ ابدأ اللعبة', ru: '▶ Начать игру', de: '▶ Spiel starten', fr: '▶ Démarrer le jeu' },
+    wr_min_players:  { en: 'At least 2 players required', es: 'Se requieren al menos 2 jugadores', ar: 'مطلوب لاعبان على الأقل', ru: 'Требуется минимум 2 игрока', de: 'Mind. 2 Spieler erforderlich', fr: 'Au moins 2 joueurs requis' },
+    wr_host_starts:  { en: 'Table host will start the game...', es: 'El anfitrión iniciará el juego...', ar: 'صاحب الطاولة سيبدأ اللعبة...', ru: 'Хозяин стола начнёт игру...', de: 'Gastgeber startet das Spiel...', fr: 'L\'hôte démarrera le jeu...' },
+    wr_leave_table:  { en: 'Leave Table', es: 'Abandonar mesa', ar: 'مغادرة الطاولة', ru: 'Покинуть стол', de: 'Tisch verlassen', fr: 'Quitter la table' },
+    wr_get_ready:    { en: 'Get ready!', es: '¡Prepárate!', ar: 'استعد!', ru: 'Приготовься!', de: 'Bereitmachen!', fr: 'Prépare-toi !' },
+    wr_word_hint:    { en: 'What is the English translation?', es: '¿Cuál es la traducción?', ar: 'ما هي الترجمة الإنجليزية؟', ru: 'Каков перевод на английский?', de: 'Was ist die englische Übersetzung?', fr: 'Quelle est la traduction ?' },
+    wr_answer_ph:    { en: 'Type and press Enter...', es: 'Escribe y pulsa Intro...', ar: 'اكتب واضغط Enter...', ru: 'Введите и нажмите Enter...', de: 'Tippe und Enter...', fr: 'Écris et Entrée...' },
+    wr_wrong:        { en: '✗ Wrong, try again!', es: '✗ ¡Incorrecto!', ar: '✗ خطأ، حاول مجدداً!', ru: '✗ Неверно, попробуй ещё!', de: '✗ Falsch, nochmal!', fr: '✗ Faux, réessaie !' },
+    wr_you_won:      { en: '🎉 You got it! Answer: ', es: '🎉 ¡Lo lograste! Respuesta: ', ar: '🎉 أحسنت! الجواب: ', ru: '🎉 Верно! Ответ: ', de: '🎉 Richtig! Antwort: ', fr: '🎉 Bravo ! Réponse : ' },
+    wr_other_won:    { en: '✅ {name} got it! Answer: ', es: '✅ ¡{name} acertó! Respuesta: ', ar: '✅ {name} أجاب! الجواب: ', ru: '✅ {name} ответил! Ответ: ', de: '✅ {name} war schneller! Antwort: ', fr: '✅ {name} a répondu ! Réponse : ' },
+    wr_timeout:      { en: '⏱️ Time\'s up! Answer: ', es: '⏱️ ¡Tiempo! Respuesta: ', ar: '⏱️ انتهى الوقت! الجواب: ', ru: '⏱️ Время вышло! Ответ: ', de: '⏱️ Zeit abgelaufen! Antwort: ', fr: '⏱️ Temps écoulé ! Réponse : ' },
+    wr_score:        { en: 'Score', es: 'Puntuación', ar: 'النتيجة', ru: 'Счёт', de: 'Punkte', fr: 'Score' },
+    wr_game_over:    { en: '🏁 Game Over!', es: '🏁 ¡Juego terminado!', ar: '🏁 انتهت اللعبة!', ru: '🏁 Игра окончена!', de: '🏁 Spiel beendet!', fr: '🏁 Partie terminée !' },
+    wr_play_again:   { en: 'Play Again', es: 'Jugar de nuevo', ar: 'العب مجدداً', ru: 'Играть снова', de: 'Nochmal', fr: 'Rejouer' },
+    wr_home_btn:     { en: 'Home', es: 'Inicio', ar: 'الرئيسية', ru: 'Главная', de: 'Startseite', fr: 'Accueil' },
+    wr_share_label:  { en: 'Share your result:', es: 'Comparte tu resultado:', ar: 'شارك نتيجتك:', ru: 'Поделись результатом:', de: 'Teile dein Ergebnis:', fr: 'Partage ton résultat :' },
+    wr_share_won:    { en: '🥇 I won the Word Race! {score}/10 points. I challenge you! lingual.work', es: '🥇 ¡Gané la Carrera de Palabras! {score}/10 puntos. ¡Te desafío! lingual.work', ar: '🥇 فزت في سباق الكلمات! {score}/١٠. أتحداك! lingual.work', ru: '🥇 Я выиграл Гонку слов! {score}/10 очков. Вызываю тебя! lingual.work', de: '🥇 Ich gewann das Wortrennen! {score}/10 Punkte. Ich fordere dich! lingual.work', fr: '🥇 J\'ai gagné la Course de mots ! {score}/10. Je te défie ! lingual.work' },
+    wr_share_played: { en: '🏆 I scored {score}/10 in the Word Race! Can you beat me? lingual.work', es: '🏆 ¡Obtuve {score}/10 en la Carrera! ¿Puedes superarme? lingual.work', ar: '🏆 حصلت على {score}/١٠ في سباق الكلمات! هل يمكنك التفوق علي؟ lingual.work', ru: '🏆 Набрал {score}/10 в Гонке слов! Сможешь победить? lingual.work', de: '🏆 Ich erzielte {score}/10 im Wortrennen! Kannst du mich schlagen? lingual.work', fr: '🏆 J\'ai obtenu {score}/10 ! Tu peux faire mieux ? lingual.work' },
 
     // Homepage - Header
     home_subtitle:  { en: 'Learn Turkish with AI', es: 'Aprende Turco con IA', ar: 'تعلم التركية بالذكاء الاصطناعي', ru: 'Учите Турецкий с ИИ', de: 'Türkisch lernen mit KI', fr: 'Apprenez le Turc avec l\'IA' },
@@ -194,6 +231,7 @@ const I18N = {
       teachers: 'nav_teachers',
       vocab: 'nav_vocab',
       quiz: 'nav_quiz',
+      wordrace: 'nav_wordrace',
       admin: 'nav_admin'
     };
 
@@ -209,6 +247,7 @@ const I18N = {
         teachers: 'Öğretmenler',
         vocab: 'Kelime',
         quiz: 'Sınav',
+        wordrace: '🏆 Yarışma',
         admin: 'Yönetim'
       };
       const tr = trTexts[route];

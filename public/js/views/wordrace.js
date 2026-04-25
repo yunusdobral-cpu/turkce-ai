@@ -9,6 +9,7 @@ let wrIsHost = false;
 function renderWordRace(container) {
   wrDestroy();
   const saved = Auth.isLoggedIn() ? Auth.getUser().displayName : '';
+  const t = (k) => I18N.t(k);
 
   container.innerHTML = `
     <div class="wr-page">
@@ -16,19 +17,22 @@ function renderWordRace(container) {
       <!-- Lobi -->
       <div id="wr-screen-lobby" class="wr-screen wr-active">
         <div class="wr-card">
-          <div class="wr-title">🏆 Kelime Yarışması</div>
-          <p class="wr-subtitle">Türkçe kelimeyi en hızlı İngilizce'ye çeviren kazanır!<br>2–8 oyuncu · 10 tur · 12 saniye/tur</p>
+          <div class="wr-title">🏆 ${I18N.bi('Kelime Yarışması', 'wr_title')}</div>
+          <p class="wr-subtitle">
+            ${I18N.bi('Türkçe kelimeyi en hızlı İngilizce\'ye çeviren kazanır!', 'wr_subtitle')}<br>
+            <span style="color:var(--text-muted);font-size:0.83rem">${t('wr_subtitle2')}</span>
+          </p>
           <div class="wr-name-row">
-            <input type="text" id="wr-name" class="wr-input" placeholder="Adınız" maxlength="20" value="${saved}">
+            <input type="text" id="wr-name" class="wr-input" placeholder="${t('wr_name_ph')}" maxlength="20" value="${saved}">
           </div>
           <div class="wr-btn-group">
-            <button class="wr-btn wr-btn-primary" id="wr-btn-queue">⚡ Hızlı Eşleşme</button>
-            <button class="wr-btn wr-btn-secondary" id="wr-btn-create">🏠 Masa Kur</button>
-            <button class="wr-btn wr-btn-bot" id="wr-btn-bot">🤖 Bot ile Oyna</button>
+            <button class="wr-btn wr-btn-primary" id="wr-btn-queue">${t('wr_quick_match')}</button>
+            <button class="wr-btn wr-btn-secondary" id="wr-btn-create">${t('wr_create_table')}</button>
+            <button class="wr-btn wr-btn-bot" id="wr-btn-bot">${t('wr_play_bot')}</button>
           </div>
           <div class="wr-open-rooms-section">
-            <div class="wr-open-rooms-title">Açık Masalar</div>
-            <div id="wr-open-rooms"><div class="wr-no-rooms">Şu an açık masa yok — sen kur!</div></div>
+            <div class="wr-open-rooms-title">${t('wr_open_tables')}</div>
+            <div id="wr-open-rooms"><div class="wr-no-rooms">${t('wr_no_tables')}</div></div>
           </div>
         </div>
       </div>
@@ -37,32 +41,32 @@ function renderWordRace(container) {
       <div id="wr-screen-waiting" class="wr-screen">
         <div class="wr-card">
           <span class="wr-waiting-anim">🔍</span>
-          <div class="wr-title">Rakip aranıyor</div>
+          <div class="wr-title">${I18N.bi('Rakip aranıyor', 'wr_searching')}</div>
           <div class="wr-dots"><span>.</span><span>.</span><span>.</span></div>
-          <p class="wr-hint-small" style="margin-bottom:1rem">8 saniye içinde rakip bulunamazsa bot eklenir</p>
-          <button class="wr-btn wr-btn-outline" id="wr-btn-cancel">İptal</button>
+          <p class="wr-hint-small" style="margin-bottom:1rem">${t('wr_bot_hint')}</p>
+          <button class="wr-btn wr-btn-outline" id="wr-btn-cancel">${t('wr_cancel')}</button>
         </div>
       </div>
 
       <!-- Masa bekleme -->
       <div id="wr-screen-room" class="wr-screen">
         <div class="wr-card">
-          <div class="wr-title">🏠 Masa</div>
-          <p class="wr-hint-small" style="margin-bottom:1rem">Diğer oyuncular açık masalar listesinden katılabilir</p>
+          <div class="wr-title">🏠 ${I18N.bi('Masa', 'wr_table_title')}</div>
+          <p class="wr-hint-small" style="margin-bottom:1rem">${t('wr_table_hint')}</p>
           <div class="wr-players-list" id="wr-players-list"></div>
           <div id="wr-host-controls" style="display:none">
-            <button class="wr-btn wr-btn-primary" id="wr-btn-start" style="width:100%">▶ Oyunu Başlat</button>
-            <p class="wr-hint-small">En az 2 kişi gerekli</p>
+            <button class="wr-btn wr-btn-primary" id="wr-btn-start" style="width:100%">${t('wr_start_game')}</button>
+            <p class="wr-hint-small">${t('wr_min_players')}</p>
           </div>
-          <p id="wr-guest-wait" class="wr-hint-small" style="display:none">Masa sahibi oyunu başlatacak...</p>
-          <button class="wr-btn wr-btn-outline wr-mt" id="wr-btn-leave">Masadan Çık</button>
+          <p id="wr-guest-wait" class="wr-hint-small" style="display:none">${t('wr_host_starts')}</p>
+          <button class="wr-btn wr-btn-outline wr-mt" id="wr-btn-leave">${t('wr_leave_table')}</button>
         </div>
       </div>
 
       <!-- Geri sayım -->
       <div id="wr-screen-countdown" class="wr-screen">
         <div class="wr-card wr-card-center">
-          <div class="wr-countdown-label">Hazır ol!</div>
+          <div class="wr-countdown-label">${I18N.bi('Hazır ol!', 'wr_get_ready')}</div>
           <div class="wr-countdown-num" id="wr-countdown-num">3</div>
         </div>
       </div>
@@ -75,26 +79,26 @@ function renderWordRace(container) {
         </div>
         <div class="wr-word-box">
           <div class="wr-word-tr" id="wr-word-tr">—</div>
-          <div class="wr-word-hint">İngilizce çevirisi nedir?</div>
+          <div class="wr-word-hint">${I18N.bi('İngilizce çevirisi nedir?', 'wr_word_hint')}</div>
         </div>
         <div class="wr-answer-row">
-          <input type="text" id="wr-answer" class="wr-input wr-input-answer" placeholder="Yaz ve Enter'a bas..." autocomplete="off" autocorrect="off" spellcheck="false">
+          <input type="text" id="wr-answer" class="wr-input wr-input-answer" placeholder="${t('wr_answer_ph')}" autocomplete="off" autocorrect="off" spellcheck="false">
           <button class="wr-btn wr-btn-primary" id="wr-btn-send">↵</button>
         </div>
         <div class="wr-feedback" id="wr-feedback"></div>
-        <div class="wr-scores-label">Skor</div>
+        <div class="wr-scores-label">${I18N.bi('Skor', 'wr_score')}</div>
         <div class="wr-scores" id="wr-scores"></div>
       </div>
 
       <!-- Oyun bitti -->
       <div id="wr-screen-gameover" class="wr-screen">
         <div class="wr-card">
-          <div class="wr-title">🏁 Oyun Bitti!</div>
+          <div class="wr-title">${I18N.bi('🏁 Oyun Bitti!', 'wr_game_over')}</div>
           <div class="wr-results" id="wr-results"></div>
           <div class="wr-share-result" id="wr-share-result"></div>
           <div class="wr-btn-group">
-            <button class="wr-btn wr-btn-primary" id="wr-btn-again">Tekrar Oyna</button>
-            <button class="wr-btn wr-btn-outline" id="wr-btn-home">Ana Sayfa</button>
+            <button class="wr-btn wr-btn-primary" id="wr-btn-again">${I18N.bi('Tekrar Oyna', 'wr_play_again')}</button>
+            <button class="wr-btn wr-btn-outline" id="wr-btn-home">${I18N.bi('Ana Sayfa', 'wr_home_btn')}</button>
           </div>
         </div>
       </div>
@@ -225,16 +229,18 @@ function wrRenderOpenRooms(openRooms) {
   const el = document.getElementById('wr-open-rooms');
   if (!el) return;
   if (!openRooms || openRooms.length === 0) {
-    el.innerHTML = '<div class="wr-no-rooms">Şu an açık masa yok — sen kur!</div>';
+    el.innerHTML = `<div class="wr-no-rooms">${I18N.t('wr_no_tables')}</div>`;
     return;
   }
+  const joinLabel = I18N.t('wr_join_btn');
+  const playersLabel = I18N.t('wr_players');
   el.innerHTML = openRooms.map(r => `
     <div class="wr-open-room-row">
       <div class="wr-open-room-info">
         <span class="wr-open-room-host">👑 ${r.hostName}</span>
-        <span class="wr-open-room-count">${r.playerCount}/8 oyuncu</span>
+        <span class="wr-open-room-count">${r.playerCount}/8 ${playersLabel}</span>
       </div>
-      <button class="wr-btn wr-btn-primary wr-btn-sm" onclick="wrJoinOpenRoom('${r.code}')">Katıl →</button>
+      <button class="wr-btn wr-btn-primary wr-btn-sm" onclick="wrJoinOpenRoom('${r.code}')">${joinLabel}</button>
     </div>
   `).join('');
 }
@@ -300,7 +306,7 @@ function wrBindSocketEvents() {
   wrSocket.on('round_start', ({ word, roundNum, total, duration }) => {
     clearInterval(wrTimerInterval);
     wrShow('wr-screen-game');
-    document.getElementById('wr-round-label').textContent = `Tur ${roundNum}/${total}`;
+    document.getElementById('wr-round-label').textContent = `${roundNum}/${total}`;
     document.getElementById('wr-word-tr').textContent = word;
     const input = document.getElementById('wr-answer');
     if (input) { input.value = ''; input.disabled = false; input.focus(); }
@@ -309,7 +315,7 @@ function wrBindSocketEvents() {
   });
 
   wrSocket.on('wrong_answer', () => {
-    wrFeedback('✗ Yanlış, tekrar dene!', 'wrong');
+    wrFeedback(I18N.t('wr_wrong'), 'wrong');
   });
 
   wrSocket.on('round_win', ({ winnerId, winnerName, answer, scores }) => {
@@ -319,7 +325,9 @@ function wrBindSocketEvents() {
     document.getElementById('wr-timer-fill').style.width = '0%';
     const isMe = winnerId === wrMySocketId;
     wrFeedback(
-      isMe ? `🎉 Sen kazandın! Cevap: "${answer}"` : `✅ ${winnerName} doğru! Cevap: "${answer}"`,
+      isMe
+        ? `${I18N.t('wr_you_won')}"${answer}"`
+        : `${I18N.t('wr_other_won').replace('{name}', winnerName)}"${answer}"`,
       isMe ? 'correct' : 'win'
     );
     wrRenderScores(scores);
@@ -330,7 +338,7 @@ function wrBindSocketEvents() {
     const input = document.getElementById('wr-answer');
     if (input) input.disabled = true;
     document.getElementById('wr-timer-fill').style.width = '0%';
-    wrFeedback(`⏱️ Süre doldu! Cevap: "${answer}"`, 'timeout');
+    wrFeedback(`${I18N.t('wr_timeout')}"${answer}"`, 'timeout');
     wrRenderScores(scores);
   });
 
@@ -342,23 +350,20 @@ function wrBindSocketEvents() {
       <div class="wr-result-row wr-rank-${r.rank} ${r.id === wrMySocketId ? 'wr-mine' : ''}">
         <span class="wr-result-rank">${medals[r.rank - 1] || `${r.rank}.`}</span>
         <span class="wr-result-name">${r.name}${r.id === wrMySocketId ? ' 👤' : ''}</span>
-        <span class="wr-result-score">${r.score} puan</span>
+        <span class="wr-result-score">${r.score} ${I18N.bi('puan', 'wr_score').toLowerCase()}</span>
       </div>
     `).join('');
 
-    // Paylaşım butonları
     const me = results.find(r => r.id === wrMySocketId);
     if (me) {
       const shareEl = document.getElementById('wr-share-result');
       const isWinner = me.rank === 1;
-      const total = results[0]?.score !== undefined ? 10 : 10;
-      const text = isWinner
-        ? `🥇 Kelime Yarışması'nı kazandım! ${me.score}/${total} puan. Türkçe öğrenmede sana da meydan okuyorum! lingual.work`
-        : `🏆 Kelime Yarışması'nda ${me.score}/${total} puan aldım! Sen kaç alırsın? lingual.work`;
+      const shareKey = isWinner ? 'wr_share_won' : 'wr_share_played';
+      const text = I18N.t(shareKey).replace('{score}', me.score);
       const encoded = encodeURIComponent(text);
       const siteUrl = encodeURIComponent('https://lingual.work');
       shareEl.innerHTML = `
-        <div class="wr-share-label">Sonucunu paylaş:</div>
+        <div class="wr-share-label">${I18N.t('wr_share_label')}</div>
         <div class="wr-share-btns">
           <a href="https://twitter.com/intent/tweet?text=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-twitter">𝕏 Twitter</a>
           <a href="https://www.facebook.com/sharer/sharer.php?u=${siteUrl}&quote=${encoded}" target="_blank" rel="noopener" class="wr-share-btn wr-share-facebook">f Facebook</a>
