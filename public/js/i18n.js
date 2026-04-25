@@ -54,6 +54,7 @@ const I18N = {
     wr_leave_table:  { en: 'Leave Table', es: 'Abandonar mesa', ar: 'مغادرة الطاولة', ru: 'Покинуть стол', de: 'Tisch verlassen', fr: 'Quitter la table' },
     wr_get_ready:    { en: 'Get ready!', es: '¡Prepárate!', ar: 'استعد!', ru: 'Приготовься!', de: 'Bereitmachen!', fr: 'Prépare-toi !' },
     wr_word_hint:    { en: 'What is the English translation?', es: '¿Cuál es la traducción?', ar: 'ما هي الترجمة الإنجليزية؟', ru: 'Каков перевод на английский?', de: 'Was ist die englische Übersetzung?', fr: 'Quelle est la traduction ?' },
+    wr_word_hint_tr: { en: 'What is the Turkish translation?', es: '¿Cuál es la traducción turca?', ar: 'ما هي الترجمة التركية؟', ru: 'Каков перевод на турецкий?', de: 'Was ist die türkische Übersetzung?', fr: 'Quelle est la traduction turque ?' },
     wr_answer_ph:    { en: 'Type and press Enter...', es: 'Escribe y pulsa Intro...', ar: 'اكتب واضغط Enter...', ru: 'Введите и нажмите Enter...', de: 'Tippe und Enter...', fr: 'Écris et Entrée...' },
     wr_wrong:        { en: '✗ Wrong, try again!', es: '✗ ¡Incorrecto!', ar: '✗ خطأ، حاول مجدداً!', ru: '✗ Неверно, попробуй ещё!', de: '✗ Falsch, nochmal!', fr: '✗ Faux, réessaie !' },
     wr_you_won:      { en: '🎉 You got it! Answer: ', es: '🎉 ¡Lo lograste! Respuesta: ', ar: '🎉 أحسنت! الجواب: ', ru: '🎉 Верно! Ответ: ', de: '🎉 Richtig! Antwort: ', fr: '🎉 Bravo ! Réponse : ' },

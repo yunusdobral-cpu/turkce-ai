@@ -5,6 +5,7 @@ let wrTimerInterval = null;
 let wrMySocketId = null;
 let wrMyName = '';
 let wrIsHost = false;
+let wrMode = 'tr_en';
 
 function renderWordRace(container) {
   wrDestroy();
@@ -24,6 +25,10 @@ function renderWordRace(container) {
           </p>
           <div class="wr-name-row">
             <input type="text" id="wr-name" class="wr-input" placeholder="${t('wr_name_ph')}" maxlength="20" value="${saved}">
+          </div>
+          <div class="wr-mode-toggle">
+            <button class="wr-mode-btn wr-mode-active" id="wr-mode-tr-en">🇹🇷 → 🇬🇧 Türkçe → İngilizce</button>
+            <button class="wr-mode-btn" id="wr-mode-en-tr">🇬🇧 → 🇹🇷 İngilizce → Türkçe</button>
           </div>
           <div class="wr-btn-group">
             <button class="wr-btn wr-btn-primary" id="wr-btn-queue">${t('wr_quick_match')}</button>
@@ -78,7 +83,8 @@ function renderWordRace(container) {
         </div>
         <div class="wr-word-box">
           <div class="wr-word-tr" id="wr-word-tr">—</div>
-          <div class="wr-word-hint">${I18N.bi('İngilizce çevirisi nedir?', 'wr_word_hint')}</div>
+          <div class="wr-word-hint" id="wr-word-hint">${I18N.bi('İngilizce çevirisi nedir?', 'wr_word_hint')}</div>
+          <div class="wr-letter-boxes" id="wr-letter-boxes"></div>
         </div>
         <div class="wr-answer-row">
           <input type="text" id="wr-answer" class="wr-input wr-input-answer" placeholder="${t('wr_answer_ph')}" autocomplete="off" autocorrect="off" spellcheck="false">
@@ -134,9 +140,20 @@ function wrName() {
 }
 
 function wrBindButtons() {
+  document.getElementById('wr-mode-tr-en')?.addEventListener('click', () => {
+    wrMode = 'tr_en';
+    document.getElementById('wr-mode-tr-en').classList.add('wr-mode-active');
+    document.getElementById('wr-mode-en-tr').classList.remove('wr-mode-active');
+  });
+  document.getElementById('wr-mode-en-tr')?.addEventListener('click', () => {
+    wrMode = 'en_tr';
+    document.getElementById('wr-mode-en-tr').classList.add('wr-mode-active');
+    document.getElementById('wr-mode-tr-en').classList.remove('wr-mode-active');
+  });
+
   document.getElementById('wr-btn-queue')?.addEventListener('click', () => {
     wrMyName = wrName();
-    wrSocket.emit('join_queue', { name: wrMyName });
+    wrSocket.emit('join_queue', { name: wrMyName, mode: wrMode });
     wrShow('wr-screen-waiting');
   });
 
@@ -147,7 +164,7 @@ function wrBindButtons() {
 
   document.getElementById('wr-btn-create')?.addEventListener('click', () => {
     wrMyName = wrName();
-    wrSocket.emit('create_room', { name: wrMyName });
+    wrSocket.emit('create_room', { name: wrMyName, mode: wrMode });
   });
 
   document.getElementById('wr-btn-start')?.addEventListener('click', () => {
@@ -210,6 +227,18 @@ function wrStartTimer(duration) {
     bar.style.background = pct > 50 ? '#22c55e' : pct > 25 ? '#f59e0b' : '#ef4444';
     if (pct === 0) clearInterval(wrTimerInterval);
   }, 50);
+}
+
+function wrRenderLetterBoxes(answerLens) {
+  const el = document.getElementById('wr-letter-boxes');
+  if (!el || !answerLens || !answerLens.length) { if (el) el.innerHTML = ''; return; }
+  const primary = answerLens[0];
+  const alts = answerLens.slice(1);
+  const boxes = Array(primary).fill('<span class="wr-box"></span>').join('');
+  const altHtml = alts.length
+    ? `<div class="wr-boxes-alt">${alts.map(l => `veya ${l} harf`).join(' · ')}</div>`
+    : '';
+  el.innerHTML = `<div class="wr-boxes-row">${boxes}</div>${altHtml}`;
 }
 
 function wrFeedback(msg, type) {
@@ -297,11 +326,16 @@ function wrBindSocketEvents() {
     }
   });
 
-  wrSocket.on('round_start', ({ word, roundNum, total, duration }) => {
+  wrSocket.on('round_start', ({ word, roundNum, total, duration, mode, answerLens }) => {
     clearInterval(wrTimerInterval);
     wrShow('wr-screen-game');
     document.getElementById('wr-round-label').textContent = `${roundNum}/${total}`;
     document.getElementById('wr-word-tr').textContent = word;
+    const hint = document.getElementById('wr-word-hint');
+    if (hint) hint.textContent = mode === 'en_tr'
+      ? I18N.bi('Türkçe çevirisi nedir?', 'wr_word_hint_tr')
+      : I18N.bi('İngilizce çevirisi nedir?', 'wr_word_hint');
+    wrRenderLetterBoxes(answerLens);
     const input = document.getElementById('wr-answer');
     if (input) { input.value = ''; input.disabled = false; input.focus(); }
     wrFeedback('', '');

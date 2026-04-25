@@ -360,6 +360,57 @@
 .wr-share-facebook { background: #1877f2; }
 .wr-share-instagram { background: linear-gradient(135deg, #f09433, #dc2743, #bc1888); }
 
+/* ── Mod Toggle ── */
+.wr-mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.1rem;
+}
+.wr-mode-btn {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  background: white;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.wr-mode-btn.wr-mode-active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* ── Harf Kutuları ── */
+.wr-letter-boxes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+}
+.wr-boxes-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.wr-box {
+  width: 18px;
+  height: 22px;
+  border-bottom: 2.5px solid var(--primary);
+  display: inline-block;
+  opacity: 0.7;
+}
+.wr-boxes-alt {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
 /* Mobile */
 @media (max-width: 480px) {
   .wr-word-tr { font-size: 2.2rem; }

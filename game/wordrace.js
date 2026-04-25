@@ -149,6 +149,11 @@ function checkAnswer(submitted, correct) {
   return variants.includes(s);
 }
 
+function getAnswerLens(answer) {
+  const variants = answer.split('/').map(v => v.split(' or ').map(s => s.trim())).flat();
+  return [...new Set(variants.map(v => v.length))].sort((a, b) => a - b);
+}
+
 module.exports = function (io) {
   const rooms = new Map();
   const queue = [];
@@ -171,6 +176,7 @@ module.exports = function (io) {
   }
 
   function scheduleBotAnswer(room) {
+    const correctAnswer = room.mode === 'en_tr' ? room.currentWord.tr : room.currentWord.en;
     room.players.filter(p => p.isBot).forEach(bot => {
       if (bot.answerTimer) clearTimeout(bot.answerTimer);
       const willAnswer = Math.random() < 0.62;
@@ -184,7 +190,7 @@ module.exports = function (io) {
         io.to(room.code).emit('round_win', {
           winnerId: bot.id,
           winnerName: bot.name,
-          answer: room.currentWord.en,
+          answer: correctAnswer,
           scores: getScores(room),
         });
         scheduleNext(room);
@@ -192,11 +198,12 @@ module.exports = function (io) {
     });
   }
 
-  function createRoom(isPrivate = false) {
+  function createRoom(isPrivate = false, mode = 'tr_en') {
     let code;
     do { code = generateCode(); } while (rooms.has(code));
     const room = {
       code, isPrivate,
+      mode,
       players: [],
       state: 'lobby',
       words: shuffle(WORDS).slice(0, TOTAL_ROUNDS),
@@ -232,19 +239,23 @@ module.exports = function (io) {
     room.currentWordAnswered = false;
     const word = room.words[room.round - 1];
     room.currentWord = word;
+    const isReverse = room.mode === 'en_tr';
+    const displayWord = isReverse ? word.en : word.tr;
+    const correctAnswer = isReverse ? word.tr : word.en;
     io.to(room.code).emit('round_start', {
-      word: word.tr,
+      word: displayWord,
       roundNum: room.round,
       total: room.totalRounds,
       duration: ROUND_DURATION,
+      mode: room.mode,
+      answerLens: getAnswerLens(correctAnswer),
     });
     scheduleBotAnswer(room);
     room.roundTimer = setTimeout(() => {
       if (!room.currentWordAnswered) {
         room.currentWordAnswered = true;
         io.to(room.code).emit('round_timeout', {
-          word: word.tr,
-          answer: word.en,
+          answer: correctAnswer,
           scores: getScores(room),
         });
         scheduleNext(room);
@@ -304,17 +315,17 @@ module.exports = function (io) {
       socket.emit('open_rooms', getOpenRooms());
     });
 
-    socket.on('join_queue', ({ name }) => {
+    socket.on('join_queue', ({ name, mode }) => {
       if (socket.roomCode) return;
       socket.playerName = (name || 'Anonim').slice(0, 20);
-      const entry = { id: socket.id, name: socket.playerName, botTimer: null };
+      const entry = { id: socket.id, name: socket.playerName, mode: mode || 'tr_en', botTimer: null };
       queue.push(entry);
       socket.emit('waiting', { position: queue.length });
 
       if (queue.length >= 2) {
         const matched = queue.splice(0, Math.min(8, queue.length));
         matched.forEach(p => { if (p.botTimer) clearTimeout(p.botTimer); });
-        const room = createRoom(false);
+        const room = createRoom(false, matched[0].mode);
         matched.forEach(p => {
           const s = io.sockets.sockets.get(p.id);
           if (!s) return;
@@ -329,7 +340,7 @@ module.exports = function (io) {
           const idx = queue.indexOf(entry);
           if (idx === -1 || socket.roomCode) return;
           queue.splice(idx, 1);
-          const room = createRoom(false);
+          const room = createRoom(false, entry.mode);
           socket.join(room.code);
           socket.roomCode = room.code;
           room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
@@ -348,10 +359,10 @@ module.exports = function (io) {
       }
     });
 
-    socket.on('create_room', ({ name }) => {
+    socket.on('create_room', ({ name, mode }) => {
       if (socket.roomCode) return;
       socket.playerName = (name || 'Anonim').slice(0, 20);
-      const room = createRoom(false);
+      const room = createRoom(false, mode || 'tr_en');
       socket.join(room.code);
       socket.roomCode = room.code;
       room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
@@ -399,14 +410,15 @@ module.exports = function (io) {
       if (!room || room.state !== 'playing' || room.currentWordAnswered) return;
       const player = room.players.find(p => p.id === socket.id);
       if (!player) return;
-      if (checkAnswer(answer, room.currentWord.en)) {
+      const correctAnswer = room.mode === 'en_tr' ? room.currentWord.tr : room.currentWord.en;
+      if (checkAnswer(answer, correctAnswer)) {
         room.currentWordAnswered = true;
         clearTimeout(room.roundTimer);
         player.score++;
         io.to(room.code).emit('round_win', {
           winnerId: socket.id,
           winnerName: player.name,
-          answer: room.currentWord.en,
+          answer: correctAnswer,
           scores: getScores(room),
         });
         scheduleNext(room);
