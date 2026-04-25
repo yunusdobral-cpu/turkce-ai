@@ -144,6 +144,16 @@ module.exports = function (io) {
   const rooms = new Map();
   const queue = [];
 
+  function getOpenRooms() {
+    return Array.from(rooms.values())
+      .filter(r => r.state === 'lobby' && r.players.length > 0)
+      .map(r => ({ code: r.code, hostName: r.players[0]?.name || 'Anonim', playerCount: r.players.length }));
+  }
+
+  function broadcastOpenRooms() {
+    io.emit('open_rooms', getOpenRooms());
+  }
+
   function createRoom(isPrivate = false) {
     let code;
     do { code = generateCode(); } while (rooms.has(code));
@@ -216,6 +226,7 @@ module.exports = function (io) {
     io.to(room.code).emit('game_over', {
       results: sorted.map((p, i) => ({ rank: i + 1, id: p.id, name: p.name, score: p.score })),
     });
+    broadcastOpenRooms();
     setTimeout(() => rooms.delete(room.code), 120000);
   }
 
@@ -228,12 +239,14 @@ module.exports = function (io) {
     if (room.players.length === 0) {
       if (room.roundTimer) clearTimeout(room.roundTimer);
       rooms.delete(room.code);
+      broadcastOpenRooms();
       return;
     }
     io.to(room.code).emit('player_left', {
       name: socket.playerName,
       players: room.players.map(p => ({ name: p.name })),
     });
+    broadcastOpenRooms();
     if (['playing', 'countdown'].includes(room.state) && room.players.length < 2) {
       if (room.roundTimer) clearTimeout(room.roundTimer);
       endGame(room);
@@ -243,6 +256,11 @@ module.exports = function (io) {
   io.on('connection', (socket) => {
     socket.roomCode = null;
     socket.playerName = 'Anonim';
+    socket.emit('open_rooms', getOpenRooms());
+
+    socket.on('get_open_rooms', () => {
+      socket.emit('open_rooms', getOpenRooms());
+    });
 
     socket.on('join_queue', ({ name }) => {
       if (socket.roomCode) return;
@@ -275,33 +293,36 @@ module.exports = function (io) {
     socket.on('create_room', ({ name }) => {
       if (socket.roomCode) return;
       socket.playerName = (name || 'Anonim').slice(0, 20);
-      const room = createRoom(true);
+      const room = createRoom(false);
       socket.join(room.code);
       socket.roomCode = room.code;
       room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
-      socket.emit('room_created', { code: room.code });
+      socket.emit('room_created', { players: [{ name: socket.playerName }] });
+      broadcastOpenRooms();
     });
 
     socket.on('join_room', ({ code, name }) => {
       if (socket.roomCode) return;
       const room = rooms.get((code || '').toUpperCase());
-      if (!room) { socket.emit('room_error', 'Oda bulunamadı'); return; }
+      if (!room) { socket.emit('room_error', 'Masa bulunamadı'); return; }
       if (room.state !== 'lobby') { socket.emit('room_error', 'Oyun zaten başladı'); return; }
-      if (room.players.length >= 8) { socket.emit('room_error', 'Oda dolu (max 8 kişi)'); return; }
+      if (room.players.length >= 8) { socket.emit('room_error', 'Masa dolu (max 8 kişi)'); return; }
       socket.playerName = (name || 'Anonim').slice(0, 20);
       socket.join(room.code);
       socket.roomCode = room.code;
       room.players.push({ id: socket.id, name: socket.playerName, score: 0 });
-      socket.emit('room_joined', { code: room.code, players: room.players.map(p => ({ name: p.name })) });
+      socket.emit('room_joined', { players: room.players.map(p => ({ name: p.name })) });
       socket.to(room.code).emit('player_joined', { name: socket.playerName, players: room.players.map(p => ({ name: p.name })) });
+      broadcastOpenRooms();
     });
 
     socket.on('start_game', () => {
       const room = rooms.get(socket.roomCode);
       if (!room || room.state !== 'lobby') return;
-      if (room.players[0]?.id !== socket.id) { socket.emit('room_error', 'Sadece oda sahibi başlatabilir'); return; }
+      if (room.players[0]?.id !== socket.id) { socket.emit('room_error', 'Sadece masa sahibi başlatabilir'); return; }
       if (room.players.length < 2) { socket.emit('room_error', 'En az 2 kişi gerekli'); return; }
       startCountdown(room);
+      broadcastOpenRooms();
     });
 
     socket.on('submit_answer', ({ answer }) => {

@@ -4,6 +4,7 @@ let wrSocket = null;
 let wrTimerInterval = null;
 let wrMySocketId = null;
 let wrMyName = '';
+let wrIsHost = false;
 
 function renderWordRace(container) {
   wrDestroy();
@@ -24,10 +25,9 @@ function renderWordRace(container) {
             <button class="wr-btn wr-btn-primary" id="wr-btn-queue">⚡ Hızlı Eşleşme</button>
             <button class="wr-btn wr-btn-secondary" id="wr-btn-create">🏠 Masa Kur</button>
           </div>
-          <div class="wr-divider">veya koda katıl</div>
-          <div class="wr-join-row">
-            <input type="text" id="wr-code-input" class="wr-input wr-input-code" placeholder="ABCD" maxlength="4">
-            <button class="wr-btn wr-btn-primary" id="wr-btn-join">Katıl →</button>
+          <div class="wr-open-rooms-section">
+            <div class="wr-open-rooms-title">Açık Masalar</div>
+            <div id="wr-open-rooms"><div class="wr-no-rooms">Şu an açık masa yok — sen kur!</div></div>
           </div>
         </div>
       </div>
@@ -42,19 +42,18 @@ function renderWordRace(container) {
         </div>
       </div>
 
-      <!-- Oda bekleme -->
+      <!-- Masa bekleme -->
       <div id="wr-screen-room" class="wr-screen">
         <div class="wr-card">
-          <div class="wr-title">🏠 Oda</div>
-          <div class="wr-room-code-label">Oda Kodu — arkadaşlarınla paylaş:</div>
-          <div class="wr-room-code" id="wr-room-code" title="Kopyalamak için tıkla">----</div>
+          <div class="wr-title">🏠 Masa</div>
+          <p class="wr-hint-small" style="margin-bottom:1rem">Diğer oyuncular açık masalar listesinden katılabilir</p>
           <div class="wr-players-list" id="wr-players-list"></div>
           <div id="wr-host-controls" style="display:none">
             <button class="wr-btn wr-btn-primary" id="wr-btn-start" style="width:100%">▶ Oyunu Başlat</button>
             <p class="wr-hint-small">En az 2 kişi gerekli</p>
           </div>
-          <p id="wr-guest-wait" class="wr-hint-small" style="display:none">Oda sahibi oyunu başlatacak...</p>
-          <button class="wr-btn wr-btn-outline wr-mt" id="wr-btn-leave">Odadan Çık</button>
+          <p id="wr-guest-wait" class="wr-hint-small" style="display:none">Masa sahibi oyunu başlatacak...</p>
+          <button class="wr-btn wr-btn-outline wr-mt" id="wr-btn-leave">Masadan Çık</button>
         </div>
       </div>
 
@@ -146,16 +145,6 @@ function wrBindButtons() {
     wrSocket.emit('create_room', { name: wrMyName });
   });
 
-  document.getElementById('wr-btn-join')?.addEventListener('click', wrJoinRoom);
-  document.getElementById('wr-code-input')?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') wrJoinRoom();
-  });
-
-  document.getElementById('wr-room-code')?.addEventListener('click', () => {
-    const code = document.getElementById('wr-room-code')?.textContent;
-    navigator.clipboard?.writeText(code).then(() => showToast('Oda kodu kopyalandı!', 'success'));
-  });
-
   document.getElementById('wr-btn-start')?.addEventListener('click', () => {
     wrSocket.emit('start_game');
   });
@@ -180,10 +169,9 @@ function wrBindButtons() {
   });
 }
 
-function wrJoinRoom() {
-  const code = (document.getElementById('wr-code-input')?.value || '').trim().toUpperCase();
-  if (code.length !== 4) { showToast('4 harfli oda kodu girin', 'error'); return; }
+function wrJoinOpenRoom(code) {
   wrMyName = wrName();
+  wrIsHost = false;
   wrSocket.emit('join_room', { code, name: wrMyName });
 }
 
@@ -226,6 +214,24 @@ function wrFeedback(msg, type) {
   el.className = 'wr-feedback wr-feedback-' + type;
 }
 
+function wrRenderOpenRooms(openRooms) {
+  const el = document.getElementById('wr-open-rooms');
+  if (!el) return;
+  if (!openRooms || openRooms.length === 0) {
+    el.innerHTML = '<div class="wr-no-rooms">Şu an açık masa yok — sen kur!</div>';
+    return;
+  }
+  el.innerHTML = openRooms.map(r => `
+    <div class="wr-open-room-row">
+      <div class="wr-open-room-info">
+        <span class="wr-open-room-host">👑 ${r.hostName}</span>
+        <span class="wr-open-room-count">${r.playerCount}/8 oyuncu</span>
+      </div>
+      <button class="wr-btn wr-btn-primary wr-btn-sm" onclick="wrJoinOpenRoom('${r.code}')">Katıl →</button>
+    </div>
+  `).join('');
+}
+
 function wrRenderPlayers(players, isHost) {
   const el = document.getElementById('wr-players-list');
   if (!el) return;
@@ -243,25 +249,29 @@ function wrRenderPlayers(players, isHost) {
 }
 
 function wrBindSocketEvents() {
-  wrSocket.on('room_created', ({ code }) => {
-    document.getElementById('wr-room-code').textContent = code;
-    wrRenderPlayers([{ name: wrMyName }], true);
+  wrSocket.on('open_rooms', (openRooms) => {
+    wrRenderOpenRooms(openRooms);
+  });
+
+  wrSocket.on('room_created', ({ players }) => {
+    wrIsHost = true;
+    wrRenderPlayers(players, true);
     wrShow('wr-screen-room');
   });
 
-  wrSocket.on('room_joined', ({ code, players }) => {
-    document.getElementById('wr-room-code').textContent = code;
+  wrSocket.on('room_joined', ({ players }) => {
+    wrIsHost = false;
     wrRenderPlayers(players, false);
     wrShow('wr-screen-room');
   });
 
   wrSocket.on('player_joined', ({ name, players }) => {
-    wrRenderPlayers(players, true);
-    showToast(`${name} katıldı!`, 'success');
+    wrRenderPlayers(players, wrIsHost);
+    showToast(`${name} masaya katıldı!`, 'success');
   });
 
   wrSocket.on('player_left', ({ name, players }) => {
-    wrRenderPlayers(players, document.getElementById('wr-host-controls')?.style.display !== 'none');
+    wrRenderPlayers(players, wrIsHost);
     showToast(`${name} ayrıldı`, 'error');
   });
 
