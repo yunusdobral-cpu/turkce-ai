@@ -346,3 +346,79 @@ function renderContact(container) {
 
   window.scrollTo(0, 0);
 }
+
+function renderAbout(container) {
+  container.innerHTML = `
+    <div class="legal-page">
+      <div class="legal-header">
+        <h1>Hakkımızda / About Us</h1>
+        <p class="legal-date">Türkçe öğrenmek hiç bu kadar kolay olmamıştı.</p>
+      </div>
+      <div class="legal-content">
+
+        <section>
+          <h2>Lingual.work Nedir?</h2>
+          <p>Lingual.work, Türkçeyi yabancı dil olarak öğrenmek isteyen kişiler için tasarlanmış yapay zeka destekli bir dil eğitim platformudur. Dilbilgisi derslerinden kelime oyunlarına, okuma metinlerinden canlı yarışmalara kadar kapsamlı bir öğrenme deneyimi sunuyoruz.</p>
+          <p>What is Lingual.work? Lingual.work is an AI-powered Turkish language learning platform designed for non-native speakers. From grammar lessons to vocabulary games, reading texts to live competitions, we offer a comprehensive learning experience.</p>
+        </section>
+
+        <section>
+          <h2>Misyonumuz / Our Mission</h2>
+          <p>Türkçeyi dünyanın her köşesinden erişilebilir, eğlenceli ve etkili bir şekilde öğretilebilir kılmak. Modern teknoloji ve yapay zeka kullanarak öğrencilere gerçekçi dil pratiği imkânı sağlamak.</p>
+          <p>Our mission is to make Turkish accessible, enjoyable, and effective to learn from anywhere in the world — using modern technology and AI to give learners realistic language practice.</p>
+        </section>
+
+        <section>
+          <h2>Özelliklerimiz / Features</h2>
+          <ul>
+            <li><strong>Dilbilgisi Dersleri (Grammar):</strong> A1'den B2'ye kapsamlı dilbilgisi konuları — soru ekleri, zamanlar, fiil çekimleri ve daha fazlası.</li>
+            <li><strong>Kelime Öğrenimi (Vocabulary):</strong> Seviyeye göre (A1–C2) kategorize edilmiş 2000+ kelime kartı, görsel destek ve tekrar sistemi.</li>
+            <li><strong>Günlük İfadeler (Daily Phrases):</strong> Günlük hayatta sık kullanılan Türkçe ifadeler ve diyaloglar.</li>
+            <li><strong>Okuma Metinleri (Reading):</strong> Seviyeye uygun gerçek hayat okuma parçaları ve anlama soruları.</li>
+            <li><strong>AI Sohbet Pratiği (AI Chat):</strong> Sanal Türk öğretmenlerle gerçek konuşma pratiği — anında düzeltme ve geri bildirim.</li>
+            <li><strong>Kelime Yarışması (Word Race):</strong> Çok oyunculu canlı kelime yarışması — arkadaşlarınızla ya da rastgele eşleşerek rekabet edin.</li>
+            <li><strong>Sınav Modülü (Quiz):</strong> Bilginizi test edin, gelişiminizi takip edin.</li>
+            <li><strong>Forum ve Topluluk:</strong> Öğrenenlerle bağlanın, sorular sorun, deneyimlerinizi paylaşın.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Kimler İçin? / Who Is It For?</h2>
+          <p>Lingual.work şu kitleler için idealdir:</p>
+          <ul>
+            <li>Türkiye'ye taşınmayı planlayan ya da Türkiye'de yaşayan yabancılar</li>
+            <li>Türk kültürü ve diline ilgi duyan herkes</li>
+            <li>İş amaçlı Türkçe öğrenmek isteyenler</li>
+            <li>TÖMER veya dil sınavlarına hazırlanıyorlar</li>
+            <li>Dil sevgisi olan gezginler ve dil meraklıları</li>
+          </ul>
+          <p>Lingual.work is ideal for expats moving to Turkey, language enthusiasts, business professionals, students preparing for Turkish language exams, and anyone curious about Turkish culture and language.</p>
+        </section>
+
+        <section>
+          <h2>Teknoloji / Technology</h2>
+          <p>Platformumuz modern web teknolojileri ve yapay zeka altyapısı üzerine kurulmuştur. AI konuşma pratiği için OpenAI'nin dil modelleri kullanılmaktadır. Tüm öğrenme verileri güvenli bir şekilde saklanmakta ve yalnızca kullanıcı deneyimini iyileştirmek amacıyla kullanılmaktadır.</p>
+        </section>
+
+        <section>
+          <h2>İletişim / Contact</h2>
+          <p>Sorularınız, önerileriniz veya geri bildirimleriniz için:</p>
+          <ul>
+            <li>E-posta: <a href="mailto:info@lingual.work">info@lingual.work</a></li>
+            <li>Destek: <a href="mailto:support@lingual.work">support@lingual.work</a></li>
+            <li><a href="#/contact">İletişim formumuzu</a> kullanabilirsiniz.</li>
+          </ul>
+        </section>
+
+      </div>
+
+      <div class="legal-footer-links">
+        <a href="#/privacy">Gizlilik Politikası</a>
+        <a href="#/terms">Kullanım Şartları</a>
+        <a href="#/contact">İletişim</a>
+        <a href="#/">Anasayfa</a>
+      </div>
+    </div>
+  `;
+  window.scrollTo(0, 0);
+}

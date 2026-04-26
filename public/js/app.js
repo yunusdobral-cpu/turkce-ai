@@ -1,7 +1,7 @@
 // SPA Router
 function requireAuth(hash) {
   // Anasayfa ve admin hariç tüm sayfalar üyelik gerektirir
-  if (hash === '#/' || hash === '' || !hash || hash === '#/admin' || hash === '#/privacy' || hash === '#/terms' || hash === '#/contact') return true;
+  if (hash === '#/' || hash === '' || !hash || hash === '#/admin' || hash === '#/privacy' || hash === '#/terms' || hash === '#/contact' || hash === '#/about') return true;
   // Admin girişi yapılmışsa serbest gezinebilir
   if (sessionStorage.getItem('adminPassword')) return true;
   if (!Auth.isLoggedIn()) {
@@ -11,11 +11,20 @@ function requireAuth(hash) {
   return true;
 }
 
+const AD_FREE_ROUTES = ['#/wordrace', '#/quiz', '#/millionaire'];
+
+function setAdsPaused(paused) {
+  (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = paused ? 1 : 0;
+}
+
 function navigateTo(hash) {
   // Yarışma sayfasından ayrılırken socket'i kapat
   if (typeof wrSocket !== 'undefined' && wrSocket && hash !== '#/wordrace') {
     wrDestroy();
   }
+
+  // Oyun/sınav sayfalarında reklam gösterme
+  setAdsPaused(AD_FREE_ROUTES.some(r => hash === r || hash.startsWith(r + '?')));
 
   const app = document.getElementById('app');
   const links = document.querySelectorAll('.nav-link');
@@ -53,6 +62,8 @@ function navigateTo(hash) {
     renderTerms(app);
   } else if (hash === '#/contact') {
     renderContact(app);
+  } else if (hash === '#/about') {
+    renderAbout(app);
   } else if (hash === '#/millionaire') {
     renderMillionaireMenu(app);
   } else if (hash.startsWith('#/quiz')) {
