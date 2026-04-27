@@ -178,25 +178,25 @@
     position: fixed;
     top: 56px;
     left: 0;
-    right: 0;
     bottom: 0;
+    width: 260px;
     background: var(--surface);
     flex-direction: column;
     margin-left: 0;
     z-index: 200;
     overflow-y: auto;
     padding: 1rem 0;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-    animation: slideDown 0.25s ease;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.12);
+    animation: slideInLeft 0.22s ease;
   }
 
   .nav-links.open {
     display: flex;
   }
 
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
   }
 
   .nav-links-left,
