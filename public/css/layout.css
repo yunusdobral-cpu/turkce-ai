@@ -166,7 +166,11 @@
 
   .nav-hamburger {
     display: flex;
-    margin-left: auto;
+    margin-right: 0.5rem;
+  }
+
+  .nav-brand {
+    flex: 1;
   }
 
   .nav-links {
