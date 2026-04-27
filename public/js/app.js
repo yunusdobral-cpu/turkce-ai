@@ -11,6 +11,16 @@ function requireAuth(hash) {
   return true;
 }
 
+function closeNavMenu() {
+  document.querySelector('.nav-links').classList.remove('open');
+  document.getElementById('nav-backdrop').classList.remove('open');
+}
+
+function toggleNavMenu() {
+  const isOpen = document.querySelector('.nav-links').classList.toggle('open');
+  document.getElementById('nav-backdrop').classList.toggle('open', isOpen);
+}
+
 const AD_FREE_ROUTES = ['#/wordrace', '#/quiz', '#/millionaire'];
 
 function setAdsPaused(paused) {
@@ -98,8 +108,7 @@ window.addEventListener('hashchange', () => navigateTo(location.hash));
 
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (e) => {
-    // Close mobile menu on navigation
-    document.querySelector('.nav-links').classList.remove('open');
+    closeNavMenu();
     const target = link.getAttribute('href');
     if (location.hash === target) {
       e.preventDefault();
