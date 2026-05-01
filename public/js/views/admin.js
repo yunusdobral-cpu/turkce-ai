@@ -11,7 +11,8 @@ async function renderAdmin(container) {
     { id: 'characters', label: 'Ogretmenler' },
     { id: 'users', label: 'Uyeler' },
     { id: 'vocab', label: 'Kelime' },
-    { id: 'quiz', label: 'Sinav' }
+    { id: 'quiz', label: 'Sinav' },
+    { id: 'cards', label: 'Kartlar' }
   ];
 
   container.innerHTML = `
@@ -27,7 +28,8 @@ async function renderAdmin(container) {
     characters: renderAdminCharacters,
     users: renderAdminUsers,
     vocab: renderAdminVocab,
-    quiz: renderAdminQuiz
+    quiz: renderAdminQuiz,
+    cards: renderAdminCards
   };
   (renderers[adminActiveTab] || renderAdminHome)()
 }
@@ -617,5 +619,100 @@ async function deleteForumPostAdmin(postId, threadId, threadTitle) {
     loadForumStats();
   } catch (err) {
     showToast('Silme basarisiz', 'error');
+  }
+}
+
+// ===================== CARDS TAB =====================
+
+let cardCurrentIndex = 0;
+let cardFormat = 'post';
+
+function getA2Nouns() {
+  return (window.VOCAB_DATA.A2.isim || []).flat();
+}
+
+function renderAdminCards() {
+  const words = getA2Nouns();
+  const word = words[cardCurrentIndex];
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="card-studio">
+      <div class="card-studio-header">
+        <h2>Kelime Kartları</h2>
+        <p>A2 · İsim — ${words.length} kelime</p>
+      </div>
+      <div class="card-studio-controls">
+        <div class="card-format-tabs">
+          <button class="card-fmt-btn ${cardFormat === 'post' ? 'active' : ''}" onclick="setCardFormat('post')">◻ Post (1:1)</button>
+          <button class="card-fmt-btn ${cardFormat === 'story' ? 'active' : ''}" onclick="setCardFormat('story')">▯ Story (9:16)</button>
+        </div>
+      </div>
+      <div class="card-studio-nav">
+        <button class="btn btn-outline" onclick="cardNav(-1)">← Önceki</button>
+        <span class="card-counter">${cardCurrentIndex + 1} / ${words.length}</span>
+        <button class="btn btn-outline" onclick="cardNav(1)">Sonraki →</button>
+      </div>
+      <div class="card-preview-wrap">
+        ${buildCardHTML(word, cardCurrentIndex, words.length)}
+      </div>
+      <div class="card-studio-actions">
+        <button class="btn btn-primary" onclick="downloadCard()">⬇ PNG İndir</button>
+      </div>
+    </div>
+  `;
+}
+
+function buildCardHTML(word, index, total) {
+  const cls = cardFormat === 'story' ? 'wcard-story' : 'wcard-post';
+  return `
+    <div class="wcard ${cls}" id="wordCard">
+      <div class="wcard-deco"></div>
+      <div class="wcard-topbar">
+        <span class="wcard-badge">A2 · İsim</span>
+        <span class="wcard-brand">lingual.work</span>
+      </div>
+      <div class="wcard-body">
+        <div class="wcard-word">${word.tr}</div>
+        <div class="wcard-divider"></div>
+        <div class="wcard-en">${word.en}</div>
+        <div class="wcard-ex">"${word.ex}"</div>
+      </div>
+      <div class="wcard-num">${index + 1} / ${total}</div>
+    </div>
+  `;
+}
+
+function setCardFormat(fmt) {
+  cardFormat = fmt;
+  renderAdminCards();
+}
+
+function cardNav(dir) {
+  const words = getA2Nouns();
+  cardCurrentIndex = (cardCurrentIndex + dir + words.length) % words.length;
+  renderAdminCards();
+}
+
+async function downloadCard() {
+  const card = document.getElementById('wordCard');
+  if (!card || typeof html2canvas === 'undefined') {
+    alert('html2canvas yüklenemedi.');
+    return;
+  }
+  const words = getA2Nouns();
+  const word = words[cardCurrentIndex];
+  try {
+    const canvas = await html2canvas(card, {
+      scale: 2,
+      backgroundColor: null,
+      useCORS: true,
+      logging: false
+    });
+    const link = document.createElement('a');
+    link.download = `lingual-a2-${word.tr}-${cardFormat}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    alert('İndirme hatası: ' + err.message);
   }
 }
