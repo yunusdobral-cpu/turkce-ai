@@ -260,7 +260,7 @@ function showPhraseCardCarousel(slides, mode, catLabel, grad, catIcon) {
         <div class="${cardClass}" style="width:${cardW}px;height:${cardH}px;background:${grad.bg};">
           <div class="${frameClass}">
             <div class="ph-phrase-header">
-              <div class="ph-phrase-cat">${catIcon} ${catLabel}</div>
+              <div class="ph-phrase-cat">${catIcon} ${catLabel.split('/')[0].trim()}</div>
               <div class="ph-phrase-num">${slide.index} / ${slide.total}</div>
             </div>
             <div class="ph-phrase-main">

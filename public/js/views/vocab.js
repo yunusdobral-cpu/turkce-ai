@@ -218,6 +218,16 @@ function renderVocab(container) {
     <option value="${code}">${name}</option>
   `).join('');
 
+  const isAdmin = !!sessionStorage.getItem('adminPassword');
+  const shareBtns = isAdmin ? `
+    <div class="vocab-sidebar-section">
+      <div class="vocab-sidebar-label">Instagram Kartı</div>
+      <div class="phrases-share-actions">
+        <button class="phrases-share-btn phrases-share-story" id="vocabShareStory">▭ Story</button>
+        <button class="phrases-share-btn phrases-share-post" id="vocabSharePost">▣ Post</button>
+      </div>
+    </div>` : '';
+
   container.innerHTML = `
     <div class="vocab-page">
       <div class="gallery-header">
@@ -251,6 +261,7 @@ function renderVocab(container) {
               ${langOptionsHtml}
             </select>
           </div>
+          ${shareBtns}
         </div>
 
         <div class="vocab-full-main">
@@ -271,4 +282,245 @@ function renderVocab(container) {
   `;
 
   initVocabBot();
+
+  if (isAdmin) {
+    document.getElementById('vocabShareStory').addEventListener('click', () => {
+      generateVocabCards(vocabState.level, vocabState.category, vocabState.section, 'story');
+    });
+    document.getElementById('vocabSharePost').addEventListener('click', () => {
+      generateVocabCards(vocabState.level, vocabState.category, vocabState.section, 'post');
+    });
+  }
+}
+
+// ========== Instagram Card Generator for Vocab ==========
+
+const VOCAB_LEVEL_GRADS = {
+  A1: { bg: 'linear-gradient(135deg, #14532d 0%, #16a34a 50%, #4ade80 100%)' },
+  A2: { bg: 'linear-gradient(135deg, #365314 0%, #65a30d 50%, #a3e635 100%)' },
+  B1: { bg: 'linear-gradient(135deg, #92400e 0%, #d97706 50%, #fbbf24 100%)' },
+  B2: { bg: 'linear-gradient(135deg, #7c2d12 0%, #ea580c 50%, #fb923c 100%)' },
+  C1: { bg: 'linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #f87171 100%)' },
+  C2: { bg: 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a78bfa 100%)' },
+};
+
+const VOCAB_LANG_LABELS = { en: 'EN', es: 'ES', ar: 'AR', ru: 'RU', de: 'DE', fr: 'FR' };
+
+function generateVocabCards(level, cat, sectionIdx, mode) {
+  const data = window.VOCAB_DATA;
+  if (!data || !data[level] || !data[level][cat] || !data[level][cat][sectionIdx]) return;
+  const words = data[level][cat][sectionIdx];
+  const sectionName = (SECTION_NAMES[level] && SECTION_NAMES[level][cat] && SECTION_NAMES[level][cat][sectionIdx]) || '';
+  const catLabel = CAT_MAP[cat] || cat;
+  const grad = VOCAB_LEVEL_GRADS[level] || VOCAB_LEVEL_GRADS.A1;
+
+  const slides = [];
+  slides.push({ type: 'cover', level, sectionName, catLabel });
+  words.forEach((w, i) => {
+    slides.push({ type: 'word', word: w, index: i + 1, total: words.length, level, sectionName });
+  });
+  slides.push({ type: 'cta' });
+
+  showVocabCardCarousel(slides, mode, grad, level, sectionName);
+}
+
+function showVocabCardCarousel(slides, mode, grad, level, sectionName) {
+  const existing = document.querySelector('.ig-card-overlay');
+  if (existing) existing.remove();
+
+  const isStory = mode === 'story';
+  const cardW = 1080;
+  const cardH = isStory ? 1920 : 1080;
+  const previewW = isStory ? 270 : 300;
+  const previewH = isStory ? 480 : 300;
+  const scaleRatio = previewW / cardW;
+
+  let currentIndex = 0;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'ig-card-overlay';
+  overlay.innerHTML = `
+    <div class="ig-card-modal">
+      <div class="ig-card-topbar">
+        <span class="ig-card-counter">1 / ${slides.length}</span>
+        <span class="ig-card-mode-label">${isStory ? 'Story (9:16)' : 'Post (1:1)'}</span>
+        <button class="ig-card-close">&times;</button>
+      </div>
+      <div class="ig-card-preview-wrap" style="width:${previewW}px;height:${previewH}px;">
+        <div class="ig-card-render-zone" style="width:${cardW}px;height:${cardH}px;transform:scale(${scaleRatio});transform-origin:top left;"></div>
+      </div>
+      <div class="ig-card-nav">
+        <button class="ig-card-prev">&larr; Önceki</button>
+        <button class="ig-card-dl">PNG İndir</button>
+        <button class="ig-card-dl-all">Tümünü İndir</button>
+        <button class="ig-card-next">Sonraki &rarr;</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const renderZone = overlay.querySelector('.ig-card-render-zone');
+  const counter = overlay.querySelector('.ig-card-counter');
+
+  function renderSlide(idx) {
+    currentIndex = idx;
+    counter.textContent = `${idx + 1} / ${slides.length}`;
+    const slide = slides[idx];
+    const cardClass = isStory ? 'ph-card ph-card-story' : 'ph-card ph-card-post';
+    const frameClass = isStory ? 'ph-frame ph-frame-story' : 'ph-frame ph-frame-post';
+
+    if (slide.type === 'cover') {
+      renderZone.innerHTML = `
+        <div class="${cardClass}" style="width:${cardW}px;height:${cardH}px;background:${grad.bg};">
+          <div class="${frameClass}">
+            <div class="ph-cover-top">
+              <div class="ph-cover-brand">Kelime Kartları</div>
+              <div class="ph-cover-brand-en">Turkish Vocabulary</div>
+            </div>
+            <div class="ph-cover-center">
+              <div class="vc-cover-level">${slide.level}</div>
+              <div class="ph-cover-title">${slide.sectionName}</div>
+              <div class="ph-cover-title-en">${slide.catLabel}</div>
+            </div>
+            <div class="ph-cover-bottom">
+              <div class="ph-swipe">${slides.length - 1} ${isStory ? '⇡ Yukarı kaydır' : '→ Kaydırarak devam et'}</div>
+              <div class="ph-watermark">
+                <span class="ph-wm-link">${LINK_SVG(36)}<span>lingual.work</span></span>
+                <span class="ph-wm-ig">${IG_SVG(44)}<span>@lingual.work</span></span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    } else if (slide.type === 'word') {
+      const w = slide.word;
+      const transGrid = Object.entries(VOCAB_LANG_LABELS).map(([code, label]) =>
+        w[code] ? `<div class="vc-trans-item"><span class="vc-trans-code">${label}</span><span class="vc-trans-val">${w[code]}</span></div>` : ''
+      ).join('');
+      renderZone.innerHTML = `
+        <div class="${cardClass}" style="width:${cardW}px;height:${cardH}px;background:${grad.bg};">
+          <div class="${frameClass}">
+            <div class="ph-phrase-header">
+              <div class="ph-phrase-cat">${slide.sectionName}</div>
+              <div class="ph-phrase-num">${slide.index} / ${slide.total}</div>
+            </div>
+            <div class="vc-word-main">
+              <div class="vc-level-badge">${slide.level}</div>
+              <div class="vc-word-tr">${w.tr}</div>
+            </div>
+            <div class="vc-trans-grid">${transGrid}</div>
+            ${w.ex ? `<div class="vc-example">
+              <div class="vc-ex-label">ÖRNEK / EXAMPLE</div>
+              <div class="vc-ex-text">${w.ex}</div>
+            </div>` : ''}
+            <div class="ph-watermark">
+              <span class="ph-wm-link">${LINK_SVG(32)}<span>lingual.work</span></span>
+              <span class="ph-wm-ig">${IG_SVG(40)}<span>@lingual.work</span></span>
+            </div>
+          </div>
+        </div>`;
+    } else if (slide.type === 'cta') {
+      renderZone.innerHTML = `
+        <div class="${cardClass}" style="width:${cardW}px;height:${cardH}px;background:${grad.bg};">
+          <div class="${frameClass}">
+            <div class="ph-cta-top">
+              <img class="ph-cta-logo" src="/logo.png" alt="lingual.work" crossorigin="anonymous">
+            </div>
+            <div class="ph-cta-center">
+              <div class="ph-cta-link-row">
+                <span class="ph-cta-icon">${LINK_SVG(56)}</span>
+                <span class="ph-cta-link">lingual.work</span>
+              </div>
+              <div class="ph-cta-link-row">
+                <span class="ph-cta-icon">${IG_SVG(68)}</span>
+                <span class="ph-cta-link">@lingual.work</span>
+              </div>
+            </div>
+            <div class="ph-cta-actions">
+              <div class="ph-cta-act"><span class="ph-cta-act-icon">${HEART_SVG(72)}</span><span>Beğen</span></div>
+              <div class="ph-cta-act"><span class="ph-cta-act-icon">${COMMENT_SVG(72)}</span><span>Yorum</span></div>
+              <div class="ph-cta-act"><span class="ph-cta-act-icon">${SHARE_SVG(72)}</span><span>Paylaş</span></div>
+              <div class="ph-cta-act"><span class="ph-cta-act-icon">${BOOKMARK_SVG(72)}</span><span>Kaydet</span></div>
+            </div>
+            <div class="ph-cta-footer">Lingual.work</div>
+          </div>
+        </div>`;
+    }
+  }
+
+  renderSlide(0);
+
+  overlay.querySelector('.ig-card-close').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  overlay.querySelector('.ig-card-prev').addEventListener('click', () => {
+    if (currentIndex > 0) renderSlide(currentIndex - 1);
+  });
+  overlay.querySelector('.ig-card-next').addEventListener('click', () => {
+    if (currentIndex < slides.length - 1) renderSlide(currentIndex + 1);
+  });
+
+  async function captureSlide(idx) {
+    renderSlide(idx);
+    const card = renderZone.querySelector('.ph-card');
+    if (!card) return null;
+    const offscreen = document.createElement('div');
+    offscreen.style.cssText = `position:fixed;left:-9999px;top:0;width:${cardW}px;height:${cardH}px;z-index:-1;overflow:hidden;`;
+    const clone = card.cloneNode(true);
+    clone.style.transform = 'none';
+    clone.style.width = cardW + 'px';
+    clone.style.height = cardH + 'px';
+    offscreen.appendChild(clone);
+    document.body.appendChild(offscreen);
+    await new Promise(r => setTimeout(r, 100));
+    try {
+      const canvas = await html2canvas(clone, {
+        scale: 1, width: cardW, height: cardH,
+        useCORS: true, backgroundColor: null,
+        windowWidth: cardW, windowHeight: cardH
+      });
+      return canvas;
+    } finally {
+      offscreen.remove();
+    }
+  }
+
+  function downloadCanvas(canvas, filename) {
+    canvas.toBlob(function(blob) {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = url;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }, 'image/png');
+  }
+
+  const safeSection = sectionName.replace(/[^\w]/g, '_');
+
+  overlay.querySelector('.ig-card-dl').addEventListener('click', async () => {
+    const btn = overlay.querySelector('.ig-card-dl');
+    btn.textContent = 'Hazırlanıyor...';
+    btn.disabled = true;
+    try {
+      const canvas = await captureSlide(currentIndex);
+      if (canvas) downloadCanvas(canvas, `${level}_${safeSection}_${currentIndex + 1}.png`);
+    } catch (err) { console.error('Download error:', err); }
+    btn.textContent = 'PNG İndir';
+    btn.disabled = false;
+  });
+
+  overlay.querySelector('.ig-card-dl-all').addEventListener('click', async () => {
+    const btn = overlay.querySelector('.ig-card-dl-all');
+    btn.disabled = true;
+    for (let i = 0; i < slides.length; i++) {
+      btn.textContent = `${i + 1}/${slides.length}...`;
+      try {
+        const canvas = await captureSlide(i);
+        if (canvas) downloadCanvas(canvas, `${level}_${safeSection}_${i + 1}.png`);
+      } catch (err) { console.error('Download error:', err); }
+      await new Promise(r => setTimeout(r, 300));
+    }
+    btn.textContent = 'Tümünü İndir';
+    btn.disabled = false;
+  });
 }
