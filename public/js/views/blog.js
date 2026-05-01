@@ -370,7 +370,7 @@ function getPostField(post, field, lang) {
 }
 
 function renderBlog(container) {
-  const lang = (window.I18N && I18N.getLang()) || 'en';
+  const lang = (typeof I18N !== 'undefined' ? I18N.getLang() : null) || 'en';
   container.innerHTML = `
     <div class="blog-page">
       <div class="blog-header">
@@ -401,7 +401,7 @@ function renderBlogPost(container, id) {
     container.innerHTML = `<div style="text-align:center;padding:3rem"><p>Yazı bulunamadı.</p><a href="#/blog">← Blog'a dön</a></div>`;
     return;
   }
-  const lang = (window.I18N && I18N.getLang()) || 'en';
+  const lang = (typeof I18N !== 'undefined' ? I18N.getLang() : null) || 'en';
   const body = getPostField(post, 'body', lang);
   const isRtl = lang === 'ar';
   container.innerHTML = `
