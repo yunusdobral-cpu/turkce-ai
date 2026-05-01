@@ -626,22 +626,35 @@ async function deleteForumPostAdmin(postId, threadId, threadTitle) {
 
 let cardCurrentIndex = 0;
 let cardFormat = 'post';
+let cardLevel = 'a2';
+
+function getA1Nouns() {
+  return (window.VOCAB_DATA.A1.isim || []).flat();
+}
 
 function getA2Nouns() {
   return (window.VOCAB_DATA.A2.isim || []).flat();
 }
 
+function getCardNouns() {
+  return cardLevel === 'a1' ? getA1Nouns() : getA2Nouns();
+}
+
 function renderAdminCards() {
-  const words = getA2Nouns();
+  const words = getCardNouns();
   const word = words[cardCurrentIndex];
   const content = document.getElementById('adminContent');
   content.innerHTML = `
     <div class="card-studio">
       <div class="card-studio-header">
         <h2>Kelime Kartları</h2>
-        <p>A2 · İsim — ${words.length} kelime</p>
+        <p>${cardLevel.toUpperCase()} · İsim — ${words.length} kelime</p>
       </div>
-      <div class="card-studio-controls">
+      <div class="card-studio-controls" style="gap:0.75rem;flex-wrap:wrap">
+        <div class="card-format-tabs">
+          <button class="card-fmt-btn ${cardLevel === 'a1' ? 'active' : ''}" onclick="setCardLevel('a1')">A1</button>
+          <button class="card-fmt-btn ${cardLevel === 'a2' ? 'active' : ''}" onclick="setCardLevel('a2')">A2</button>
+        </div>
         <div class="card-format-tabs">
           <button class="card-fmt-btn ${cardFormat === 'post' ? 'active' : ''}" onclick="setCardFormat('post')">◻ Post (1:1)</button>
           <button class="card-fmt-btn ${cardFormat === 'story' ? 'active' : ''}" onclick="setCardFormat('story')">▯ Story (9:16)</button>
@@ -661,6 +674,29 @@ function renderAdminCards() {
     </div>
   `;
 }
+
+const A1_ISIM_EXEN = {
+  "anne":"My mother cooks very delicious food.","baba":"My father is going to work.","kardeş":"I have two siblings.","abla":"My older sister studies at university.","ağabey":"My older brother is a doctor.","çocuk":"Children are playing in the park.","bebek":"The baby is sleeping.","arkadaş":"My best friend is Ali.","öğretmen":"The teacher started the lesson.","öğrenci":"There are twenty students in the class.",
+  "kadın":"That woman is very beautiful.","erkek":"That man is very tall.","kız":"The girl is singing.","oğlan":"The boy is playing ball.","aile":"My family lives in Istanbul.","dede":"My grandfather is eighty years old.","nine":"My grandmother lives in the village.","komşu":"Our neighbors are very nice people.","doktor":"I need to go to the doctor.","insan":"He is a very good person.",
+  "ev":"Our house is big.","oda":"My room is very nice.","mutfak":"I am cooking in the kitchen.","banyo":"The bathroom is clean.","salon":"There is a television in the living room.","yatak":"My bed is very comfortable.","masa":"There are books on the table.","sandalye":"Please sit on the chair.","kapı":"Close the door.","pencere":"Please open the window.",
+  "duvar":"There is a picture on the wall.","balkon":"I can see the sea from the balcony.","merdiven":"Go up the stairs.","anahtar":"Where is my key?","dolap":"The clothes are in the wardrobe.","buzdolabı":"The milk is in the refrigerator.","lamba":"Turn on the lamp.","ayna":"I looked in the mirror.","halı":"We bought a new carpet.","bahçe":"There are flowers in the garden.",
+  "su":"I would like a glass of water.","ekmek":"The bread is fresh.","çay":"Would you like some tea?","kahve":"Turkish coffee is very nice.","süt":"The children are drinking milk.","peynir":"We eat cheese at breakfast.","yumurta":"I boiled two eggs.","pilav":"I love rice very much.","et":"We will eat meat tonight.","tavuk":"I had chicken soup.",
+  "balık":"The fish is very fresh.","sebze":"Vegetable dishes are healthy.","meyve":"I eat fruit every day.","elma":"I want a red apple.","portakal":"I drank orange juice.","domates":"I put tomato in the salad.","salata":"The salad is very fresh.","çorba":"Lentil soup, please.","şeker":"Don't put sugar in my tea.","tuz":"Add a little salt.",
+  "baş":"My head hurts.","göz":"Your eyes are very beautiful.","kulak":"My ears are cold.","burun":"My nose is blocked.","ağız":"Open your mouth.","el":"Wash your hands.","ayak":"My foot hurts.","saç":"Your hair is very long.","yüz":"Wash your face.","diş":"Brush your teeth.",
+  "gömlek":"He wore a white shirt.","pantolon":"These trousers are tight.","etek":"She wore a red skirt.","ayakkabı":"I bought new shoes.","çorap":"Where are my socks?","şapka":"Wear a hat in the sun.","ceket":"It is cold, put on your jacket.","elbise":"This dress is very nice.","mont":"I bought a new coat for winter.","çanta":"My bag is very heavy.",
+  "okul":"School starts at eight o'clock.","hastane":"Where is the hospital?","market":"I am going to the supermarket.","park":"We are walking in the park.","restoran":"This restaurant is very nice.","cadde":"Istiklal Avenue is very crowded.","sokak":"I live on this street.","köprü":"We crossed the bridge.","deniz":"The sea is very beautiful.","dağ":"We climbed the mountain.",
+  "otobüs":"The bus was late.","araba":"We bought a new car.","taksi":"I called a taxi.","uçak":"The plane takes off at five o'clock.","tren":"We went to Ankara by train.","havalimanı":"We are going to the airport.","durak":"Where is the stop?","cami":"The mosque is very old.","eczane":"Where is the nearest pharmacy?","otel":"We stayed at the hotel for two nights.",
+  "güneş":"The sun is shining very brightly.","yıldız":"There are stars in the sky.","yağmur":"It is raining today.","kar":"It is snowing outside.","rüzgar":"The wind is blowing very hard.","bulut":"There are clouds in the sky.","ağaç":"There is a big tree in the garden.","çiçek":"The flowers smell very nice.","hayvan":"I love animals very much.",
+  "kedi":"My cat is very cute.","köpek":"The dog is barking.","kuş":"The birds are singing.","göl":"The lake is very calm.","nehir":"We swam in the river.","orman":"We went hiking in the forest.","toprak":"The soil is wet.","taş":"There are big stones on the road.","hava":"The weather is very nice today.","gök":"The sky is blue.",
+  "gün":"Today is a beautiful day.","gece":"Good night!","sabah":"I woke up early in the morning.","akşam":"What are you doing this evening?","hafta":"I am very busy this week.","yıl":"This year passed very nicely.","saat":"What time is it?","dakika":"Wait five minutes.","saniye":"One second, please.",
+  "bugün":"Today is Monday.","yarın":"Let's meet tomorrow.","dün":"I went to the cinema yesterday.","pazartesi":"I start work on Monday.","salı":"I have a lesson on Tuesday.","çarşamba":"Let's go to the cinema on Wednesday.","perşembe":"There is a meeting on Thursday.","cuma":"Friday is a holiday!","cumartesi":"We will go shopping on Saturday.","pazar":"I rest on Sunday.",
+  "kitap":"This book is very nice.","kalem":"I lost my pen.","defter":"Please write in the notebook.","sınıf":"There are thirty students in the classroom.","ders":"The lesson starts at nine o'clock.","sınav":"I have an exam tomorrow.","ödev":"I did my homework.","bilgisayar":"My computer broke down.","telefon":"My phone is ringing.","iş":"I was late for work.",
+  "para":"I have no money.","kağıt":"Please give me a piece of paper.","silgi":"Can I borrow an eraser?","tahta":"The teacher is writing on the board.","soru":"I have a question.","cevap":"I don't know the answer.","kelime":"What does this word mean?","cümle":"Make a sentence.","dil":"Turkish is a beautiful language.","not":"I got a good grade on the exam.",
+  "renk":"My favorite color is blue.","kırmızı":"The red car is very nice.","mavi":"The sky is blue.","yeşil":"The trees are green.","sarı":"I bought yellow flowers.","beyaz":"He wore a white shirt.","siyah":"I saw a black cat.","turuncu":"I love the color orange.","mor":"Purple flowers are very beautiful.","pembe":"She bought a pink dress.",
+  "mutlu":"I am very happy today.","üzgün":"Why are you sad?","kızgın":"My father is very angry.","korku":"I am afraid of the dark.","sevgi":"Love is the most beautiful feeling.","mutluluk":"Happiness is within us.","acı":"There is pain in my arm.","sevinç":"She cried with joy.","umut":"Don't lose hope.","güven":"I trust you.",
+  "gözlük":"I cannot find my glasses.","cüzdan":"Where is my wallet?","şemsiye":"It is raining, take your umbrella.","fotoğraf":"I took a beautiful photo.","hediye":"I bought a birthday present.","bardak":"Give me a glass of water.","tabak":"I washed the plates.","kaşık":"Eat the soup with a spoon.","çatal":"The fork is on the table.","bıçak":"Where is the bread knife?",
+  "havlu":"Is there a clean towel?","sabun":"Wash your hands with soap.","diş fırçası":"I forgot my toothbrush.","pil":"The remote control battery is dead.","mum":"Blow out the birthday candles.","çikolata":"I want to eat chocolate.","gazete":"My father is reading the newspaper.","bilet":"Two tickets, please.","harita":"Let's look at the map."
+};
 
 const A2_ISIM_EXEN = {
   "avukat":"My lawyer is going to court tomorrow.","mühendis":"My older brother became an engineer.","hemşire":"The nurse gave me a shot.","polis":"The police officer is directing traffic.","şoför":"The taxi driver is going very fast.","müdür":"The director is in a meeting.","gazeteci":"The journalist is reporting the news.","sanatçı":"A famous artist came.","aşçı":"The chef cooks very delicious food.","berber":"I got my hair cut at the barber.","vatandaş":"Every citizen has rights.","toplum":"We work for society.","kültür":"Turkish culture is very rich.","gelenek":"This is a beautiful tradition.","bayram":"We visit family during the holiday.","düğün":"The wedding went very beautifully.","tören":"The graduation ceremony is tomorrow.","misafir":"Guests are coming tonight.","nüfus":"Istanbul has a very large population.","vatandaşlık":"I applied for citizenship.",
@@ -712,7 +748,9 @@ const WCARD_SVG_PEN = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height
 function buildCardHTML(word, index, total) {
   const isStory = cardFormat === 'story';
   const cls = isStory ? 'wcard-story' : 'wcard-post';
-  const exEn = A2_ISIM_EXEN[word.tr] || '';
+  const exEnMap = cardLevel === 'a1' ? A1_ISIM_EXEN : A2_ISIM_EXEN;
+  const exEn = exEnMap[word.tr] || '';
+  const badge = cardLevel === 'a1' ? 'A1 · İsim' : 'A2 · İsim';
   const penDeco = isStory
     ? `<div style="position:absolute;right:22px;top:50%;transform:translateY(-50%);z-index:0;opacity:0.55">${WCARD_SVG_PEN}</div>`
     : '';
@@ -722,7 +760,7 @@ function buildCardHTML(word, index, total) {
       <div class="wcard-deco-br">${WCARD_SVG_PLANT}</div>
       ${penDeco}
       <div class="wcard-topbar">
-        <span class="wcard-badge">A2 · İsim</span>
+        <span class="wcard-badge">${badge}</span>
         <span class="wcard-brand">lingual.work</span>
       </div>
       <div class="wcard-body">
@@ -744,13 +782,19 @@ function buildCardHTML(word, index, total) {
   `;
 }
 
+function setCardLevel(level) {
+  cardLevel = level;
+  cardCurrentIndex = 0;
+  renderAdminCards();
+}
+
 function setCardFormat(fmt) {
   cardFormat = fmt;
   renderAdminCards();
 }
 
 function cardNav(dir) {
-  const words = getA2Nouns();
+  const words = getCardNouns();
   cardCurrentIndex = (cardCurrentIndex + dir + words.length) % words.length;
   renderAdminCards();
 }
@@ -761,7 +805,7 @@ async function downloadCard() {
     alert('html2canvas yüklenemedi.');
     return;
   }
-  const words = getA2Nouns();
+  const words = getCardNouns();
   const word = words[cardCurrentIndex];
   try {
     const canvas = await html2canvas(card, {
@@ -771,7 +815,7 @@ async function downloadCard() {
       logging: false
     });
     const link = document.createElement('a');
-    link.download = `lingual-a2-${word.tr}-${cardFormat}.png`;
+    link.download = `lingual-${cardLevel}-${word.tr}-${cardFormat}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   } catch (err) {
