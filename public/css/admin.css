@@ -468,19 +468,20 @@
 }
 
 .wcard-en {
-  font-size: 1.3rem;
-  font-weight: 300;
+  font-size: 1.45rem;
+  font-weight: 400;
   color: #2c4a7c;
   margin-bottom: 1.1rem;
   letter-spacing: 0.6px;
 }
 
 .wcard-story .wcard-en {
-  font-size: 1.5rem;
+  font-size: 1.65rem;
 }
 
 .wcard-ex {
-  font-size: 0.78rem;
+  font-size: 0.86rem;
+  font-weight: 500;
   font-style: italic;
   color: #8a9bb8;
   line-height: 1.6;
@@ -488,12 +489,13 @@
 }
 
 .wcard-story .wcard-ex {
-  font-size: 0.88rem;
+  font-size: 0.97rem;
   max-width: 285px;
 }
 
 .wcard-exen {
-  font-size: 0.72rem;
+  font-size: 0.79rem;
+  font-weight: 500;
   font-style: italic;
   color: #b83232;
   line-height: 1.5;
@@ -503,7 +505,7 @@
 }
 
 .wcard-story .wcard-exen {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 
 .wcard-cta {
@@ -514,7 +516,7 @@
 }
 
 .wcard-cta-tr {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #1a2744;
   margin: 0 0 0.15rem;
@@ -522,23 +524,23 @@
 }
 
 .wcard-cta-en {
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-size: 0.79rem;
+  font-weight: 600;
   color: #1a2744;
   opacity: 0.65;
   margin: 0 0 0.5rem;
 }
 
 .wcard-cta-arrow {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 900;
   color: #b83232;
   line-height: 1;
 }
 
-.wcard-story .wcard-cta-tr { font-size: 0.9rem; }
-.wcard-story .wcard-cta-en { font-size: 0.8rem; }
-.wcard-story .wcard-cta-arrow { font-size: 2rem; }
+.wcard-story .wcard-cta-tr { font-size: 1rem; }
+.wcard-story .wcard-cta-en { font-size: 0.88rem; }
+.wcard-story .wcard-cta-arrow { font-size: 2.2rem; }
 
 .wcard-num {
   text-align: center;
