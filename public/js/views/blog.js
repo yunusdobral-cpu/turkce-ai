@@ -360,14 +360,13 @@ function formatBlogDate(dateStr) {
 }
 
 function getPostField(post, field, lang) {
-  const plural = field + 's';
-  if (post[plural] && post[plural][lang]) return post[plural][lang];
-  if (post[plural] && post[plural]['en']) return post[plural]['en'];
+  const pluralKey = field === 'body' ? 'bodies' : field + 's';
+  if (post[pluralKey] && post[pluralKey][lang]) return post[pluralKey][lang];
+  if (post[pluralKey] && post[pluralKey]['en']) return post[pluralKey]['en'];
   if (field === 'title') return lang === 'tr' ? post.title : (post.titleEn || post.title);
   if (field === 'category') return lang === 'tr' ? post.category : (post.categoryEn || post.category);
   if (field === 'summary') return lang === 'tr' ? post.summary : (post.summaryEn || post.summary);
-  if (field === 'body') return post.body || '';
-  return '';
+  return post.body || '';
 }
 
 function renderBlog(container) {
