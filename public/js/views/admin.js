@@ -662,6 +662,19 @@ function renderAdminCards() {
   `;
 }
 
+const A2_ISIM_EXEN = {
+  "avukat":"My lawyer is going to court tomorrow.","mühendis":"My older brother became an engineer.","hemşire":"The nurse gave me a shot.","polis":"The police officer is directing traffic.","şoför":"The taxi driver is going very fast.","müdür":"The director is in a meeting.","gazeteci":"The journalist is reporting the news.","sanatçı":"A famous artist came.","aşçı":"The chef cooks very delicious food.","berber":"I got my hair cut at the barber.","vatandaş":"Every citizen has rights.","toplum":"We work for society.","kültür":"Turkish culture is very rich.","gelenek":"This is a beautiful tradition.","bayram":"We visit family during the holiday.","düğün":"The wedding went very beautifully.","tören":"The graduation ceremony is tomorrow.","misafir":"Guests are coming tonight.","nüfus":"Istanbul has a very large population.","vatandaşlık":"I applied for citizenship.",
+  "hastalık":"This illness is contagious.","ilaç":"Don't forget to take your medicine.","ateş":"The child has a fever.","ameliyat":"The surgery went well.","muayene":"The doctor examined me.","reçete":"The doctor wrote a prescription.","kan":"I had a blood test done.","kalp":"My heart is beating very fast.","mide":"My stomach hurts.","akciğer":"Smoking damages the lungs.","omuz":"My shoulder hurts.","diz":"My knee hurts a lot.","parmak":"I cut my finger.","bel":"My back hurts.","boyun":"My neck stiffened up.","cilt":"My skin is very dry.","grip":"I got the flu, I'll stay home.","alerji":"I have a pollen allergy.","diyet":"I'm on a diet.","egzersiz":"I exercise every day.",
+  "fiyat":"How much does this product cost?","indirim":"There is a big sale.","mağaza":"The store opens at ten o'clock.","kasa":"There is a queue at the cashier.","fiş":"Please keep the receipt.","kredi kartı":"Can I pay with a credit card?","banka":"I deposited money at the bank.","hesap":"Please bring the bill.","maaş":"My salary was deposited late this month.","borç":"I paid my debt.","vergi":"It's time to pay taxes.","fatura":"The electricity bill is very high.","ürün":"This product is very high quality.","marka":"Which brand do you prefer?","beden":"This size is too small for me.","numara":"My shoe size is 42.","müşteri":"The customer is always right.","sipariş":"When will my order arrive?","kargo":"The package arrived in two days.","pazarlık":"I enjoy bargaining.",
+  "tarif":"I made it with my mother's recipe.","malzeme":"I bought all the ingredients.","baharat":"Add spice to the food.","soğan":"I chopped the onion.","sarımsak":"Garlic is very healthy.","biber":"I added green pepper.","makarna":"The pasta turned out very delicious.","sos":"I prepared tomato sauce.","tatlı":"There is baklava for dessert.","dondurma":"I want chocolate ice cream.","börek":"My mother made börek.","kek":"I bought a birthday cake.","un":"You need flour to make bread.","tereyağı":"I cooked it with butter.","zeytinyağı":"I put olive oil in the salad.","bal":"I ate honey at breakfast.","reçel":"Strawberry jam is very nice.","zeytin":"There are olives at breakfast.","salatalık":"I put cucumber in the salad.","havuç":"I had carrot soup.",
+  "üniversite":"I study law at university.","bölüm":"What department are you studying in?","diploma":"I received my diploma.","mezuniyet":"The graduation ceremony was very beautiful.","başvuru":"I applied for a job.","mülakat":"I have an interview tomorrow.","deneyim":"I have two years of experience.","proje":"We started a new project.","sunum":"The presentation went very well.","toplantı":"We have a meeting at three o'clock.","rapor":"I will submit the report tomorrow.","sertifika":"I got a language certificate.","burs":"I won a scholarship!","staj":"I will do an internship in the summer.","sözleşme":"I signed the contract.","terfi":"I got a promotion, I am very happy.","emekli":"My father retired.","özgeçmiş":"I updated my resume.","hedef":"My goal is to study abroad.","başarı":"I wish you continued success.",
+  "internet":"There is no internet connection.","şifre":"I forgot my password.","ekran":"The screen is very bright.","tuş":"Press this button.","mesaj":"I sent you a message.","e-posta":"What is your email address?","uygulama":"Download this application.","dosya":"I sent the file.","yazıcı":"I printed from the printer.","şarj":"Your phone's battery is dead.","kamera":"This camera has very good resolution.","hoparlör":"The speaker's volume is very loud.","kulaklık":"I lost my headphones.","televizyon":"There is a nice movie on television.","haber":"Did you watch the news?","reklam":"This advertisement is very funny.","program":"This program is very useful.","site":"I use this website frequently.","video":"I watched a nice video.","çeviri":"Is this translation correct?",
+  "dostluk":"Our friendship is very precious.","aşk":"Love is everywhere.","saygı":"Show respect to elders.","özgürlük":"Freedom is very important.","adalet":"Justice should be for everyone.","barış":"We want peace in the world.","sabır":"You must be patient.","cesaret":"Thank you for your courage.","merak":"Don't worry, everything is fine.","kıskançlık":"Jealousy damages relationships.","nişan":"They got engaged last week.","evlilik":"Their marriage is going very well.","boşanma":"Divorce is a difficult process.","nefret":"Hatred solves nothing.","heyecan":"The excitement of the holiday has begun.","endişe":"Don't worry, we'll handle it.","pişmanlık":"I feel great regret.","şükür":"Gratitude for everything.","hayal":"My dreams are big.","özlem":"I am longing for my hometown.",
+  "pasaport":"I renewed my passport.","vize":"I applied for a visa.","bavul":"I packed my suitcase.","rezervasyon":"I made a hotel reservation.","tur":"We joined a city tour.","rehber":"The guide is very knowledgeable.","müze":"We visited the museum.","saray":"We saw Topkapı Palace.","kale":"The castle is very impressive.","plaj":"We sunbathed on the beach.","tatil":"Where are you going for vacation?","gezi":"We will go on a trip this weekend.","liman":"The ship docked at the port.","gümrük":"We passed through customs.","acenta":"I went to the travel agency.","harita":"Show the location on the map.","yön":"Which direction should I go?","güzergah":"Let's choose the shortest route.","anıt":"This monument is very old.","çeşme":"We drank water from the fountain.",
+  "kiracı":"A new tenant arrived.","ev sahibi":"The landlord raised the rent.","kira":"The rent is very expensive.","taşınmak":"We moved to a new house.","kombi":"The boiler broke down.","klima":"Turn on the air conditioning, it's very hot.","asansör":"The elevator is broken, let's take the stairs.","garaj":"I parked the car in the garage.","çamaşır":"I need to do laundry.","bulaşık":"I washed the dishes.","süpürge":"I cleaned with the vacuum cleaner.","çöp":"Take the trash out.","perde":"I closed the curtains.","yastık":"My pillow is very comfortable.","yorgan":"I folded the quilt.","çarşaf":"I changed the bed sheets.","musluk":"The faucet is dripping.","priz":"Is there an outlet here?","ampul":"The light bulb is burned out, let's change it.","kat":"We live on the third floor.",
+  "futbol":"We watched the football match.","basketbol":"I love playing basketball.","yüzme":"I am taking swimming lessons.","koşu":"I go for a morning run.","bisiklet":"I go to work by bicycle.","maç":"The match was very exciting.","takım":"Our team became the champion.","antrenman":"There is training three days a week.","salon":"I go to the gym.","müzik":"I love listening to music.","şarkı":"I love this song very much.","enstrüman":"I am learning to play guitar.","resim":"She drew a beautiful picture.","sergi":"We went to an art exhibition.","tiyatro":"We bought tickets for the theater.","sinema":"There is a new movie at the cinema.","roman":"I finished this novel in one day.","dergi":"I am reading a fashion magazine.","yürüyüş":"We went hiking in the forest.","kamp":"We will go camping in the summer."
+};
+
 const WCARD_SVG_COFFEE = `<svg xmlns="http://www.w3.org/2000/svg" width="108" height="118" viewBox="0 0 108 118" style="transform:rotate(-14deg);display:block">
   <ellipse cx="54" cy="110" rx="40" ry="7.5" fill="#c0ad90" opacity="0.18"/>
   <ellipse cx="54" cy="106" rx="43" ry="11" fill="#e8dcc6"/>
@@ -699,6 +712,7 @@ const WCARD_SVG_PEN = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height
 function buildCardHTML(word, index, total) {
   const isStory = cardFormat === 'story';
   const cls = isStory ? 'wcard-story' : 'wcard-post';
+  const exEn = A2_ISIM_EXEN[word.tr] || '';
   const penDeco = isStory
     ? `<div style="position:absolute;right:22px;top:50%;transform:translateY(-50%);z-index:0;opacity:0.55">${WCARD_SVG_PEN}</div>`
     : '';
@@ -712,10 +726,18 @@ function buildCardHTML(word, index, total) {
         <span class="wcard-brand">lingual.work</span>
       </div>
       <div class="wcard-body">
-        <div class="wcard-word">${word.tr}</div>
-        <div class="wcard-line"></div>
-        <div class="wcard-en">${word.en}</div>
-        <div class="wcard-ex">"${word.ex}"</div>
+        <div class="wcard-content-frame">
+          <div class="wcard-word">${word.tr}</div>
+          <div class="wcard-line"></div>
+          <div class="wcard-en">${word.en}</div>
+          <div class="wcard-ex">"${word.ex}"</div>
+          ${exEn ? `<div class="wcard-exen">"${exEn}"</div>` : ''}
+        </div>
+        <div class="wcard-cta">
+          <p class="wcard-cta-tr">Sen nasıl kullanırdın? Yorumda göster!</p>
+          <p class="wcard-cta-en">How would you use it? Show us in the comments!</p>
+          <div class="wcard-cta-arrow">↓</div>
+        </div>
       </div>
       <div class="wcard-num">${index + 1} / ${total}</div>
     </div>
