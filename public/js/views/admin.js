@@ -662,18 +662,58 @@ function renderAdminCards() {
   `;
 }
 
+const WCARD_SVG_COFFEE = `<svg xmlns="http://www.w3.org/2000/svg" width="108" height="118" viewBox="0 0 108 118" style="transform:rotate(-14deg);display:block">
+  <ellipse cx="54" cy="110" rx="40" ry="7.5" fill="#c0ad90" opacity="0.18"/>
+  <ellipse cx="54" cy="106" rx="43" ry="11" fill="#e8dcc6"/>
+  <ellipse cx="54" cy="103" rx="38" ry="9.5" fill="#f0e6d2"/>
+  <ellipse cx="54" cy="103" rx="33" ry="8" fill="#ece1cc" stroke="#e0d4b8" stroke-width="0.6"/>
+  <path d="M30,50 Q30,86 54,86 Q78,86 78,50" fill="#e6d9bc"/>
+  <ellipse cx="54" cy="50" rx="24" ry="8" fill="#d8c8a4"/>
+  <ellipse cx="54" cy="50" rx="19.5" ry="6.5" fill="#18090200"/>
+  <ellipse cx="54" cy="50" rx="19.5" ry="6.5" fill="#1a0e04"/>
+  <ellipse cx="50" cy="48" rx="6" ry="3.5" fill="#5c3018" opacity="0.45"/>
+  <path d="M46,49 Q50,47 54,49 Q58,51 62,49" stroke="#8b5530" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <path d="M78,60 Q96,60 96,71 Q96,82 78,82" fill="none" stroke="#d8c8a4" stroke-width="5.5" stroke-linecap="round"/>
+</svg>`;
+
+const WCARD_SVG_PLANT = `<svg xmlns="http://www.w3.org/2000/svg" width="88" height="96" viewBox="0 0 88 96" style="display:block">
+  <path d="M44,92 Q39,68 29,42 Q21,18 44,7" stroke="#6b8c5a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <path d="M33,72 Q11,62 15,45 Q33,47 33,72Z" fill="#8aac76" opacity="0.82"/>
+  <path d="M33,72 Q21,58 16,46" stroke="#527041" stroke-width="0.8" fill="none" opacity="0.35"/>
+  <path d="M29,52 Q52,40 48,25 Q30,27 29,52Z" fill="#7da06c" opacity="0.85"/>
+  <path d="M29,52 Q41,38 47,26" stroke="#527041" stroke-width="0.8" fill="none" opacity="0.35"/>
+  <path d="M25,36 Q5,29 9,14 Q25,17 25,36Z" fill="#8aac76" opacity="0.78"/>
+  <path d="M25,36 Q13,25 10,15" stroke="#527041" stroke-width="0.8" fill="none" opacity="0.35"/>
+  <path d="M23,27 Q46,15 42,4 Q26,6 23,27Z" fill="#6a9460" opacity="0.82"/>
+</svg>`;
+
+const WCARD_SVG_PEN = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="92" viewBox="0 0 18 92" style="transform:rotate(8deg);display:block">
+  <rect x="3" y="0" width="12" height="18" rx="6" fill="#b83232"/>
+  <rect x="4" y="15" width="10" height="3.5" fill="#8e1e1e"/>
+  <rect x="3" y="18" width="12" height="58" fill="#1a2744"/>
+  <rect x="13.5" y="4" width="2.5" height="30" rx="1.25" fill="#c83030"/>
+  <path d="M3,76 L9,92 L15,76Z" fill="#d4c8a8"/>
+  <rect x="5.5" y="20" width="3" height="52" rx="1.5" fill="rgba(255,255,255,0.07)"/>
+</svg>`;
+
 function buildCardHTML(word, index, total) {
-  const cls = cardFormat === 'story' ? 'wcard-story' : 'wcard-post';
+  const isStory = cardFormat === 'story';
+  const cls = isStory ? 'wcard-story' : 'wcard-post';
+  const penDeco = isStory
+    ? `<div style="position:absolute;right:22px;top:50%;transform:translateY(-50%);z-index:0;opacity:0.55">${WCARD_SVG_PEN}</div>`
+    : '';
   return `
     <div class="wcard ${cls}" id="wordCard">
-      <div class="wcard-deco"></div>
+      <div class="wcard-deco-bl">${WCARD_SVG_COFFEE}</div>
+      <div class="wcard-deco-br">${WCARD_SVG_PLANT}</div>
+      ${penDeco}
       <div class="wcard-topbar">
         <span class="wcard-badge">A2 · İsim</span>
         <span class="wcard-brand">lingual.work</span>
       </div>
       <div class="wcard-body">
         <div class="wcard-word">${word.tr}</div>
-        <div class="wcard-divider"></div>
+        <div class="wcard-line"></div>
         <div class="wcard-en">${word.en}</div>
         <div class="wcard-ex">"${word.ex}"</div>
       </div>
