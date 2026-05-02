@@ -1000,6 +1000,7 @@ function batchNav(dir) {
 
 function renderAdminCardsBatch() {
   const cats = ['isim', 'fiil', 'sifat', 'zarf'];
+  const catLabels = { isim: 'İSİM', fiil: 'FİİL', sifat: 'SIFAT', zarf: 'ZARF' };
   const d = window.VOCAB_DATA;
   const isStory = cardFormat === 'story';
   const groupIdx = cardCurrentIndex;
@@ -1011,16 +1012,25 @@ function renderAdminCardsBatch() {
 
   const cardW = isStory ? 405 : 540;
   const cardH = isStory ? 720 : 540;
-  const gridW = cardW * 2;
-  const gridH = cardH * 2;
-  const previewW = Math.round(gridW * 0.5);
-  const previewH = Math.round(gridH * 0.5);
+  const cellW = isStory ? 130 : 210;
+  const scale = +(cellW / cardW).toFixed(4);
+  const cellH = Math.round(cardH * scale);
 
-  let gridHTML = '';
+  let previewCells = '';
   for (const cat of cats) {
     const words = ((d[cardLevel.toUpperCase()] || {})[cat] || []).flat();
     const word = words[groupIdx] || words[0];
-    if (word) gridHTML += buildCardHTML(word, groupIdx, words.length, cat, true);
+    if (!word) continue;
+    previewCells += `
+      <div>
+        <div style="text-align:center;font-size:0.7rem;font-weight:700;color:#1a2744;margin-bottom:0.3rem;letter-spacing:0.4px">${catLabels[cat]}</div>
+        <div style="overflow:hidden;width:${cellW}px;height:${cellH}px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.13)">
+          <div style="transform:scale(${scale});transform-origin:top left;width:${cardW}px;height:${cardH}px">
+            ${buildCardHTML(word, groupIdx, words.length, cat, true)}
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   const content = document.getElementById('adminContent');
@@ -1047,13 +1057,11 @@ function renderAdminCardsBatch() {
         <span class="card-counter">Grup ${groupIdx + 1} · ${queuePos + 1} / ${maxLen}${isDownloaded ? ' ✓' : ''}</span>
         <button class="btn btn-outline" onclick="batchNav(1)">Sonraki →</button>
       </div>
-      <div class="card-preview-wrap" style="overflow:hidden;width:${previewW}px;height:${previewH}px;margin:0 auto;">
-        <div style="transform:scale(0.5);transform-origin:top left;width:${gridW}px;height:${gridH}px;display:grid;grid-template-columns:1fr 1fr;">
-          ${gridHTML}
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;max-width:${cellW * 2 + 20}px;margin:1rem auto 0;">
+        ${previewCells}
       </div>
       <div class="card-studio-actions">
-        <button class="btn btn-primary" onclick="downloadBatch()">⬇ Grubu İndir (PNG)</button>
+        <button class="btn btn-primary" onclick="downloadBatch()">⬇ 4 Kartı İndir</button>
       </div>
     </div>
   `;
