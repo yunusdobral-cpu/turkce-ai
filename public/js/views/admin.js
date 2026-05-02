@@ -1290,43 +1290,72 @@ async function downloadReels() {
   const word = words[cardCurrentIndex];
   if (!word) return;
 
-  if (typeof MediaRecorder === 'undefined') {
-    alert('Tarayıcınız video kaydını desteklemiyor.');
+  if (typeof VideoEncoder === 'undefined') {
+    alert('Tarayıcınız WebCodecs desteklemiyor. Chrome 94+ gerekli.');
     return;
   }
+
+  const btn = document.querySelector('[data-reels-btn]');
+  const setBtn = (txt, dis) => { if (btn) { btn.textContent = txt; btn.disabled = dis; } };
+
+  setBtn('⏳ Yükleniyor…', true);
+
+  if (!window.Mp4Muxer) {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/mp4-muxer/build/mp4-muxer.min.js';
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('mp4-muxer yüklenemedi. İnternet bağlantısını kontrol et.'));
+      document.head.appendChild(s);
+    }).catch(err => { alert(err.message); setBtn('🎬 Reels Video İndir', false); throw err; });
+  }
+
+  const { Muxer, ArrayBufferTarget } = window.Mp4Muxer;
+  const target = new ArrayBufferTarget();
+  const muxer = new Muxer({
+    target,
+    video: { codec: 'avc', width: W, height: H },
+    fastStart: 'in-memory'
+  });
+
+  let codec = null;
+  for (const c of ['avc1.4d0028', 'avc1.640028', 'avc1.42001f']) {
+    const s = await VideoEncoder.isConfigSupported({ codec: c, width: W, height: H });
+    if (s.supported) { codec = c; break; }
+  }
+  if (!codec) { alert('H.264 kodlama desteklenmiyor.'); setBtn('🎬 Reels Video İndir', false); return; }
+
+  const encoder = new VideoEncoder({
+    output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+    error: e => console.error('VideoEncoder:', e)
+  });
+  encoder.configure({ codec, width: W, height: H, bitrate: 8_000_000, framerate: FPS });
 
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
-  const stream = canvas.captureStream(FPS);
+  const totalFrames = Math.ceil(DURATION / 1000 * FPS);
 
-  const mime = ['video/webm;codecs=vp9', 'video/webm'].find(m => MediaRecorder.isTypeSupported(m));
-  if (!mime) { alert('WebM formatı desteklenmiyor.'); return; }
+  setBtn('⏺ Kodlanıyor…', true);
 
-  const recorder = new MediaRecorder(stream, { mimeType: mime });
-  const chunks = [];
-  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-  recorder.onstop = () => {
-    const blob = new Blob(chunks, { type: 'video/webm' });
-    const a = document.createElement('a');
-    a.download = `lingual-reels-${cardLevel}-${cardCategory}-${word.tr}.webm`;
-    a.href = URL.createObjectURL(blob);
-    a.click();
-    const btn = document.querySelector('[data-reels-btn]');
-    if (btn) { btn.textContent = '🎬 Reels Video İndir'; btn.disabled = false; }
-  };
-
-  const btn = document.querySelector('[data-reels-btn]');
-  if (btn) { btn.textContent = '⏺ Kaydediliyor… (6sn)'; btn.disabled = true; }
-
-  recorder.start(100);
-  const start = performance.now();
-  function frame() {
-    const elapsed = performance.now() - start;
-    const t = Math.min(elapsed / DURATION, 1);
+  for (let i = 0; i < totalFrames; i++) {
+    const t = i / (totalFrames - 1);
     drawReelsFrame(ctx, W, H, word, t);
-    if (elapsed < DURATION) requestAnimationFrame(frame);
-    else recorder.stop();
+    const frame = new VideoFrame(canvas, { timestamp: Math.round(i * 1_000_000 / FPS) });
+    encoder.encode(frame, { keyFrame: i % 30 === 0 });
+    frame.close();
+    if (i % 15 === 0) await new Promise(r => setTimeout(r, 0));
   }
-  requestAnimationFrame(frame);
+
+  await encoder.flush();
+  encoder.close();
+  muxer.finalize();
+
+  const blob = new Blob([target.buffer], { type: 'video/mp4' });
+  const a = document.createElement('a');
+  a.download = `lingual-reels-${cardLevel}-${cardCategory}-${word.tr}.mp4`;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+
+  setBtn('🎬 Reels Video İndir', false);
 }
