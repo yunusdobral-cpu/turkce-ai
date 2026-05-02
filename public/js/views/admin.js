@@ -663,6 +663,7 @@ function renderAdminCards() {
         <div class="card-format-tabs">
           <button class="card-fmt-btn ${cardFormat === 'post' ? 'active' : ''}" onclick="setCardFormat('post')">◻ Post (1:1)</button>
           <button class="card-fmt-btn ${cardFormat === 'story' ? 'active' : ''}" onclick="setCardFormat('story')">▯ Story (9:16)</button>
+          <button class="card-fmt-btn ${cardFormat === 'reels' ? 'active' : ''}" onclick="setCardFormat('reels')">▶ Reels (9:16)</button>
         </div>
         <button class="btn btn-outline" onclick="toggleBatchMode()" style="white-space:nowrap">⊞ Toplu İndir</button>
       </div>
@@ -675,7 +676,10 @@ function renderAdminCards() {
         ${buildCardHTML(word, cardCurrentIndex, words.length)}
       </div>
       <div class="card-studio-actions">
-        <button class="btn btn-primary" onclick="downloadCard()">⬇ PNG İndir</button>
+        ${cardFormat === 'reels'
+          ? `<button class="btn btn-primary" data-reels-btn onclick="downloadReels()">🎬 Reels Video İndir</button>`
+          : `<button class="btn btn-primary" onclick="downloadCard()">⬇ PNG İndir</button>`
+        }
       </div>
     </div>
   `;
@@ -881,7 +885,7 @@ const WCARD_SVG_PEN = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height
 </svg>`;
 
 function buildCardHTML(word, index, total, overrideCat, noId) {
-  const isStory = cardFormat === 'story';
+  const isStory = cardFormat === 'story' || cardFormat === 'reels';
   const cls = isStory ? 'wcard-story' : 'wcard-post';
   const cat = overrideCat || cardCategory;
   const catLabel = cat === 'fiil' ? 'Fiil' : cat === 'sifat' ? 'Sıfat' : cat === 'zarf' ? 'Zarf' : 'İsim';
@@ -1128,4 +1132,201 @@ async function downloadBatch() {
   const nextUndone = newQueue.find(i => !cardBatchDownloaded.has(i));
   cardCurrentIndex = nextUndone !== undefined ? nextUndone : (newQueue[0] !== undefined ? newQueue[0] : 0);
   renderAdminCards();
+}
+
+// ===================== REELS =====================
+
+function reelsEaseOut(x) {
+  return 1 - Math.pow(1 - Math.max(0, Math.min(1, x)), 3);
+}
+
+function reelsFade(t, start, dur) {
+  return Math.max(0, Math.min(1, (t - start) / dur));
+}
+
+function reelsWrapText(ctx, text, x, y, maxW, lineH) {
+  const parts = text.split(' ');
+  let line = '';
+  const lines = [];
+  for (const p of parts) {
+    const test = line ? line + ' ' + p : p;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = p; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineH));
+  return lines.length;
+}
+
+function drawReelsFrame(ctx, W, H, word, t) {
+  const cx = W / 2;
+  const sansFont = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  const grad = ctx.createRadialGradient(W * 0.28, H * 0.22, 0, W * 0.28, H * 0.22, W * 1.2);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(0.45, '#faf7f2');
+  grad.addColorStop(1, '#f4efe6');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.roundRect(4, 4, W - 8, H - 8, 32);
+  ctx.fill();
+  ctx.strokeStyle = '#e8e1d6';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.roundRect(4, 4, W - 8, H - 8, 32);
+  ctx.stroke();
+
+  // Topbar
+  const topA = reelsFade(t, 0, 0.06);
+  if (topA > 0) {
+    ctx.globalAlpha = topA;
+    const catLabel = cardCategory === 'fiil' ? 'FİİL' : cardCategory === 'sifat' ? 'SIFAT' : cardCategory === 'zarf' ? 'ZARF' : 'İSİM';
+    const badgeText = `${cardLevel.toUpperCase()} · ${catLabel}`;
+    ctx.font = `500 20px ${sansFont}`;
+    const bw = ctx.measureText(badgeText).width + 30;
+    const bh = 38;
+    const bx = 64, by = 82;
+    ctx.strokeStyle = '#1a2744'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(bx, by - bh / 2, bw, bh, bh / 2); ctx.stroke();
+    ctx.fillStyle = '#1a2744'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(badgeText, bx + 15, by);
+    ctx.globalAlpha = topA * 0.38;
+    ctx.textAlign = 'right';
+    ctx.font = `500 20px ${sansFont}`;
+    ctx.fillText('lingual.work', W - 64, by);
+    ctx.globalAlpha = 1;
+  }
+
+  // TR Word
+  const wordProgress = reelsFade(t, 0.08, 0.12);
+  if (wordProgress > 0) {
+    ctx.globalAlpha = wordProgress;
+    const slide = reelsEaseOut(wordProgress);
+    const wordFontSize = word.tr.length > 10 ? 68 : word.tr.length > 7 ? 80 : 90;
+    ctx.font = `800 ${wordFontSize}px ${sansFont}`;
+    ctx.fillStyle = '#1a2744';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(word.tr, cx + (1 - slide) * -80, H * 0.36);
+    ctx.globalAlpha = 1;
+  }
+
+  // Red line
+  const lineP = reelsEaseOut(reelsFade(t, 0.22, 0.08));
+  if (lineP > 0) {
+    const lw = 76 * lineP;
+    ctx.fillStyle = '#b83232';
+    ctx.beginPath(); ctx.roundRect(cx - lw / 2, H * 0.36 + 68, lw, 5, 2); ctx.fill();
+  }
+
+  // EN translation
+  const enA = reelsFade(t, 0.32, 0.10);
+  if (enA > 0) {
+    ctx.globalAlpha = enA;
+    ctx.font = `400 44px ${sansFont}`;
+    ctx.fillStyle = '#1e4fa3';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(word.en, cx, H * 0.36 + 130);
+    ctx.globalAlpha = 1;
+  }
+
+  // TR Example
+  const exA = reelsFade(t, 0.43, 0.10);
+  if (exA > 0) {
+    ctx.globalAlpha = exA;
+    ctx.font = `italic 500 27px ${sansFont}`;
+    ctx.fillStyle = '#3a5276';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    reelsWrapText(ctx, `"${word.ex}"`, cx, H * 0.36 + 192, W - 140, 38);
+    ctx.globalAlpha = 1;
+  }
+
+  // EN Example (EXEN)
+  const exEnMaps = { a1: { isim: A1_ISIM_EXEN, fiil: A1_FIIL_EXEN, sifat: A1_SIFAT_EXEN, zarf: A1_ZARF_EXEN }, a2: { isim: A2_ISIM_EXEN, fiil: A2_FIIL_EXEN, sifat: A2_SIFAT_EXEN, zarf: A2_ZARF_EXEN }, b1: { isim: B1_ISIM_EXEN, fiil: B1_FIIL_EXEN, sifat: B1_SIFAT_EXEN, zarf: B1_ZARF_EXEN } };
+  const exEn = ((exEnMaps[cardLevel] || {})[cardCategory] || {})[word.tr] || '';
+  const exenA = reelsFade(t, 0.56, 0.10);
+  if (exenA > 0 && exEn) {
+    ctx.globalAlpha = exenA;
+    ctx.font = `500 26px ${sansFont}`;
+    ctx.fillStyle = '#b83232';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    reelsWrapText(ctx, `"${exEn}"`, cx, H * 0.36 + 296, W - 140, 36);
+    ctx.globalAlpha = 1;
+  }
+
+  // CTA
+  const ctaA = reelsFade(t, 0.68, 0.10);
+  if (ctaA > 0) {
+    ctx.globalAlpha = ctaA;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#1a2744';
+    ctx.font = `700 27px ${sansFont}`;
+    ctx.fillText('Sen nasıl kullanırdın? Yorumda göster!', cx, H * 0.82);
+    ctx.globalAlpha = ctaA * 0.65;
+    ctx.font = `500 23px ${sansFont}`;
+    ctx.fillText('How would you use it? Show us in the comments!', cx, H * 0.82 + 42);
+    ctx.globalAlpha = ctaA;
+    ctx.fillStyle = '#b83232';
+    ctx.font = `900 68px ${sansFont}`;
+    ctx.fillText('↓', cx, H * 0.82 + 118);
+    ctx.globalAlpha = 1;
+  }
+
+  // Card number
+  ctx.globalAlpha = 0.28;
+  ctx.font = `500 20px ${sansFont}`;
+  ctx.fillStyle = '#1a2744';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  const allWords = getCardWords();
+  ctx.fillText(`${cardCurrentIndex + 1} / ${allWords.length}`, cx, H - 44);
+  ctx.globalAlpha = 1;
+}
+
+async function downloadReels() {
+  const W = 810, H = 1440, DURATION = 6000, FPS = 30;
+  const words = getCardWords();
+  const word = words[cardCurrentIndex];
+  if (!word) return;
+
+  if (typeof MediaRecorder === 'undefined') {
+    alert('Tarayıcınız video kaydını desteklemiyor.');
+    return;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const stream = canvas.captureStream(FPS);
+
+  const mime = ['video/webm;codecs=vp9', 'video/webm'].find(m => MediaRecorder.isTypeSupported(m));
+  if (!mime) { alert('WebM formatı desteklenmiyor.'); return; }
+
+  const recorder = new MediaRecorder(stream, { mimeType: mime });
+  const chunks = [];
+  recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const a = document.createElement('a');
+    a.download = `lingual-reels-${cardLevel}-${cardCategory}-${word.tr}.webm`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    const btn = document.querySelector('[data-reels-btn]');
+    if (btn) { btn.textContent = '🎬 Reels Video İndir'; btn.disabled = false; }
+  };
+
+  const btn = document.querySelector('[data-reels-btn]');
+  if (btn) { btn.textContent = '⏺ Kaydediliyor… (6sn)'; btn.disabled = true; }
+
+  recorder.start(100);
+  const start = performance.now();
+  function frame() {
+    const elapsed = performance.now() - start;
+    const t = Math.min(elapsed / DURATION, 1);
+    drawReelsFrame(ctx, W, H, word, t);
+    if (elapsed < DURATION) requestAnimationFrame(frame);
+    else recorder.stop();
+  }
+  requestAnimationFrame(frame);
 }
