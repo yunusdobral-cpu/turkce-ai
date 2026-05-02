@@ -628,6 +628,8 @@ let cardCurrentIndex = 0;
 let cardFormat = 'post';
 let cardLevel = 'a2';
 let cardCategory = 'isim';
+let cardBatchMode = false;
+let cardBatchDownloaded = new Set();
 
 function getCardWords() {
   const d = window.VOCAB_DATA;
@@ -635,6 +637,7 @@ function getCardWords() {
 }
 
 function renderAdminCards() {
+  if (cardBatchMode) { renderAdminCardsBatch(); return; }
   const words = getCardWords();
   const word = words[cardCurrentIndex];
   const catLabel = cardCategory === 'fiil' ? 'Fiil' : cardCategory === 'sifat' ? 'Sıfat' : cardCategory === 'zarf' ? 'Zarf' : 'İsim';
@@ -661,6 +664,7 @@ function renderAdminCards() {
           <button class="card-fmt-btn ${cardFormat === 'post' ? 'active' : ''}" onclick="setCardFormat('post')">◻ Post (1:1)</button>
           <button class="card-fmt-btn ${cardFormat === 'story' ? 'active' : ''}" onclick="setCardFormat('story')">▯ Story (9:16)</button>
         </div>
+        <button class="btn btn-outline" onclick="toggleBatchMode()" style="white-space:nowrap">⊞ Toplu İndir</button>
       </div>
       <div class="card-studio-nav">
         <button class="btn btn-outline" onclick="cardNav(-1)">← Önceki</button>
@@ -876,18 +880,19 @@ const WCARD_SVG_PEN = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height
   <rect x="5.5" y="20" width="3" height="52" rx="1.5" fill="rgba(255,255,255,0.07)"/>
 </svg>`;
 
-function buildCardHTML(word, index, total) {
+function buildCardHTML(word, index, total, overrideCat, noId) {
   const isStory = cardFormat === 'story';
   const cls = isStory ? 'wcard-story' : 'wcard-post';
-  const catLabel = cardCategory === 'fiil' ? 'Fiil' : cardCategory === 'sifat' ? 'Sıfat' : cardCategory === 'zarf' ? 'Zarf' : 'İsim';
+  const cat = overrideCat || cardCategory;
+  const catLabel = cat === 'fiil' ? 'Fiil' : cat === 'sifat' ? 'Sıfat' : cat === 'zarf' ? 'Zarf' : 'İsim';
   const exEnMaps = { a1: { isim: A1_ISIM_EXEN, fiil: A1_FIIL_EXEN, sifat: A1_SIFAT_EXEN, zarf: A1_ZARF_EXEN }, a2: { isim: A2_ISIM_EXEN, fiil: A2_FIIL_EXEN, sifat: A2_SIFAT_EXEN, zarf: A2_ZARF_EXEN }, b1: { isim: B1_ISIM_EXEN, fiil: B1_FIIL_EXEN, sifat: B1_SIFAT_EXEN, zarf: B1_ZARF_EXEN } };
-  const exEn = ((exEnMaps[cardLevel] || {})[cardCategory] || {})[word.tr] || '';
+  const exEn = ((exEnMaps[cardLevel] || {})[cat] || {})[word.tr] || '';
   const badge = `${cardLevel.toUpperCase()} · ${catLabel}`;
   const penDeco = isStory
     ? `<div style="position:absolute;right:22px;top:50%;transform:translateY(-50%);z-index:0;opacity:0.55">${WCARD_SVG_PEN}</div>`
     : '';
   return `
-    <div class="wcard ${cls}" id="wordCard">
+    <div class="wcard ${cls}"${noId ? '' : ' id="wordCard"'}>
       <div class="wcard-deco-bl">${WCARD_SVG_COFFEE}</div>
       <div class="wcard-deco-br">${WCARD_SVG_PLANT}</div>
       ${penDeco}
@@ -917,6 +922,7 @@ function buildCardHTML(word, index, total) {
 function setCardLevel(level) {
   cardLevel = level;
   cardCurrentIndex = 0;
+  cardBatchDownloaded = new Set();
   renderAdminCards();
 }
 
@@ -958,5 +964,147 @@ async function downloadCard() {
     link.click();
   } catch (err) {
     alert('İndirme hatası: ' + err.message);
+  }
+}
+
+function getBatchQueue() {
+  const cats = ['isim', 'fiil', 'sifat', 'zarf'];
+  const d = window.VOCAB_DATA;
+  const maxLen = Math.min(...cats.map(c => ((d[cardLevel.toUpperCase()] || {})[c] || []).flat().length));
+  const undone = [];
+  const done = [];
+  for (let i = 0; i < maxLen; i++) {
+    (cardBatchDownloaded.has(i) ? done : undone).push(i);
+  }
+  return [...undone, ...done];
+}
+
+function toggleBatchMode() {
+  cardBatchMode = !cardBatchMode;
+  cardBatchDownloaded = new Set();
+  if (cardBatchMode) {
+    cardCurrentIndex = getBatchQueue()[0] || 0;
+  } else {
+    cardCurrentIndex = 0;
+  }
+  renderAdminCards();
+}
+
+function batchNav(dir) {
+  const queue = getBatchQueue();
+  const pos = queue.indexOf(cardCurrentIndex);
+  const newPos = ((pos < 0 ? 0 : pos) + dir + queue.length) % queue.length;
+  cardCurrentIndex = queue[newPos];
+  renderAdminCards();
+}
+
+function renderAdminCardsBatch() {
+  const cats = ['isim', 'fiil', 'sifat', 'zarf'];
+  const d = window.VOCAB_DATA;
+  const isStory = cardFormat === 'story';
+  const groupIdx = cardCurrentIndex;
+  const queue = getBatchQueue();
+  const maxLen = queue.length;
+  const downloaded = cardBatchDownloaded.size;
+  const queuePos = queue.indexOf(groupIdx);
+  const isDownloaded = cardBatchDownloaded.has(groupIdx);
+
+  const cardW = isStory ? 405 : 540;
+  const cardH = isStory ? 720 : 540;
+  const gridW = cardW * 2;
+  const gridH = cardH * 2;
+  const previewW = Math.round(gridW * 0.5);
+  const previewH = Math.round(gridH * 0.5);
+
+  let gridHTML = '';
+  for (const cat of cats) {
+    const words = ((d[cardLevel.toUpperCase()] || {})[cat] || []).flat();
+    const word = words[groupIdx] || words[0];
+    if (word) gridHTML += buildCardHTML(word, groupIdx, words.length, cat, true);
+  }
+
+  const content = document.getElementById('adminContent');
+  content.innerHTML = `
+    <div class="card-studio">
+      <div class="card-studio-header">
+        <h2>Kelime Kartları — Toplu İndir</h2>
+        <p>${cardLevel.toUpperCase()} · ${downloaded} / ${maxLen} grup indirildi</p>
+      </div>
+      <div class="card-studio-controls" style="gap:0.75rem;flex-wrap:wrap">
+        <div class="card-format-tabs">
+          <button class="card-fmt-btn ${cardLevel === 'a1' ? 'active' : ''}" onclick="setCardLevel('a1')">A1</button>
+          <button class="card-fmt-btn ${cardLevel === 'a2' ? 'active' : ''}" onclick="setCardLevel('a2')">A2</button>
+          <button class="card-fmt-btn ${cardLevel === 'b1' ? 'active' : ''}" onclick="setCardLevel('b1')">B1</button>
+        </div>
+        <div class="card-format-tabs">
+          <button class="card-fmt-btn ${cardFormat === 'post' ? 'active' : ''}" onclick="setCardFormat('post')">◻ Post (1:1)</button>
+          <button class="card-fmt-btn ${cardFormat === 'story' ? 'active' : ''}" onclick="setCardFormat('story')">▯ Story (9:16)</button>
+        </div>
+        <button class="btn btn-outline" onclick="toggleBatchMode()" style="white-space:nowrap">← Tekli Moda Dön</button>
+      </div>
+      <div class="card-studio-nav">
+        <button class="btn btn-outline" onclick="batchNav(-1)">← Önceki</button>
+        <span class="card-counter">Grup ${groupIdx + 1} · ${queuePos + 1} / ${maxLen}${isDownloaded ? ' ✓' : ''}</span>
+        <button class="btn btn-outline" onclick="batchNav(1)">Sonraki →</button>
+      </div>
+      <div class="card-preview-wrap" style="overflow:hidden;width:${previewW}px;height:${previewH}px;margin:0 auto;">
+        <div style="transform:scale(0.5);transform-origin:top left;width:${gridW}px;height:${gridH}px;display:grid;grid-template-columns:1fr 1fr;">
+          ${gridHTML}
+        </div>
+      </div>
+      <div class="card-studio-actions">
+        <button class="btn btn-primary" onclick="downloadBatch()">⬇ Grubu İndir (PNG)</button>
+      </div>
+    </div>
+  `;
+}
+
+async function downloadBatch() {
+  if (typeof html2canvas === 'undefined') {
+    alert('html2canvas yüklenemedi.');
+    return;
+  }
+  const cats = ['isim', 'fiil', 'sifat', 'zarf'];
+  const d = window.VOCAB_DATA;
+  const isStory = cardFormat === 'story';
+  const groupIdx = cardCurrentIndex;
+  const cardW = isStory ? 405 : 540;
+  const cardH = isStory ? 720 : 540;
+  const gridW = cardW * 2;
+  const gridH = cardH * 2;
+
+  const container = document.createElement('div');
+  container.style.cssText = `position:fixed;left:-9999px;top:0;width:${gridW}px;height:${gridH}px;display:grid;grid-template-columns:1fr 1fr;`;
+
+  for (const cat of cats) {
+    const words = ((d[cardLevel.toUpperCase()] || {})[cat] || []).flat();
+    const word = words[groupIdx] || words[0];
+    if (word) container.innerHTML += buildCardHTML(word, groupIdx, words.length, cat, true);
+  }
+
+  document.body.appendChild(container);
+  try {
+    const canvas = await html2canvas(container, {
+      scale: 1,
+      backgroundColor: null,
+      useCORS: true,
+      logging: false,
+      width: gridW,
+      height: gridH
+    });
+    const link = document.createElement('a');
+    link.download = `lingual-batch-${cardLevel}-${cardFormat}-grup${groupIdx + 1}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    cardBatchDownloaded.add(groupIdx);
+    const newQueue = getBatchQueue();
+    const nextUndone = newQueue.find(i => !cardBatchDownloaded.has(i));
+    cardCurrentIndex = nextUndone !== undefined ? nextUndone : (newQueue[0] !== undefined ? newQueue[0] : 0);
+    renderAdminCards();
+  } catch (err) {
+    alert('İndirme hatası: ' + err.message);
+  } finally {
+    document.body.removeChild(container);
   }
 }
