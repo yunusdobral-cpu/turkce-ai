@@ -1188,7 +1188,7 @@ function drawReelsFrame(ctx, W, H, word, t) {
     ctx.font = `500 20px ${sansFont}`;
     const bw = ctx.measureText(badgeText).width + 30;
     const bh = 38;
-    const bx = 64, by = 82;
+    const bx = 64, by = 164;
     ctx.strokeStyle = '#1a2744'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.roundRect(bx, by - bh / 2, bw, bh, bh / 2); ctx.stroke();
     ctx.fillStyle = '#1a2744'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
@@ -1236,10 +1236,10 @@ function drawReelsFrame(ctx, W, H, word, t) {
   const exA = reelsFade(t, 0.43, 0.10);
   if (exA > 0) {
     ctx.globalAlpha = exA;
-    ctx.font = `italic 500 27px ${sansFont}`;
+    ctx.font = `italic 500 43px ${sansFont}`;
     ctx.fillStyle = '#3a5276';
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    reelsWrapText(ctx, `"${word.ex}"`, cx, H * 0.36 + 192, W - 140, 38);
+    reelsWrapText(ctx, `"${word.ex}"`, cx, H * 0.36 + 192, W - 140, 61);
     ctx.globalAlpha = 1;
   }
 
@@ -1249,10 +1249,10 @@ function drawReelsFrame(ctx, W, H, word, t) {
   const exenA = reelsFade(t, 0.56, 0.10);
   if (exenA > 0 && exEn) {
     ctx.globalAlpha = exenA;
-    ctx.font = `500 26px ${sansFont}`;
+    ctx.font = `500 42px ${sansFont}`;
     ctx.fillStyle = '#b83232';
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    reelsWrapText(ctx, `"${exEn}"`, cx, H * 0.36 + 296, W - 140, 36);
+    reelsWrapText(ctx, `"${exEn}"`, cx, H * 0.36 + 296, W - 140, 58);
     ctx.globalAlpha = 1;
   }
 
@@ -1263,14 +1263,14 @@ function drawReelsFrame(ctx, W, H, word, t) {
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = '#1a2744';
     ctx.font = `700 27px ${sansFont}`;
-    ctx.fillText('Sen nasıl kullanırdın? Yorumda göster!', cx, H * 0.82);
+    ctx.fillText('Sen nasıl kullanırdın? Yorumda göster!', cx, H * 0.73);
     ctx.globalAlpha = ctaA * 0.65;
     ctx.font = `500 23px ${sansFont}`;
-    ctx.fillText('How would you use it? Show us in the comments!', cx, H * 0.82 + 42);
+    ctx.fillText('How would you use it? Show us in the comments!', cx, H * 0.73 + 42);
     ctx.globalAlpha = ctaA;
     ctx.fillStyle = '#b83232';
     ctx.font = `900 68px ${sansFont}`;
-    ctx.fillText('↓', cx, H * 0.82 + 118);
+    ctx.fillText('↓', cx, H * 0.73 + 118);
     ctx.globalAlpha = 1;
   }
 
@@ -1280,7 +1280,7 @@ function drawReelsFrame(ctx, W, H, word, t) {
   ctx.fillStyle = '#1a2744';
   ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
   const allWords = getCardWords();
-  ctx.fillText(`${cardCurrentIndex + 1} / ${allWords.length}`, cx, H - 44);
+  ctx.fillText(`${cardCurrentIndex + 1} / ${allWords.length}`, cx, H - 66);
   ctx.globalAlpha = 1;
 }
 
