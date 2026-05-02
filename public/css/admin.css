@@ -61,6 +61,16 @@
 
 .admin-tabs::-webkit-scrollbar { display: none; }
 
+@media (min-width: 600px) {
+  .admin-tabs {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+  .admin-tab-logout {
+    margin-left: 0;
+  }
+}
+
 .admin-tab {
   padding: 0.75rem 1.5rem;
   background: none;
