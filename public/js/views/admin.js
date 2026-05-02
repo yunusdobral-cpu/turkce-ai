@@ -922,7 +922,7 @@ function buildCardHTML(word, index, total, overrideCat, noId) {
 function setCardLevel(level) {
   cardLevel = level;
   cardCurrentIndex = 0;
-  cardBatchDownloaded = new Set();
+  if (cardBatchMode) batchLoadDone(); else cardBatchDownloaded = new Set();
   renderAdminCards();
 }
 
@@ -967,6 +967,17 @@ async function downloadCard() {
   }
 }
 
+function batchLoadDone() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(`lingual_batch_${cardLevel}`) || '[]');
+    cardBatchDownloaded = new Set(saved);
+  } catch { cardBatchDownloaded = new Set(); }
+}
+
+function batchSaveDone() {
+  localStorage.setItem(`lingual_batch_${cardLevel}`, JSON.stringify([...cardBatchDownloaded]));
+}
+
 function getBatchQueue() {
   const cats = ['isim', 'fiil', 'sifat', 'zarf'];
   const d = window.VOCAB_DATA;
@@ -981,8 +992,8 @@ function getBatchQueue() {
 
 function toggleBatchMode() {
   cardBatchMode = !cardBatchMode;
-  cardBatchDownloaded = new Set();
   if (cardBatchMode) {
+    batchLoadDone();
     cardCurrentIndex = getBatchQueue()[0] || 0;
   } else {
     cardCurrentIndex = 0;
@@ -1112,6 +1123,7 @@ async function downloadBatch() {
   }
 
   cardBatchDownloaded.add(groupIdx);
+  batchSaveDone();
   const newQueue = getBatchQueue();
   const nextUndone = newQueue.find(i => !cardBatchDownloaded.has(i));
   cardCurrentIndex = nextUndone !== undefined ? nextUndone : (newQueue[0] !== undefined ? newQueue[0] : 0);
