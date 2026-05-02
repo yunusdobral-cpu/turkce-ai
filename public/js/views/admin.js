@@ -1070,41 +1070,42 @@ async function downloadBatch() {
   const groupIdx = cardCurrentIndex;
   const cardW = isStory ? 405 : 540;
   const cardH = isStory ? 720 : 540;
-  const gridW = cardW * 2;
-  const gridH = cardH * 2;
-
-  const container = document.createElement('div');
-  container.style.cssText = `position:fixed;left:-9999px;top:0;width:${gridW}px;height:${gridH}px;display:grid;grid-template-columns:1fr 1fr;`;
 
   for (const cat of cats) {
     const words = ((d[cardLevel.toUpperCase()] || {})[cat] || []).flat();
     const word = words[groupIdx] || words[0];
-    if (word) container.innerHTML += buildCardHTML(word, groupIdx, words.length, cat, true);
-  }
+    if (!word) continue;
 
-  document.body.appendChild(container);
-  try {
-    const canvas = await html2canvas(container, {
-      scale: 1,
-      backgroundColor: null,
-      useCORS: true,
-      logging: false,
-      width: gridW,
-      height: gridH
-    });
-    const link = document.createElement('a');
-    link.download = `lingual-batch-${cardLevel}-${cardFormat}-grup${groupIdx + 1}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    const container = document.createElement('div');
+    container.style.cssText = `position:fixed;left:-9999px;top:0;width:${cardW}px;height:${cardH}px;`;
+    container.innerHTML = buildCardHTML(word, groupIdx, words.length, cat, true);
+    document.body.appendChild(container);
 
-    cardBatchDownloaded.add(groupIdx);
-    const newQueue = getBatchQueue();
-    const nextUndone = newQueue.find(i => !cardBatchDownloaded.has(i));
-    cardCurrentIndex = nextUndone !== undefined ? nextUndone : (newQueue[0] !== undefined ? newQueue[0] : 0);
-    renderAdminCards();
-  } catch (err) {
-    alert('İndirme hatası: ' + err.message);
-  } finally {
+    try {
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+        logging: false,
+        width: cardW,
+        height: cardH
+      });
+      const link = document.createElement('a');
+      link.download = `lingual-${cardLevel}-${cat}-grup${groupIdx + 1}-${cardFormat}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      await new Promise(r => setTimeout(r, 250));
+    } catch (err) {
+      alert('İndirme hatası: ' + err.message);
+      document.body.removeChild(container);
+      return;
+    }
     document.body.removeChild(container);
   }
+
+  cardBatchDownloaded.add(groupIdx);
+  const newQueue = getBatchQueue();
+  const nextUndone = newQueue.find(i => !cardBatchDownloaded.has(i));
+  cardCurrentIndex = nextUndone !== undefined ? nextUndone : (newQueue[0] !== undefined ? newQueue[0] : 0);
+  renderAdminCards();
 }
