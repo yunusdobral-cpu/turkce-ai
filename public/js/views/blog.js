@@ -748,6 +748,404 @@ const BLOG_POSTS = [
       `
     }
   }
+,
+  {
+    id: 'learn-turkish-with-series',
+    title: 'Türkçeyi Dizi İzleyerek Öğrenmek: İşe Yarayan 5 Strateji',
+    titleEn: 'Learning Turkish with Series: 5 Strategies That Actually Work',
+    date: '2026-05-03',
+    category: 'İpuçları',
+    categoryEn: 'Tips',
+    summary: 'Pasif izlemek işe yaramaz — ama aktif tekniklerle Türk dizileri inanılmaz bir öğrenme aracına dönüşebilir.',
+    summaryEn: 'Passive watching doesn\'t work — but with active techniques, Turkish series become an incredible learning tool.',
+    titles: {
+      tr: 'Türkçeyi Dizi İzleyerek Öğrenmek: İşe Yarayan 5 Strateji',
+      en: 'Learning Turkish with Series: 5 Strategies That Actually Work',
+      es: 'Aprender Turco con Series: 5 Estrategias que Funcionan de Verdad',
+      ar: 'تعلّم التركية بمشاهدة المسلسلات: ٥ استراتيجيات تجدي نفعاً',
+      ru: 'Учим турецкий по сериалам: 5 стратегий, которые работают',
+      de: 'Türkisch mit Serien lernen: 5 Strategien, die wirklich funktionieren',
+      fr: 'Apprendre le turc avec des séries : 5 stratégies qui marchent vraiment'
+    },
+    categories: {
+      tr: 'İpuçları', en: 'Tips', es: 'Consejos', ar: 'نصائح', ru: 'Советы', de: 'Tipps', fr: 'Conseils'
+    },
+    summaries: {
+      tr: 'Pasif izlemek işe yaramaz — ama aktif tekniklerle Türk dizileri inanılmaz bir öğrenme aracına dönüşebilir.',
+      en: 'Passive watching doesn\'t work — but with active techniques, Turkish series become an incredible learning tool.',
+      es: 'Ver pasivamente no funciona — pero con técnicas activas, las series turcas se convierten en una herramienta increíble.',
+      ar: 'المشاهدة السلبية لا تُجدي — لكن مع تقنيات نشطة، تصبح المسلسلات التركية أداةً رائعة للتعلم.',
+      ru: 'Пассивный просмотр не работает — но с активными техниками турецкие сериалы становятся невероятным инструментом.',
+      de: 'Passives Zuschauen hilft nicht — aber mit aktiven Techniken werden türkische Serien zu einem unglaublichen Lernwerkzeug.',
+      fr: 'Regarder passivement ne fonctionne pas — mais avec des techniques actives, les séries turques deviennent un outil d\'apprentissage incroyable.'
+    },
+    bodies: {
+      tr: `<p>Muhtemelen şu tavsiyeyi duymuşsunuzdur: "Sadece Türk televizyonu izle, kendiliğinden öğrenirsin." Gerçek aslında daha karmaşık. Pasif izleme — bölümlerin üzerinizden geçip gitmesine izin vermek — şaşırtıcı derecede az öğrenme sağlar. Ama <em>aktif</em> izleme? O bambaşka bir hikaye.</p>
+<h2>Diziler Neden İşe Yarar?</h2>
+<p>Diziler, ders kitaplarının veremeyeceği bir şeyi sunar: doğal, bağlamsal dil. Karakterler size fiil çekmez — tartışır, şaka yapar, ağlar, müzakere eder. Aynı kelime ve ifadeleri onlarca bölüm boyunca tekrar tekrar duyarsınız; uzun vadeli hatırlamanın temeli de tam olarak budur.</p>
+<h2>Gerçekten İşe Yarayan 5 Strateji</h2>
+<ol>
+<li><strong>Cümle avı:</strong> Anlamadığınız bir ifade duyduğunuzda duraksayın. Araştırın. Yüksek sesle tekrarlayın. Bu tek alışkanlık, ilerleyen öğrencileri takılıp kalanlardan ayırır.</li>
+<li><strong>Katmanlı altyazı:</strong> Türkçe altyazı + ana dilinizdeki altyazıyla başlayın. Kendinizi rahat hissettiğinizde yalnızca Türkçeye geçin. Altyazıyı tamamen kapatmak en son adımdır.</li>
+<li><strong>Gölgeleme (Shadowing):</strong> Konuşma temposu size uyan bir karakter seçin. Onların repliklerini duyduktan hemen sonra tekrarlayın, ritim ve tonlamayı taklit edin. Bu, telaffuzu herhangi bir egzersizden daha hızlı geliştirir.</li>
+<li><strong>Bölüm günlüğü:</strong> Her bölümden sonra hatırladığınız 3–5 yeni kelime ya da ifadeyi yazın. Mükemmeli değil, tutarlılığı hedefleyin.</li>
+<li><strong>Stratejik tekrar izleme:</strong> Her bölümü iki kez izleyin. Önce durmadan genel anlayış için, sonra duraklamalı ayrıntılar için. İkinci izleme şaşırtıcı derecede fazla şey ortaya çıkarır.</li>
+</ol>
+<h2>Seviyeye Göre En İyi Diziler</h2>
+<div class="example-box">
+<strong>Başlangıç (A1–A2):</strong> <em>Ufak Tefek Cinayetler</em> — modern Türkçe, anlaşılır konuşma, günlük kelime hazinesi<br>
+<strong>Orta (B1):</strong> <em>Kara Para Aşk</em> — doğal tempo, zengin diyaloglu suç dramı<br>
+<strong>Orta-Üst (B2):</strong> <em>Fatih Harbiye</em> — kültürel derinlik, edebi referanslar<br>
+<strong>İleri (C1+):</strong> <em>Diriliş: Ertuğrul</em> — tarihsel kelime hazinesi, resmi ve arkaik ifadeler
+</div>
+<h2>Yapılmaması Gerekenler</h2>
+<ul>
+<li>Yalnızca ana dilinizde altyazıyla izlemeyin — okursunuz, dinlemezsiniz.</li>
+<li>Başlangıç seviyesinde tarihsel dramalarla başlamayın — kelime hazinesi çok özelleşmiş.</li>
+<li>Tekrar etmeden aralıksız izlemeyin — durmadan 5 bölüm izlemek neredeyse hiçbir şey yapmamak kadar pasif kalır.</li>
+</ul>
+<p>Amaç eğlence değil. Amaç, gerçek Türkçenin zihinsel bir kataloğunu oluşturmak — nasıl aktığını, nasıl duyulduğunu, insanların onu nasıl kullandığını. Doğru yapıldığında diziler sizi bu noktaya neredeyse başka her şeyden daha hızlı taşır.</p>`,
+      en: `<p>You've probably heard the advice: "just watch Turkish TV and you'll pick it up." The truth is more nuanced. Passive watching — letting episodes wash over you without engagement — produces surprisingly little learning. But <em>active</em> watching? That's a different story.</p>
+<h2>Why Series Work (When Done Right)</h2>
+<p>Series give you something textbooks can't: natural, contextual language. Characters don't conjugate verbs at you — they argue, joke, cry, negotiate. You hear the same words and phrases repeated across dozens of episodes, which is exactly how long-term retention builds.</p>
+<h2>5 Strategies That Actually Work</h2>
+<ol>
+<li><strong>Sentence mining:</strong> When you hear a phrase you don't understand, pause. Look it up. Repeat it out loud. This single habit separates learners who progress from those who stay stuck.</li>
+<li><strong>Subtitles in layers:</strong> Start with Turkish subtitles + your native language subtitles. Once comfortable, switch to Turkish only. Hiding subtitles entirely comes last.</li>
+<li><strong>Shadowing:</strong> Pick a character whose speech pace you like. Repeat their lines immediately after hearing them, mimicking rhythm and intonation. This builds pronunciation faster than any drill.</li>
+<li><strong>Episode journaling:</strong> After each episode, write 3–5 new words or phrases you remember. Don't aim for perfection — aim for consistency.</li>
+<li><strong>Rewatch strategically:</strong> Watch each episode twice. First without stopping for comprehension, then with pauses for detail. The second watch reveals a surprising amount.</li>
+</ol>
+<h2>Best Series by Level</h2>
+<div class="example-box">
+<strong>Beginner (A1–A2):</strong> <em>Ufak Tefek Cinayetler</em> — modern Turkish, clear speech, everyday vocabulary<br>
+<strong>Intermediate (B1):</strong> <em>Kara Para Aşk</em> — natural pace, crime drama with rich dialogue<br>
+<strong>Upper Intermediate (B2):</strong> <em>Fatih Harbiye</em> — cultural depth, literary references<br>
+<strong>Advanced (C1+):</strong> <em>Diriliş: Ertuğrul</em> — historical vocabulary, formal and archaic expressions
+</div>
+<h2>What Not to Do</h2>
+<ul>
+<li>Don't watch with only your native language subtitles — you'll read, not listen.</li>
+<li>Don't start with historical dramas as a beginner — the vocabulary is too specialized.</li>
+<li>Don't binge without review — watching 5 episodes without pausing is almost as passive as doing nothing.</li>
+</ul>
+<p>The goal isn't entertainment. The goal is building a mental catalog of real Turkish — how it flows, how it sounds, how people actually use it. Series, done right, get you there faster than almost anything else.</p>`,
+      es: `<p>Probablemente hayas escuchado el consejo: "solo mira televisión turca y lo captarás." La verdad es más matizada. Ver pasivamente — dejando que los episodios pasen sin comprometerse — produce sorprendentemente poco aprendizaje. Pero ver de forma <em>activa</em>? Eso es otra historia.</p>
+<h2>¿Por Qué Funcionan las Series?</h2>
+<p>Las series te dan algo que los libros de texto no pueden: lenguaje natural y contextual. Los personajes no conjugan verbos para ti — discuten, bromean, lloran, negocian. Escuchas las mismas palabras y frases repetidas en decenas de episodios, que es exactamente cómo se construye la retención a largo plazo.</p>
+<h2>5 Estrategias que Realmente Funcionan</h2>
+<ol>
+<li><strong>Minería de oraciones:</strong> Cuando escuches una frase que no entiendas, pausa. Búscala. Repítela en voz alta. Este único hábito separa a los estudiantes que progresan de los que se quedan estancados.</li>
+<li><strong>Subtítulos en capas:</strong> Comienza con subtítulos en turco + los de tu idioma. Una vez cómodo, cambia solo a turco. Ocultar los subtítulos por completo viene al final.</li>
+<li><strong>Sombreado:</strong> Elige un personaje con un ritmo de habla que te guste. Repite sus frases inmediatamente después de escucharlas, imitando el ritmo y la entonación.</li>
+<li><strong>Diario de episodios:</strong> Después de cada episodio, escribe 3–5 palabras o frases nuevas que recuerdes. No busques la perfección — busca la consistencia.</li>
+<li><strong>Revisa estratégicamente:</strong> Mira cada episodio dos veces: primero sin parar para comprensión, luego con pausas para los detalles.</li>
+</ol>
+<h2>Las Mejores Series por Nivel</h2>
+<div class="example-box">
+<strong>Principiante (A1–A2):</strong> <em>Ufak Tefek Cinayetler</em> — turco moderno, habla clara, vocabulario cotidiano<br>
+<strong>Intermedio (B1):</strong> <em>Kara Para Aşk</em> — ritmo natural, drama policial con diálogos ricos<br>
+<strong>Intermedio-alto (B2):</strong> <em>Fatih Harbiye</em> — profundidad cultural, referencias literarias<br>
+<strong>Avanzado (C1+):</strong> <em>Diriliş: Ertuğrul</em> — vocabulario histórico, expresiones formales y arcaicas
+</div>
+<h2>Lo Que No Debes Hacer</h2>
+<ul>
+<li>No veas solo con subtítulos en tu idioma nativo — leerás, no escucharás.</li>
+<li>No empieces con dramas históricos como principiante — el vocabulario es demasiado especializado.</li>
+<li>No hagas maratones sin revisar — ver 5 episodios sin pausar es casi tan pasivo como no hacer nada.</li>
+</ul>
+<p>El objetivo no es el entretenimiento. El objetivo es construir un catálogo mental del turco real. Las series, bien hechas, te llevan ahí más rápido que casi cualquier otra cosa.</p>`,
+      ar: `<p>ربما سمعت النصيحة: "فقط شاهد التلفزيون التركي وستكتسب اللغة." الحقيقة أكثر دقةً. المشاهدة السلبية — السماح للحلقات بالمرور دون تفاعل — تُنتج تعلّماً ضئيلاً. لكن المشاهدة <em>النشطة</em>؟ تلك قصة مختلفة تماماً.</p>
+<h2>لماذا تنجح المسلسلات؟</h2>
+<p>تمنحك المسلسلات شيئاً لا تستطيع الكتب المدرسية توفيره: لغة طبيعية وسياقية. الشخصيات لا تصرّف الأفعال أمامك — بل تتجادل وتمزح وتبكي وتتفاوض. تسمع الكلمات والعبارات نفسها مكررةً عبر عشرات الحلقات، وهذا بالضبط ما يبني الاحتفاظ طويل المدى.</p>
+<h2>٥ استراتيجيات تجدي نفعاً فعلاً</h2>
+<ol>
+<li><strong>استخراج الجمل:</strong> عندما تسمع عبارة لا تفهمها، توقف. ابحث عنها. كررها بصوت عالٍ.</li>
+<li><strong>الترجمة على مراحل:</strong> ابدأ بالترجمة التركية وترجمة لغتك الأم معاً. بمجرد الراحة، انتقل إلى التركية فقط.</li>
+<li><strong>المحاكاة الصوتية:</strong> اختر شخصية وكرر جملها مباشرةً بعد سماعها مقلّداً الإيقاع والنبر.</li>
+<li><strong>يوميات الحلقات:</strong> بعد كل حلقة، اكتب ٣–٥ كلمات أو عبارات جديدة تتذكرها.</li>
+<li><strong>إعادة المشاهدة بذكاء:</strong> شاهد كل حلقة مرتين — الأولى للفهم العام، والثانية بتوقفات للتفاصيل.</li>
+</ol>
+<h2>أفضل المسلسلات حسب المستوى</h2>
+<div class="example-box">
+<strong>مبتدئ (A1–A2):</strong> <em>Ufak Tefek Cinayetler</em> — تركية حديثة، كلام واضح، مفردات يومية<br>
+<strong>متوسط (B1):</strong> <em>Kara Para Aşk</em> — إيقاع طبيعي، دراما جريمة بحوارات غنية<br>
+<strong>فوق المتوسط (B2):</strong> <em>Fatih Harbiye</em> — عمق ثقافي، مراجع أدبية<br>
+<strong>متقدم (C1+):</strong> <em>Diriliş: Ertuğrul</em> — مفردات تاريخية، تعابير رسمية وقديمة
+</div>
+<h2>ما يجب تجنّبه</h2>
+<ul>
+<li>لا تشاهد بترجمة لغتك الأم فقط — ستقرأ لا تستمع.</li>
+<li>لا تبدأ بالمسلسلات التاريخية كمبتدئ — المفردات متخصصة جداً.</li>
+<li>لا تشاهد حلقات متتالية دون مراجعة.</li>
+</ul>
+<p>الهدف ليس الترفيه. الهدف بناء مخزون ذهني من التركية الحقيقية. المسلسلات، عند استخدامها بشكل صحيح، توصلك إلى هذا أسرع من أي شيء آخر تقريباً.</p>`,
+      ru: `<p>Вы наверняка слышали совет: «просто смотрите турецкое телевидение — и язык придёт сам». На самом деле всё сложнее. Пассивный просмотр даёт удивительно мало. А вот <em>активный</em> просмотр? Это совсем другая история.</p>
+<h2>Почему сериалы работают?</h2>
+<p>Сериалы дают то, чего не могут учебники: живой, контекстный язык. Персонажи не спрягают глаголы — они спорят, шутят, плачут, торгуются. Одни и те же слова повторяются на протяжении десятков эпизодов — именно так строится долгосрочное запоминание.</p>
+<h2>5 стратегий, которые работают</h2>
+<ol>
+<li><strong>Майнинг предложений:</strong> Услышали непонятную фразу — поставьте на паузу, найдите значение, произнесите вслух.</li>
+<li><strong>Субтитры послойно:</strong> Начните с турецких + родных субтитров. Освоившись, переключитесь только на турецкие.</li>
+<li><strong>Шэдоуинг:</strong> Повторяйте реплики персонажа сразу после того, как услышите их, копируя ритм и интонацию.</li>
+<li><strong>Дневник эпизодов:</strong> После каждого эпизода запишите 3–5 новых слов или фраз.</li>
+<li><strong>Пересматривайте осознанно:</strong> Смотрите каждый эпизод дважды — сначала без остановок, затем с паузами.</li>
+</ol>
+<h2>Лучшие сериалы по уровням</h2>
+<div class="example-box">
+<strong>Начинающий (A1–A2):</strong> <em>Ufak Tefek Cinayetler</em> — современный турецкий, чёткая речь<br>
+<strong>Средний (B1):</strong> <em>Kara Para Aşk</em> — естественный темп, детективная драма<br>
+<strong>Выше среднего (B2):</strong> <em>Fatih Harbiye</em> — культурная глубина<br>
+<strong>Продвинутый (C1+):</strong> <em>Diriliş: Ertuğrul</em> — историческая лексика
+</div>
+<h2>Чего не делать</h2>
+<ul>
+<li>Не смотрите только с субтитрами на родном языке — будете читать, а не слушать.</li>
+<li>Не начинайте с исторических сериалов на начальном уровне.</li>
+<li>Не смотрите запоем без повторения.</li>
+</ul>
+<p>Цель — не развлечение, а построение ментального каталога настоящего турецкого. Сериалы при правильном подходе доведут вас до этого быстрее, чем почти всё остальное.</p>`,
+      de: `<p>Du hast wahrscheinlich schon den Ratschlag gehört: „Schau einfach türkisches Fernsehen — und du wirst es aufschnappen." Die Wahrheit ist differenzierter. Passives Zuschauen bringt erstaunlich wenig. Aber <em>aktives</em> Zuschauen? Das ist eine andere Geschichte.</p>
+<h2>Warum Serien funktionieren</h2>
+<p>Serien bieten natürliche, kontextuelle Sprache. Figuren streiten, scherzen, weinen, verhandeln. Du hörst dieselben Wörter über Dutzende von Episoden — genau so entsteht langfristiges Behalten.</p>
+<h2>5 Strategien, die wirklich funktionieren</h2>
+<ol>
+<li><strong>Satz-Mining:</strong> Unbekannte Phrase gehört — pausiere, schlage nach, wiederhole laut.</li>
+<li><strong>Untertitel in Schichten:</strong> Beginne mit türkischen + muttersprachlichen Untertiteln. Wechsle dann zu nur Türkisch.</li>
+<li><strong>Shadowing:</strong> Wiederhole Figuren-Repliken sofort und ahme Rhythmus und Intonation nach.</li>
+<li><strong>Episoden-Tagebuch:</strong> Nach jeder Episode 3–5 neue Wörter oder Phrasen aufschreiben.</li>
+<li><strong>Strategisch wiederholen:</strong> Jede Episode zweimal sehen — erst ohne Stopp, dann mit Pausen.</li>
+</ol>
+<h2>Die besten Serien nach Niveau</h2>
+<div class="example-box">
+<strong>Anfänger (A1–A2):</strong> <em>Ufak Tefek Cinayetler</em> — modernes Türkisch, klare Aussprache<br>
+<strong>Mittelstufe (B1):</strong> <em>Kara Para Aşk</em> — natürliches Tempo, Krimidrama<br>
+<strong>Obere Mittelstufe (B2):</strong> <em>Fatih Harbiye</em> — kulturelle Tiefe<br>
+<strong>Fortgeschritten (C1+):</strong> <em>Diriliş: Ertuğrul</em> — historischer Wortschatz
+</div>
+<h2>Was du nicht tun solltest</h2>
+<ul>
+<li>Nicht nur mit muttersprachlichen Untertiteln schauen.</li>
+<li>Als Anfänger nicht mit historischen Dramen beginnen.</li>
+<li>Nicht pausenlos ohne Wiederholung schauen.</li>
+</ul>
+<p>Das Ziel ist, einen mentalen Katalog des echten Türkischen aufzubauen. Serien bringen dich, richtig gemacht, schneller dahin als fast alles andere.</p>`,
+      fr: `<p>Tu as probablement déjà entendu ce conseil : « regarde simplement la télévision turque et tu apprendras la langue. » La réalité est plus nuancée. Regarder passivement produit étonnamment peu d'apprentissage. Mais regarder de façon <em>active</em> ? C'est une toute autre histoire.</p>
+<h2>Pourquoi les séries fonctionnent</h2>
+<p>Les séries offrent un langage naturel et contextuel. Les personnages se disputent, plaisantent, pleurent, négocient. Tu entends les mêmes mots répétés sur des dizaines d'épisodes — c'est ainsi que se construit la rétention à long terme.</p>
+<h2>5 stratégies qui marchent vraiment</h2>
+<ol>
+<li><strong>La chasse aux phrases :</strong> Phrase incomprise — pause, cherche, répète à voix haute.</li>
+<li><strong>Les sous-titres en couches :</strong> Commence avec sous-titres turcs + langue maternelle. Passe ensuite au turc uniquement.</li>
+<li><strong>Le shadowing :</strong> Répète les répliques d'un personnage en imitant rythme et intonation.</li>
+<li><strong>Le journal d'épisodes :</strong> Après chaque épisode, note 3 à 5 nouveaux mots ou expressions.</li>
+<li><strong>Revois stratégiquement :</strong> Deux visionnages par épisode — d'abord sans pause, puis avec pauses.</li>
+</ol>
+<h2>Les meilleures séries par niveau</h2>
+<div class="example-box">
+<strong>Débutant (A1–A2) :</strong> <em>Ufak Tefek Cinayetler</em> — turc moderne, élocution claire<br>
+<strong>Intermédiaire (B1) :</strong> <em>Kara Para Aşk</em> — rythme naturel, drame policier<br>
+<strong>Intermédiaire supérieur (B2) :</strong> <em>Fatih Harbiye</em> — profondeur culturelle<br>
+<strong>Avancé (C1+) :</strong> <em>Diriliş: Ertuğrul</em> — vocabulaire historique
+</div>
+<h2>Ce qu'il ne faut pas faire</h2>
+<ul>
+<li>Ne regarde pas uniquement avec des sous-titres dans ta langue maternelle.</li>
+<li>Ne commence pas par des drames historiques en tant que débutant.</li>
+<li>Ne fais pas de marathon sans révision.</li>
+</ul>
+<p>L'objectif est de construire un catalogue mental du turc réel. Les séries, bien faites, t'y amènent plus vite que presque tout le reste.</p>`
+    }
+  },
+  {
+    id: 'sen-siz-turkish-politeness',
+    title: 'Sen mi Siz mi? Türkçede Nezaket ve Hitap Biçimleri',
+    titleEn: 'Sen or Siz? Politeness and Address in Turkish',
+    date: '2026-05-05',
+    category: 'Dilbilgisi',
+    categoryEn: 'Grammar',
+    summary: 'Türkçede "sen" mi "siz" mi kullanacağınızı bilmek sadece dilbilgisi meselesi değil — kültürel bir ince ayardır.',
+    summaryEn: 'Knowing whether to use "sen" or "siz" in Turkish is not just a grammar question — it\'s a cultural calibration.',
+    titles: {
+      tr: 'Sen mi Siz mi? Türkçede Nezaket ve Hitap Biçimleri',
+      en: 'Sen or Siz? Politeness and Address in Turkish',
+      es: '¿Sen o Siz? Cortesía y formas de tratamiento en turco',
+      ar: 'سن أم سيز؟ أساليب التخاطب والأدب في التركية',
+      ru: '«Sen» или «Siz»? Вежливость и обращение в турецком языке',
+      de: 'Sen oder Siz? Höflichkeit und Anrede im Türkischen',
+      fr: 'Sen ou Siz ? Politesse et formes d\'adresse en turc'
+    },
+    categories: {
+      tr: 'Dilbilgisi', en: 'Grammar', es: 'Gramática', ar: 'قواعد اللغة', ru: 'Грамматика', de: 'Grammatik', fr: 'Grammaire'
+    },
+    summaries: {
+      tr: 'Türkçede "sen" mi "siz" mi kullanacağınızı bilmek sadece dilbilgisi meselesi değil — kültürel bir ince ayardır.',
+      en: 'Knowing whether to use "sen" or "siz" in Turkish is not just a grammar question — it\'s a cultural calibration.',
+      es: 'Saber cuándo usar "sen" o "siz" en turco no es solo una cuestión gramatical — es una calibración cultural.',
+      ar: 'معرفة متى تستخدم "سن" أو "سيز" في التركية ليست مسألة نحوية فحسب — بل هي ضبط ثقافي دقيق.',
+      ru: 'Знание того, когда использовать «sen» или «siz» — это не просто грамматика, а культурная настройка.',
+      de: 'Zu wissen, ob man „sen" oder „siz" verwendet, ist nicht nur eine Grammatikfrage — es ist eine kulturelle Feinabstimmung.',
+      fr: 'Savoir quand utiliser « sen » ou « siz » n\'est pas qu\'une question de grammaire — c\'est une calibration culturelle.'
+    },
+    bodies: {
+      tr: `<p>Pek çok Avrupa dili resmi/gayri resmi bir ayrıma sahiptir — Fransızcada <em>tu</em> ve <em>vous</em>, Almancada <em>du</em> ve <em>Sie</em> vardır. Türkçede de aynısı söz konusudur: <em>sen</em> (gayri resmi) ve <em>siz</em> (resmi ya da çoğul). Ama sosyal kurallar beklediğinizden çok daha nüanslı — ve çok daha hoşgörülüdür.</p>
+<h2>Temel Kural</h2>
+<p><em>Sen</em>, arkadaşlar, aile, çocuklar ve yaşıtlarla kullanılır. <em>Siz</em>, yaşlılar, yabancılar, üstler ve resmi durumlarda kullanılır. Emin olamadığınızda <em>siz</em> ile başlayın — saygılı olmak hiçbir zaman kaba değildir.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — Nasılsın? (gayri resmi)<br>
+<span>Siz nasılsınız?</span> — Nasılsınız? (resmi / çoğul)
+</div>
+<h2>Türkler Ne Zaman Geçiş Yapar?</h2>
+<p>Bir Türk ilişkisindeki en sıcak anlardan biri, birinin sizi <em>siz</em>den <em>sen</em>e geçmeye davet etmesidir — genellikle <em>"Seninle 'sen' diyebilir miyim?"</em> şeklinde ifade edilir. Bu, güven ve yakınlığın işaretidir.</p>
+<p>Şehirlerdeki genç nesiller, özellikle yaratıcı ve teknoloji alanlarında, yabancılarla bile <em>sen</em>i varsayılan olarak kullanmaya başlamıştır. Ancak geleneksel ortamlarda — devlet daireleri, sağlık kurumları, yaşlılarla iletişim — <em>siz</em> hâlâ beklenendir.</p>
+<h2>Önemli Nezaket İfadeleri</h2>
+<ul>
+<li><strong>Buyurun</strong> — Türkçenin belki de en çok yönlü kelimesi. "Lütfen buyurun", "buyurun alın", "evet, nasıl yardımcı olabilirim?" ya da "girin lütfen" anlamlarına gelebilir. Her şeyi bağlam belirler.</li>
+<li><strong>Lütfen</strong> — Lütfen.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — Teşekkür ederim (resmi) / Teşekkürler (gündelik).</li>
+<li><strong>Rica ederim</strong> — Bir şey değil (resmi). <em>Bir şey değil</em> ise gündelik karşılığıdır.</li>
+<li><strong>Affedersiniz</strong> — Affedersiniz / Özür dilerim (yabancıya, resmi).</li>
+</ul>
+<h2>Yaşın Rolü</h2>
+<p>Türk kültüründe yaş hiyerarşisi ciddiye alınır. Belirgin biçimde yaşlı birine <em>siz</em> kullanmak — tanıdık bile olsa — saygının bir göstergesidir. Yaşlı bir kişiye aile bağı olmaksızın <em>abi</em> (büyük erkek kardeş), <em>abla</em> (büyük kız kardeş), <em>amca</em> veya <em>teyze</em> demek yaygındır — bu bir karışıklık değil, sıcaklık ifadesidir.</p>
+<h2>Yaygın Bir Hata</h2>
+<p>Pek çok öğrenci dilbilgisi açısından daha basit olduğu için her yerde <em>sen</em> kullanır. Türkler yabancıların hatalarına çok hoşgörülüdür — ancak yaşlı ya da tanımadık birine <em>siz</em> kullanmak her zaman daha iyi bir izlenim bırakır.</p>
+<div class="highlight">Hızlı ipucu: Mağaza ve restoranlarda çalışanlar genellikle yaşa bakılmaksızın tüm müşterilere <em>siz</em> ile hitap eder. Bu, hizmet sektöründe standart bir görgü kuralıdır.</div>`,
+      en: `<p>Most European languages have a formal/informal split — French has <em>tu</em> and <em>vous</em>, German has <em>du</em> and <em>Sie</em>. Turkish has the same: <em>sen</em> (informal) and <em>siz</em> (formal or plural). But the social rules are more nuanced — and more forgiving — than you might expect.</p>
+<h2>The Basic Rule</h2>
+<p><em>Sen</em> is used with friends, family, children, and peers. <em>Siz</em> is used with elders, strangers, superiors, and in formal situations. When in doubt, start with <em>siz</em> — it's never rude to be respectful.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — How are you? (informal)<br>
+<span>Siz nasılsınız?</span> — How are you? (formal / plural)
+</div>
+<h2>When Turks Switch</h2>
+<p>One of the warmest moments in a Turkish relationship is when someone invites you to switch from <em>siz</em> to <em>sen</em> — usually phrased as <em>"Seninle 'sen' diyebilir miyim?"</em> (Can I use 'sen' with you?). This signals trust and closeness.</p>
+<p>Younger generations in cities are moving toward <em>sen</em> as a default even with strangers, especially in creative or tech workplaces. But in traditional settings — government offices, medical contexts, dealing with elders — <em>siz</em> remains expected.</p>
+<h2>Key Polite Phrases</h2>
+<ul>
+<li><strong>Buyurun</strong> — Perhaps the most versatile word in Turkish. It can mean: "please go ahead," "here you are," "yes, what can I do for you?", or "come in." Context does all the work.</li>
+<li><strong>Lütfen</strong> — Please.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — Thank you (formal) / Thanks (casual).</li>
+<li><strong>Rica ederim</strong> — You're welcome (formal). <em>Bir şey değil</em> is the casual equivalent.</li>
+<li><strong>Affedersiniz</strong> — Excuse me / I'm sorry (to a stranger, formal).</li>
+</ul>
+<h2>The Role of Age</h2>
+<p>Age hierarchy is taken seriously in Turkish culture. Using <em>siz</em> with someone significantly older — even if they're not a stranger — is a sign of respect. Calling an older person <em>abi</em> (older brother), <em>abla</em> (older sister), <em>amca</em> (uncle), or <em>teyze</em> (aunt) is common even without a family relationship — it's warmth, not confusion.</p>
+<h2>A Common Mistake</h2>
+<p>Many learners default to <em>sen</em> everywhere because it's simpler grammatically. Turks are very forgiving of foreigners' mistakes — but using <em>siz</em> with an elder or stranger will always make a better impression.</p>
+<div class="highlight">Quick tip: In shops and restaurants, staff will often use <em>siz</em> with all customers regardless of age. This is standard service-industry etiquette.</div>`,
+      es: `<p>La mayoría de los idiomas europeos tienen una división formal/informal — el francés tiene <em>tu</em> y <em>vous</em>, el alemán tiene <em>du</em> y <em>Sie</em>. El turco tiene lo mismo: <em>sen</em> (informal) y <em>siz</em> (formal o plural). Pero las reglas sociales son más matizadas — y más indulgentes — de lo que podrías esperar.</p>
+<h2>La Regla Básica</h2>
+<p><em>Sen</em> se usa con amigos, familia, niños y compañeros. <em>Siz</em> se usa con personas mayores, desconocidos, superiores y en situaciones formales. Cuando tengas dudas, empieza con <em>siz</em>.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — ¿Cómo estás? (informal)<br>
+<span>Siz nasılsınız?</span> — ¿Cómo está usted? (formal / plural)
+</div>
+<h2>Cuándo Cambian los Turcos</h2>
+<p>Uno de los momentos más cálidos en una relación turca es cuando alguien te invita a cambiar de <em>siz</em> a <em>sen</em> — normalmente con <em>"Seninle 'sen' diyebilir miyim?"</em>. Esto indica confianza y cercanía.</p>
+<h2>Frases Clave de Cortesía</h2>
+<ul>
+<li><strong>Buyurun</strong> — La palabra más versátil del turco: "adelante", "aquí tiene", "¿en qué puedo ayudarle?" o "pase". El contexto lo define todo.</li>
+<li><strong>Lütfen</strong> — Por favor.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — Gracias (formal) / Gracias (informal).</li>
+<li><strong>Rica ederim</strong> — De nada (formal). <em>Bir şey değil</em> es el equivalente informal.</li>
+<li><strong>Affedersiniz</strong> — Disculpe (a un desconocido, formal).</li>
+</ul>
+<h2>El Papel de la Edad</h2>
+<p>Usar <em>siz</em> con alguien mayor es señal de respeto. Llamar a una persona mayor <em>abi</em>, <em>abla</em>, <em>amca</em> o <em>teyze</em> es habitual incluso sin relación familiar — es calidez, no confusión.</p>
+<h2>Un Error Común</h2>
+<p>Muchos estudiantes usan <em>sen</em> en todas partes porque es más simple. Los turcos son muy indulgentes, pero usar <em>siz</em> con mayores o desconocidos siempre causará mejor impresión.</p>
+<div class="highlight">Consejo: En tiendas y restaurantes, el personal suele usar <em>siz</em> con todos los clientes. Es la etiqueta estándar del sector servicios.</div>`,
+      ar: `<p>معظم اللغات الأوروبية لديها تمييز رسمي/غير رسمي. التركية لها الشيء ذاته: <em>سن</em> (غير رسمي) و<em>سيز</em> (رسمي أو جمع). لكن القواعد الاجتماعية أكثر دقةً — وأكثر تسامحاً — مما قد تتوقع.</p>
+<h2>القاعدة الأساسية</h2>
+<p><em>سن</em> تُستخدم مع الأصدقاء والعائلة والأطفال والأقران. <em>سيز</em> تُستخدم مع كبار السن والغرباء والرؤساء وفي المواقف الرسمية. عند الشك، ابدأ بـ<em>سيز</em>.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — كيف حالك؟ (غير رسمي)<br>
+<span>Siz nasılsınız?</span> — كيف حالكم؟ (رسمي / جمع)
+</div>
+<h2>متى يتحوّل الأتراك</h2>
+<p>من أكثر اللحظات دفئاً في العلاقة التركية حين يدعوك أحدهم للتحوّل من <em>سيز</em> إلى <em>سن</em> — وعادةً بقول <em>"Seninle 'sen' diyebilir miyim?"</em>. هذا يدل على الثقة والقرب.</p>
+<h2>أبرز العبارات المهذّبة</h2>
+<ul>
+<li><strong>Buyurun</strong> — أكثر كلمة متعددة الاستخدامات في التركية: "تفضّل"، "هاك"، "كيف أساعدك؟"، "ادخل". السياق يحدد المعنى.</li>
+<li><strong>Lütfen</strong> — من فضلك.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — شكراً جزيلاً (رسمي) / شكراً (غير رسمي).</li>
+<li><strong>Rica ederim</strong> — على الرحب (رسمي). <em>Bir şey değil</em> هو المقابل غير الرسمي.</li>
+<li><strong>Affedersiniz</strong> — عفواً (لشخص غريب، رسمي).</li>
+</ul>
+<h2>دور السنّ</h2>
+<p>استخدام <em>سيز</em> مع شخص أكبر سناً علامة على الاحترام. مناداة كبير السن بـ<em>أبي</em> أو <em>أبلا</em> أو <em>عمجا</em> أو <em>تيزه</em> شائع دون وجود علاقة عائلية — تعبير عن الدفء لا الالتباس.</p>
+<h2>خطأ شائع</h2>
+<p>كثير من المتعلمين يلجؤون إلى <em>سن</em> في كل مكان لأنها أبسط نحوياً. لكن استخدام <em>سيز</em> مع كبير أو غريب يترك دائماً انطباعاً أفضل.</p>
+<div class="highlight">نصيحة: في المحلات والمطاعم يستخدم الموظفون <em>سيز</em> مع جميع العملاء — هذه آداب السلوك المعتادة في قطاع الخدمات.</div>`,
+      ru: `<p>В большинстве европейских языков есть деление на официальное и неофициальное обращение. В турецком то же самое: <em>sen</em> (неформальное) и <em>siz</em> (формальное или множественное число). Но социальные правила здесь тоньше — и терпимее — чем вы могли бы ожидать.</p>
+<h2>Основное правило</h2>
+<p><em>Sen</em> используется с друзьями, семьёй, детьми и ровесниками. <em>Siz</em> — со старшими, незнакомцами, начальниками и в официальных ситуациях. При сомнении начинайте с <em>siz</em>.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — Как дела? (неформально)<br>
+<span>Siz nasılsınız?</span> — Как дела? (формально / множественное число)
+</div>
+<h2>Когда турки переходят на «ты»</h2>
+<p>Один из самых тёплых моментов — когда кто-то приглашает перейти с <em>siz</em> на <em>sen</em>: <em>«Seninle 'sen' diyebilir miyim?»</em>. Это сигнал доверия и близости.</p>
+<h2>Ключевые вежливые фразы</h2>
+<ul>
+<li><strong>Buyurun</strong> — самое универсальное слово турецкого: «проходите», «возьмите», «чем могу помочь?», «входите». Всё зависит от контекста.</li>
+<li><strong>Lütfen</strong> — Пожалуйста.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — Спасибо (официально) / Спасибо (неформально).</li>
+<li><strong>Rica ederim</strong> — Не за что (официально). <em>Bir şey değil</em> — неформальный вариант.</li>
+<li><strong>Affedersiniz</strong> — Извините (к незнакомцу, официально).</li>
+</ul>
+<h2>Роль возраста</h2>
+<p>Обращение на <em>siz</em> к значительно более старшему человеку — признак уважения. Называть пожилого человека <em>abi</em>, <em>abla</em>, <em>amca</em> или <em>teyze</em> обычное дело даже без родственной связи — это теплота, а не путаница.</p>
+<h2>Распространённая ошибка</h2>
+<p>Многие везде используют <em>sen</em> — грамматически проще. Но <em>siz</em> со старшим или незнакомым всегда произведёт лучшее впечатление.</p>
+<div class="highlight">Быстрый совет: В магазинах и ресторанах сотрудники обращаются ко всем покупателям на <em>siz</em>. Это стандартный этикет в сфере обслуживания.</div>`,
+      de: `<p>Die meisten europäischen Sprachen haben eine formelle/informelle Trennung. Türkisch hat dasselbe: <em>sen</em> (informell) und <em>siz</em> (formell oder Plural). Aber die sozialen Regeln sind nuancierter — und nachsichtiger — als du vielleicht erwartest.</p>
+<h2>Die Grundregel</h2>
+<p><em>Sen</em> wird mit Freunden, Familie, Kindern und Gleichaltrigen verwendet. <em>Siz</em> mit Älteren, Fremden, Vorgesetzten und in formellen Situationen. Im Zweifel fange mit <em>siz</em> an.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — Wie geht's? (informell)<br>
+<span>Siz nasılsınız?</span> — Wie geht es Ihnen? (formell / Plural)
+</div>
+<h2>Wann Türken wechseln</h2>
+<p>Einer der herzlichsten Momente ist, wenn jemand dich einlädt, von <em>siz</em> zu <em>sen</em> zu wechseln — meist mit <em>„Seninle 'sen' diyebilir miyim?"</em>. Dies signalisiert Vertrauen und Nähe.</p>
+<h2>Wichtige Höflichkeitsausdrücke</h2>
+<ul>
+<li><strong>Buyurun</strong> — Das vielseitigste Wort im Türkischen: „bitte", „hier bitte", „wie kann ich helfen?", „kommen Sie herein". Der Kontext entscheidet.</li>
+<li><strong>Lütfen</strong> — Bitte.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — Danke (formell) / Danke (informell).</li>
+<li><strong>Rica ederim</strong> — Gern geschehen (formell). <em>Bir şey değil</em> ist das informelle Äquivalent.</li>
+<li><strong>Affedersiniz</strong> — Entschuldigung (zu einem Fremden, formell).</li>
+</ul>
+<h2>Die Rolle des Alters</h2>
+<p><em>Siz</em> mit jemandem zu verwenden, der deutlich älter ist, ist ein Zeichen des Respekts. Eine ältere Person <em>abi</em>, <em>abla</em>, <em>amca</em> oder <em>teyze</em> zu nennen ist üblich ohne Familienverhältnis — es ist Wärme, keine Verwirrung.</p>
+<h2>Ein häufiger Fehler</h2>
+<p>Viele verwenden überall <em>sen</em>, weil es einfacher ist. Aber <em>siz</em> bei einem Älteren oder Fremden macht stets einen besseren Eindruck.</p>
+<div class="highlight">Schnelltipp: In Geschäften und Restaurants verwenden Mitarbeiter <em>siz</em> für alle Kunden — das ist die übliche Etikette im Servicebereich.</div>`,
+      fr: `<p>La plupart des langues européennes ont une distinction formel/informel. Le turc a la même chose : <em>sen</em> (informel) et <em>siz</em> (formel ou pluriel). Mais les règles sociales sont plus nuancées — et plus indulgentes — que tu ne le crois.</p>
+<h2>La règle de base</h2>
+<p><em>Sen</em> s'utilise avec les amis, la famille, les enfants et les pairs. <em>Siz</em> avec les personnes plus âgées, les inconnus, les supérieurs et dans les situations formelles. En cas de doute, commence par <em>siz</em>.</p>
+<div class="example-box">
+<span>Sen nasılsın?</span> — Comment vas-tu ? (informel)<br>
+<span>Siz nasılsınız?</span> — Comment allez-vous ? (formel / pluriel)
+</div>
+<h2>Quand les Turcs changent de registre</h2>
+<p>L'un des moments les plus chaleureux est quand quelqu'un t'invite à passer de <em>siz</em> à <em>sen</em> — avec <em>« Seninle 'sen' diyebilir miyim ? »</em>. Cela signale confiance et proximité.</p>
+<h2>Expressions de politesse essentielles</h2>
+<ul>
+<li><strong>Buyurun</strong> — Le mot le plus polyvalent du turc : « je vous en prie », « voilà », « que puis-je faire pour vous ? », « entrez ». Le contexte fait tout.</li>
+<li><strong>Lütfen</strong> — S'il vous plaît.</li>
+<li><strong>Teşekkür ederim / Teşekkürler</strong> — Merci beaucoup (formel) / Merci (informel).</li>
+<li><strong>Rica ederim</strong> — De rien (formel). <em>Bir şey değil</em> est l'équivalent informel.</li>
+<li><strong>Affedersiniz</strong> — Excusez-moi (à un inconnu, formellement).</li>
+</ul>
+<h2>Le rôle de l'âge</h2>
+<p>Utiliser <em>siz</em> avec quelqu'un de plus âgé est un signe de respect. Appeler une personne âgée <em>abi</em>, <em>abla</em>, <em>amca</em> ou <em>teyze</em> est courant même sans lien familial — c'est de la chaleur, pas de la confusion.</p>
+<h2>Une erreur courante</h2>
+<p>Beaucoup utilisent <em>sen</em> partout car c'est plus simple. Mais <em>siz</em> avec une personne âgée ou un inconnu fera toujours meilleure impression.</p>
+<div class="highlight">Conseil rapide : Dans les magasins et restaurants, le personnel utilise <em>siz</em> avec tous les clients. C'est l'étiquette standard dans le secteur des services.</div>`
+    }
+  }
 ];
 
 function formatBlogDate(dateStr) {
