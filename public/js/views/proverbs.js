@@ -15,16 +15,19 @@ function renderProverbs(container) {
     </div>
   `).join('');
 
+  const isAtasozleri = currentCat && currentCat.id === 'atasozleri';
   const itemsHtml = currentCat ? currentCat.items.map((item, i) => {
     const translation = item[lang] || item.en || '';
+    const hasDetail = isAtasozleri && item.detailEn;
     return `
-      <div class="phrases-card proverbs-card">
+      <div class="phrases-card proverbs-card${hasDetail ? ' proverbs-card-clickable' : ''}"${hasDetail ? ` data-index="${i}"` : ''}>
         <div class="phrases-card-header">
           <span class="phrases-card-num">${i + 1}</span>
           <div class="phrases-card-text">
             <span class="phrases-card-tr">${item.tr}</span>
             ${translation ? `<span class="phrases-card-en">${translation}</span>` : ''}
           </div>
+          ${hasDetail ? '<span class="proverbs-detail-hint">→</span>' : ''}
         </div>
         <div class="proverbs-meaning">${item.meaning}</div>
       </div>`;
@@ -70,4 +73,22 @@ function renderProverbs(container) {
       renderProverbs(container);
     });
   });
+
+  if (isAtasozleri) {
+    container.querySelectorAll('.proverbs-card-clickable').forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.dataset.index);
+        const item = currentCat.items[idx];
+        if (!item || !item.detailEn) return;
+        const modalContent = `
+          <div class="proverbs-modal-body">
+            <p class="proverbs-modal-en"><em>${item.en}</em></p>
+            <p class="proverbs-modal-meaning">${item.meaning}</p>
+            <hr class="proverbs-modal-divider">
+            <p class="proverbs-modal-detail">${item.detailEn}</p>
+          </div>`;
+        openModal(item.tr, modalContent);
+      });
+    });
+  }
 }

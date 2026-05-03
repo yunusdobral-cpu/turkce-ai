@@ -705,3 +705,29 @@
   padding-top: 0.5rem;
   border-top: 1px solid var(--border);
 }
+
+.proverbs-card-clickable {
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.proverbs-card-clickable:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+.proverbs-detail-hint {
+  font-size: 1rem;
+  color: var(--primary);
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+.proverbs-card-clickable:hover .proverbs-detail-hint {
+  opacity: 1;
+}
+
+.proverbs-modal-body { line-height: 1.7; }
+.proverbs-modal-en { font-size: 1.05rem; font-style: italic; color: var(--text-muted); margin-bottom: 0.4rem; }
+.proverbs-modal-meaning { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.proverbs-modal-divider { border: none; border-top: 1px solid var(--border); margin: 0.75rem 0; }
+.proverbs-modal-detail { font-size: 0.97rem; color: var(--text); }
