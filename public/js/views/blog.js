@@ -1172,7 +1172,7 @@ function renderBlog(container) {
         <p>Türkçe öğrenme rehberleri, kültür yazıları ve ipuçları / Guides, culture & tips for Turkish learners</p>
       </div>
       <div class="blog-grid">
-        ${BLOG_POSTS.map(post => `
+        ${BLOG_POSTS.slice().sort((a, b) => b.date.localeCompare(a.date)).map(post => `
           <a class="blog-card" href="#/blog/${post.id}">
             <div class="blog-card-meta">
               <span class="blog-card-cat">${getPostField(post, 'category', lang)}</span>
