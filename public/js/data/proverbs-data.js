@@ -151,7 +151,8 @@ const PROVERBS_DATA = [
         ar: 'يُصغي / يُعير انتباهاً.',
         ru: 'Прислушиваться / слушать внимательно.',
         de: 'Ein offenes Ohr haben / aufmerksam zuhören.',
-        fr: 'Prêter l\'oreille / écouter attentivement.'
+        fr: 'Prêter l\'oreille / écouter attentivement.',
+        detailEn: '"Kulak" is ear, and "vermek" is to give. So literally: to give your ear. What makes this idiom interesting is the word "give" — not just "use" your ears, but actually hand over your attention to someone. There\'s a generosity implied in it. A teacher says "bana kulak verin" — give me your ear — before something important. A distressed friend might quietly ask "biraz kulak verebilir misin?" — can you lend me an ear for a moment? In both cases, the ear isn\'t just a listening organ. It\'s a gift of presence. The English "lend an ear" carries the same warmth — borrowed, not taken. You get it back, but in the moment, it belongs to someone else.'
       },
       {
         tr: 'Göz kulak olmak',
@@ -161,7 +162,8 @@ const PROVERBS_DATA = [
         ar: 'يراقب / يحرس.',
         ru: 'Присматривать / приглядывать.',
         de: 'Ein Auge auf etwas haben / aufpassen.',
-        fr: 'Garder un œil sur / surveiller.'
+        fr: 'Garder un œil sur / surveiller.',
+        detailEn: 'Eye and ear both at once — that\'s the level of attention this idiom demands. Not a passive glance, but full sensory alertness. "Çocuklara göz kulak ol" means watch the kids carefully while I\'m gone. The phrase shows up in situations of real responsibility: when a parent leaves for a few hours, when a manager steps away from the floor, when someone trusts you with something they care about. What\'s interesting is that English only asks for an eye — "keep an eye on it." Turkish asks for the ear too. You have to listen as well as look. It\'s a higher standard of care, and the person asking knows it.'
       },
       {
         tr: 'El atmak',
@@ -171,7 +173,8 @@ const PROVERBS_DATA = [
         ar: 'يتدخل / يشارك.',
         ru: 'Взяться за что-то / вмешаться.',
         de: 'Sich einmischen / anpacken.',
-        fr: 'S\'impliquer / mettre la main à la pâte.'
+        fr: 'S\'impliquer / mettre la main à la pâte.',
+        detailEn: '"El" is hand, "atmak" is to throw. To throw your hand at something — a sudden, decisive entry. The image is of someone reaching in, grabbing hold. Whether that\'s welcome or not depends entirely on the situation. "El attı ve işi kurtardı" — he jumped in and saved the project. Positive. But "o konuya el atmasını istemiyorum" — I don\'t want him getting his hands into that. Not so much. The same idiom carries both meanings, and Turkish speakers navigate the difference through context and tone. What stays constant is the idea of sudden involvement — not slow, not invited — just a hand, suddenly in the middle of things.'
       },
       {
         tr: 'Burnunu sokmak',
@@ -181,7 +184,8 @@ const PROVERBS_DATA = [
         ar: 'يُدخل أنفه في شؤون غيره / يتدخل.',
         ru: 'Совать нос не в своё дело.',
         de: 'Die Nase in etwas stecken / sich einmischen.',
-        fr: 'Fourrer son nez dans les affaires des autres.'
+        fr: 'Fourrer son nez dans les affaires des autres.',
+        detailEn: 'The nose pushes in where it doesn\'t belong. The visual is almost comic, but the meaning is always a little unflattering. "Her şeye burnunu sokuyor" — he sticks his nose into everything. It\'s never said with admiration. What\'s telling is that nearly every major language has exactly this idiom — English pokes, French forres, Russian suvaet — all using the nose as the offending body part. There\'s something universally human about this particular behavior: the person who cannot resist inserting themselves where they weren\'t asked. The nose, because it sniffs out things uninvited, is the perfect symbol.'
       },
       {
         tr: 'Ağzı açık kalmak',
@@ -191,7 +195,8 @@ const PROVERBS_DATA = [
         ar: 'يبقى مفتوح الفم / يُذهل.',
         ru: 'Рот раскрыть от удивления / опешить.',
         de: 'Den Mund offen stehen haben / sprachlos sein.',
-        fr: 'Rester bouche bée.'
+        fr: 'Rester bouche bée.',
+        detailEn: 'The mouth just... stays open. You know the feeling — something happens that is so unexpected, so stunning, or so absurd that closing your mouth actually requires conscious effort. Turkish captures this with perfect literalism: "ağzı bir karış açık kaldı" — his mouth fell open a full inch. It works for awe just as naturally as shock. You can stand with your mouth open watching a spectacular view the same way you do when you hear impossible news. What both have in common: the mind is so overwhelmed that it forgets to tell the jaw what to do. The body reacts before the brain catches up.'
       },
       {
         tr: 'Ayak uydurmak',
@@ -201,7 +206,8 @@ const PROVERBS_DATA = [
         ar: 'يواكب / يتأقلم.',
         ru: 'Идти в ногу / приспосабливаться.',
         de: 'Schritt halten / sich anpassen.',
-        fr: 'Suivre le rythme / s\'adapter.'
+        fr: 'Suivre le rythme / s\'adapter.',
+        detailEn: '"Ayak" is foot, "uydurmak" is to match or adjust. The image is of walking — when two people have different natural paces, one adjusts their stride to match the other. Simple, physical, immediate. Used both literally and abstractly: adapting to a new workplace, keeping up with rapid changes in technology, fitting into a social group. "Yeni sisteme ayak uyduramadı" — she couldn\'t keep up with the new system. But it can also be used critically: "herkese ayak uyduruyor" — he just goes along with whatever everyone else does. Adaptability is a virtue until it becomes a lack of backbone. Turkish uses the same idiom for both.'
       },
       {
         tr: 'İşi başından aşmak',
@@ -211,7 +217,8 @@ const PROVERBS_DATA = [
         ar: 'غارق في العمل / مثقل بالأعمال.',
         ru: 'Быть по уши в делах / захлёбываться работой.',
         de: 'In Arbeit versinken / überwältigt sein.',
-        fr: 'Être débordé de travail.'
+        fr: 'Être débordé de travail.',
+        detailEn: 'The work overflows — above your head. "Başından aşmak" literally means to go over one\'s head, to flood past the brim. "İşim başımdan aşıyor" — I\'m buried in work, up past my head. English says "snowed under," which is cold and heavy but somewhat passive. This Turkish image is of a flood — active, chaotic, rising — which captures something truer about what it actually feels like. You didn\'t just have too much dropped on you. It rushed in and now you\'re submerged. Anyone who came back from a week off to find 300 unread emails knows exactly which image is more accurate.'
       },
       {
         tr: 'Gözden düşmek',
@@ -221,7 +228,8 @@ const PROVERBS_DATA = [
         ar: 'يسقط من عيون شخص ما / يفقد مكانته.',
         ru: 'Потерять расположение / впасть в немилость.',
         de: 'In Ungnade fallen / jemandes Gunst verlieren.',
-        fr: 'Tomber en disgrâce / perdre la faveur de quelqu\'un.'
+        fr: 'Tomber en disgrâce / perdre la faveur de quelqu\'un.',
+        detailEn: 'To fall from someone\'s eyes. The idiom captures something that is rarely announced — a quiet, invisible shift in how someone sees you. You\'re not fired. You\'re not confronted. The relationship just becomes a degree cooler, a little more formal. The boss who used to stop by your desk to chat now walks past. The friend who once called first now responds late. "Onun gözünden düştüm" — I fell from her eyes. What\'s melancholy about this phrase is that the fall is usually permanent. Things that cause someone to lose their regard for you tend to stay in memory. The eyes hold onto what they\'ve seen.'
       },
       {
         tr: 'Kılına dokunmamak',
@@ -231,7 +239,8 @@ const PROVERBS_DATA = [
         ar: 'لا يمسّ شعرة من رأسه / لا يؤذيه.',
         ru: 'Не тронуть и волоска / не причинить вреда.',
         de: 'Kein Haar krümmen / nichts antun.',
-        fr: 'Ne pas toucher à un cheveu de quelqu\'un.'
+        fr: 'Ne pas toucher à un cheveu de quelqu\'un.',
+        detailEn: '"Kıl" is a single strand of hair — not the hair on your head, but one individual thread of it. The smallest, most inconsequential unit. And the promise is: not even that will be harmed. The standard of protection this idiom sets is extraordinary. It\'s used as a solemn guarantee — in moments of real danger, when someone is vouching for another\'s safety with full conviction. "Kılına dokunmayacaklar" — not a hair on their head will be touched. The English carries the same weight — "touch a hair on their head" — perhaps because a single strand of hair is the same impossible threshold in every language. Total protection, not approximate protection.'
       },
       {
         tr: 'İki arada bir derede kalmak',
@@ -241,7 +250,8 @@ const PROVERBS_DATA = [
         ar: 'بين المطرقة والسندان.',
         ru: 'Оказаться между двух огней.',
         de: 'Zwischen zwei Stühlen sitzen.',
-        fr: 'Être entre le marteau et l\'enclume.'
+        fr: 'Être entre le marteau et l\'enclume.',
+        detailEn: 'Literally: stuck between two places in the middle of a stream. You\'ve waded in from one bank and now you can\'t get back — but you can\'t reach the other side either. You\'re just standing in the water, cold, unable to move. The image is almost funny, which is part of what makes it memorable. Other languages go for violence — rock and hard place, sword and wall, hammer and anvil. Turkish goes for mild absurdity: you\'re just wet and stuck in a stream. But the feeling is identical: both options have a real cost, and there\'s no third path. You have to pick one bank and wade toward it.'
       },
       {
         tr: 'Göz yummak',
@@ -251,7 +261,8 @@ const PROVERBS_DATA = [
         ar: 'يغضّ الطرف / يتجاهل.',
         ru: 'Закрывать глаза / смотреть сквозь пальцы.',
         de: 'Ein Auge zudrücken / übersehen.',
-        fr: 'Fermer les yeux sur / faire semblant de ne pas voir.'
+        fr: 'Fermer les yeux sur / faire semblant de ne pas voir.',
+        detailEn: '"Göz" is eye, "yummak" is to close. But notice it\'s one eye — not two. You\'ve already seen it. Now you\'re choosing to close your eyes to what you saw. That one detail makes all the difference: this is a deliberate act, not ignorance. "Yönetim bu sorunlara göz yumdu" — management deliberately overlooked these problems. Sometimes it\'s compassionate — a teacher closing an eye to a first offense, a parent ignoring a minor transgression. Sometimes it\'s complicit — a system that functions by not looking too closely at how it functions. The idiom holds both without judging either. It just names the act: you saw it, and then you chose not to see it anymore.'
       },
       {
         tr: 'Dili tutulmak',
@@ -261,7 +272,8 @@ const PROVERBS_DATA = [
         ar: 'يُصاب بالتلعثم / يعجز عن الكلام.',
         ru: 'Онеметь / лишиться дара речи.',
         de: 'Nicht wissen, was man sagen soll / sprachlos sein.',
-        fr: 'Rester sans voix / avoir la langue paralysée.'
+        fr: 'Rester sans voix / avoir la langue paralysée.',
+        detailEn: 'The tongue is held. Not lost, not gone — just seized in place, unable to move. "Tutulmak" implies being gripped by something external — your tongue didn\'t decide to go quiet, something grabbed it. That involuntary quality is exactly right. When genuine shock or awe or overwhelming emotion hits, you don\'t choose to stay silent. It just happens to you. "Şaşkınlıktan dili tutuldu" — her tongue was seized by astonishment. English "tongue-tied" is remarkably close — tied rather than held, but the same idea. In both languages, the tongue becomes the body part that reveals what the mind cannot process. When words fail, it\'s always the tongue that takes the blame.'
       }
     ]
   }

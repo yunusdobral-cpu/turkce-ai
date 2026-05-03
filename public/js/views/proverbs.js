@@ -15,10 +15,9 @@ function renderProverbs(container) {
     </div>
   `).join('');
 
-  const isAtasozleri = currentCat && currentCat.id === 'atasozleri';
   const itemsHtml = currentCat ? currentCat.items.map((item, i) => {
     const translation = item[lang] || item.en || '';
-    const hasDetail = isAtasozleri && item.detailEn;
+    const hasDetail = !!item.detailEn;
     return `
       <div class="phrases-card proverbs-card${hasDetail ? ' proverbs-card-clickable' : ''}"${hasDetail ? ` data-index="${i}"` : ''}>
         <div class="phrases-card-header">
@@ -74,13 +73,11 @@ function renderProverbs(container) {
     });
   });
 
-  if (isAtasozleri) {
-    container.querySelectorAll('.proverbs-card-clickable').forEach(card => {
-      card.addEventListener('click', () => {
-        location.hash = `#/proverbs/${currentCat.id}/${card.dataset.index}`;
-      });
+  container.querySelectorAll('.proverbs-card-clickable').forEach(card => {
+    card.addEventListener('click', () => {
+      location.hash = `#/proverbs/${currentCat.id}/${card.dataset.index}`;
     });
-  }
+  });
 }
 
 function renderProverbDetail(container, catId, itemIndex) {
@@ -108,7 +105,7 @@ function renderProverbDetail(container, catId, itemIndex) {
   container.innerHTML = `
     <div class="proverb-detail-page">
       <div class="proverb-detail-topbar">
-        <a href="#/proverbs" class="proverb-detail-back">← Atasözleri</a>
+        <a href="#/proverbs" class="proverb-detail-back">← ${cat.category.tr}</a>
         <span class="proverb-detail-counter">${itemIndex + 1} / ${cat.items.length}</span>
       </div>
 
