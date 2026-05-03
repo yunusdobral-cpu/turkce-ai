@@ -29,6 +29,8 @@ const I18N = {
     nav_vocab:      { en: 'Vocabulary', es: 'Vocabulario', ar: 'المفردات', ru: 'Словарь', de: 'Wortschatz', fr: 'Vocabulaire' },
     nav_quiz:       { en: 'Quiz', es: 'Examen', ar: 'اختبار', ru: 'Тест', de: 'Quiz', fr: 'Quiz' },
     nav_wordrace:   { en: 'Word Race', es: 'Carrera', ar: 'سباق', ru: 'Гонка', de: 'Wortrennen', fr: 'Course' },
+    nav_proverbs:   { en: 'Proverbs & Idioms', es: 'Refranes y Modismos', ar: 'أمثال وتعابير', ru: 'Пословицы и идиомы', de: 'Sprichwörter & Redewendungen', fr: 'Proverbes & Expressions' },
+    nav_blog:       { en: 'Blog', es: 'Blog', ar: 'المدونة', ru: 'Блог', de: 'Blog', fr: 'Blog' },
     nav_admin:      { en: 'Admin', es: 'Admin', ar: 'الإدارة', ru: 'Админ', de: 'Verwaltung', fr: 'Admin' },
 
     // Word Race
@@ -233,6 +235,8 @@ const I18N = {
       vocab: 'nav_vocab',
       quiz: 'nav_quiz',
       wordrace: 'nav_wordrace',
+      proverbs: 'nav_proverbs',
+      blog: 'nav_blog',
       admin: 'nav_admin'
     };
 
@@ -249,6 +253,8 @@ const I18N = {
         vocab: 'Kelime',
         quiz: 'Sınav',
         wordrace: '🏆 Yarışma',
+        proverbs: 'Atasözleri ve Deyimler',
+        blog: 'Blog',
         admin: 'Yönetim'
       };
       const tr = trTexts[route];

@@ -695,3 +695,13 @@
     font-size: 0.95rem;
   }
 }
+
+/* Proverbs & Idioms */
+.proverbs-meaning {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
