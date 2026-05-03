@@ -1,7 +1,7 @@
 // SPA Router
 function requireAuth(hash) {
   // Anasayfa ve admin hariç tüm sayfalar üyelik gerektirir
-  if (hash === '#/' || hash === '' || !hash || hash === '#/admin' || hash === '#/privacy' || hash === '#/terms' || hash === '#/contact' || hash === '#/about' || hash === '#/blog' || hash.startsWith('#/blog/') || hash === '#/proverbs') return true;
+  if (hash === '#/' || hash === '' || !hash || hash === '#/admin' || hash === '#/privacy' || hash === '#/terms' || hash === '#/contact' || hash === '#/about' || hash === '#/blog' || hash.startsWith('#/blog/') || hash === '#/proverbs' || hash.startsWith('#/proverbs/')) return true;
   // Admin girişi yapılmışsa serbest gezinebilir
   if (sessionStorage.getItem('adminPassword')) return true;
   if (!Auth.isLoggedIn()) {
@@ -87,6 +87,10 @@ function navigateTo(hash) {
     const params = new URLSearchParams(hash.split('?')[1] || '');
     const mode = params.get('mode');
     renderQuiz(app, mode);
+  } else if (hash.startsWith('#/proverbs/')) {
+    links.forEach(l => { if (l.dataset.route === 'proverbs') l.classList.add('active'); });
+    const parts = hash.replace('#/proverbs/', '').split('/');
+    renderProverbDetail(app, parts[0], parseInt(parts[1]) || 0);
   } else if (hash === '#/proverbs') {
     links.forEach(l => { if (l.dataset.route === 'proverbs') l.classList.add('active'); });
     renderProverbs(app);

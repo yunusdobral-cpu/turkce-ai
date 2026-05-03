@@ -77,18 +77,69 @@ function renderProverbs(container) {
   if (isAtasozleri) {
     container.querySelectorAll('.proverbs-card-clickable').forEach(card => {
       card.addEventListener('click', () => {
-        const idx = parseInt(card.dataset.index);
-        const item = currentCat.items[idx];
-        if (!item || !item.detailEn) return;
-        const modalContent = `
-          <div class="proverbs-modal-body">
-            <p class="proverbs-modal-en"><em>${item.en}</em></p>
-            <p class="proverbs-modal-meaning">${item.meaning}</p>
-            <hr class="proverbs-modal-divider">
-            <p class="proverbs-modal-detail">${item.detailEn}</p>
-          </div>`;
-        openModal(item.tr, modalContent);
+        location.hash = `#/proverbs/${currentCat.id}/${card.dataset.index}`;
       });
     });
   }
+}
+
+function renderProverbDetail(container, catId, itemIndex) {
+  const lang = I18N.getLang();
+  const cat = PROVERBS_DATA.find(c => c.id === catId);
+  if (!cat) { location.hash = '#/proverbs'; return; }
+  const item = cat.items[itemIndex];
+  if (!item) { location.hash = '#/proverbs'; return; }
+
+  const translation = (lang !== 'tr' && item[lang]) ? item[lang] : item.en || '';
+  const prevIndex = itemIndex > 0 ? itemIndex - 1 : null;
+  const nextIndex = itemIndex < cat.items.length - 1 ? itemIndex + 1 : null;
+
+  const otherProverbs = cat.items
+    .map((p, i) => ({ p, i }))
+    .filter(({ i }) => i !== itemIndex)
+    .slice(0, 4);
+
+  const otherHtml = otherProverbs.map(({ p, i }) => `
+    <a href="#/proverbs/${catId}/${i}" class="proverb-related-item">
+      <span class="proverb-related-tr">${p.tr}</span>
+      <span class="proverb-related-en">${p.en}</span>
+    </a>`).join('');
+
+  container.innerHTML = `
+    <div class="proverb-detail-page">
+      <div class="proverb-detail-topbar">
+        <a href="#/proverbs" class="proverb-detail-back">← Atasözleri</a>
+        <span class="proverb-detail-counter">${itemIndex + 1} / ${cat.items.length}</span>
+      </div>
+
+      <div class="proverb-detail-hero">
+        <div class="proverb-detail-icon">${cat.icon}</div>
+        <h1 class="proverb-detail-tr">${item.tr}</h1>
+        ${translation ? `<p class="proverb-detail-en">${translation}</p>` : ''}
+      </div>
+
+      <div class="proverb-detail-body-card">
+        <div class="proverb-detail-meaning-label">Anlamı</div>
+        <p class="proverb-detail-meaning">${item.meaning}</p>
+        ${item.detailEn ? `
+          <hr class="proverb-detail-divider">
+          <div class="proverb-detail-explanation">${item.detailEn}</div>` : ''}
+      </div>
+
+      <div class="proverb-detail-nav">
+        ${prevIndex !== null
+          ? `<a href="#/proverbs/${catId}/${prevIndex}" class="proverb-nav-btn">← Önceki</a>`
+          : '<span></span>'}
+        ${nextIndex !== null
+          ? `<a href="#/proverbs/${catId}/${nextIndex}" class="proverb-nav-btn">Sonraki →</a>`
+          : '<span></span>'}
+      </div>
+
+      ${otherHtml ? `
+        <div class="proverb-related">
+          <h3 class="proverb-related-title">Diğer Atasözleri</h3>
+          <div class="proverb-related-list">${otherHtml}</div>
+        </div>` : ''}
+    </div>
+  `;
 }
