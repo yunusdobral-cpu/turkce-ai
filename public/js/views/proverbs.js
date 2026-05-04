@@ -118,9 +118,9 @@ function renderProverbDetail(container, catId, itemIndex) {
       <div class="proverb-detail-body-card">
         <div class="proverb-detail-meaning-label">Anlamı</div>
         <p class="proverb-detail-meaning">${item.meaning}</p>
-        ${item.detailEn ? `
+        ${(item.detailEn || item['detail' + lang.charAt(0).toUpperCase() + lang.slice(1)]) ? `
           <hr class="proverb-detail-divider">
-          <div class="proverb-detail-explanation">${item.detailEn}</div>` : ''}
+          <div class="proverb-detail-explanation">${item['detail' + lang.charAt(0).toUpperCase() + lang.slice(1)] || item.detailEn}</div>` : ''}
       </div>
 
       <div class="proverb-detail-nav">
